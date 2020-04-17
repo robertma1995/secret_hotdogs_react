@@ -1,0 +1,1 @@
+// TODO: set database connection from ./config.js, and consolidate all tables here (hotdogs, users)
