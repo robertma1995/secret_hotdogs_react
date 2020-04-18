@@ -36,10 +36,10 @@ function Home() {
                         {hotdogs.map((hotdog) => (
                             <TableRow key={hotdog.id}>
                                 <TableCell component="th" scope="row"> {hotdog.id} </TableCell>
-                                <TableCell align="right"> {hotdog.title} </TableCell>
-                                <TableCell align="right"> {hotdog.ingredients} </TableCell>
-                                <TableCell align="right"> {hotdog.creator} </TableCell>
-                                <TableCell align="right"> {hotdog.ts} </TableCell>
+                                <TableCell> {hotdog.title} </TableCell>
+                                <TableCell> {hotdog.ingredients} </TableCell>
+                                <TableCell> {hotdog.creator} </TableCell>
+                                <TableCell> {hotdog.ts} </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
