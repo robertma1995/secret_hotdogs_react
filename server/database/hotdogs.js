@@ -20,12 +20,6 @@ const all = async () => {
             console.log(err);
             return reject(err);
         })
-        // dbindex.connection.query("SELECT * FROM hotdogs", (err, results) => {
-        //     if (err) {
-        //         return reject(err);
-        //     }
-        //     resolve(results);
-        // });
     });
 }
 
