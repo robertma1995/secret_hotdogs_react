@@ -1,33 +1,17 @@
 import React from 'react';
 import './App.css';
+// material ui
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { Box, Container } from '@material-ui/core';
-import NavBar from './components/navbar';
-import Home from './components/home';
+// routing
 import { Switch, Route } from 'react-router-dom';
-import * as routes from './routes';
+import * as routes from './utils/routes';
+// my components/pages
+import brandTheme from './utils/theme';
+import NavBar from './components/navbar';
+import Home from './pages/home';
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#cbb09c'
-        },
-        secondary: {
-            main: '#ffffff'
-        },
-        text: {
-            primary: '#9e9e9e',
-        },
-    },
-    overrides: {
-        // white button text - contained Button "color" only changes background color
-        MuiButton: {
-            containedPrimary: {
-                color: '#ffffff'
-            }
-        }
-    }
-});
+const theme = createMuiTheme(brandTheme);
 
 function App() {
     return (
