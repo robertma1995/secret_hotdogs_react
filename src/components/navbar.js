@@ -24,11 +24,11 @@ function NavBar() {
             <AppBar position="static" color="transparent" elevation="0">
                 <Toolbar disableGutters>
                     <Typography variant="h4" className={classes.title}>
-                        <Link href={routes.HOME} underline="none" color="primary">
+                        <Link href={routes.HOME} color="primary" underline="none">
                             Secret Ninja Hotdogs
                         </Link>
                     </Typography>
-                    <Button color="primary" variant="contained" disableElevation> Login </Button>
+                    <Button href={routes.LOGIN} color="primary" variant="contained" disableElevation> Login </Button>
                 </Toolbar>
             </AppBar>
         </div>

@@ -20,7 +20,7 @@ function Home() {
     // read a state variable by simply placing {} around the variable name
     return (
         <div>
-            <h4> HELLO WORLD! </h4>
+            <h4> Your Hotdogs </h4>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
