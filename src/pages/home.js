@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { PageTitle } from '../components'; 
 
 // index.php
 function Home() {
@@ -20,7 +21,9 @@ function Home() {
     // read a state variable by simply placing {} around the variable name
     return (
         <div>
-            <h4> Your Hotdogs </h4>
+            <Box p={2}>
+                <PageTitle text="Your Hotdogs"/>
+            </Box>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
