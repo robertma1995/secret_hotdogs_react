@@ -3,10 +3,11 @@ import { Box, Button, Container, TextField } from '@material-ui/core';
 import isEmail from 'validator/lib/isEmail';
 import { UserContext } from '../userContext';
 import { PageTitle } from '../components';
+import * as routes from '../utils/routes';
 
-
-function Login() {
-    // TODO: track email and password state vars
+function Login(props) {
+    // context + state variables
+    const { userId, setCurrentUserId } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState("");
     const [password, setPassword] = useState("");
@@ -21,7 +22,6 @@ function Login() {
         setPassword(password);
     }
 
-    const { userId, setCurrentUserId } = useContext(UserContext);
     function handleLogin() {
         // setError functions are asynchronous, so use local vars instead for login check
         var emailValid = false;
@@ -59,13 +59,22 @@ function Login() {
                     },
                     body: JSON.stringify({email: email, password: password})
                 });
-                const loginStatus = await response.json();
-                console.log(loginStatus);
+                // if login succeeds, set context user id and redirect to home page
+                const loginUserId = await response.json();
+                console.log("loginUserId: " + loginUserId);
+                if (!loginUserId) {
+                    setEmailError("Incorrect email or password");
+                    setPasswordError("Incorrect email or password");
+                } else {
+                    setCurrentUserId(loginUserId);
+                    props.history.push(routes.HOME);
+                }
             })();
-            // TODO: setCurrentUserId(id);
         }
 
         // TODO (optional): add a form to allow for login via pressing enter (<form action=login()>)
+
+        // TODO (optional): loading spinner (state variable called "loading", and useEffect)
     }
 
     return (

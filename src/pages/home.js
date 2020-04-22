@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import { PageTitle } from '../components'; 
+import { UserContext } from '../userContext';
 
 // index.php
 function Home() {
-    // state variables
+    // context + state variables
+    const { userId, setCurrentUserId } = useContext(UserContext);
     const [hotdogs, setHotdogs] = useState([]);
+
+    // console.log("home.js: userId = " + userId);
 
     // similar to componentDidMount
     useEffect(() => {
