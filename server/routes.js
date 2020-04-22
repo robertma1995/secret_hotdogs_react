@@ -31,12 +31,14 @@ router.post('/api/login', async (req, res) => {
     // res.json('Hello World again :)');
     const { email, password } = req.body;
     try {
-        let loginStatus = await DB.users.login(email, password);
-        console.log("loginStatus: " + loginStatus);
-        // TODO: if login successful, return true
+        // TODO: if login successful, return user id
+        let userId = await DB.users.login(email, password);
+        console.log("routes.js: userId = " + userId);
+        res.json(userId);
     } catch(e) {
-        console.log(e);
         // TODO: if login not successful, return false
+        console.log(e);
+        res.json(false);
     }
 })
 

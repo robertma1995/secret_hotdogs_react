@@ -1,6 +1,7 @@
 // imports
 const dbindex = require('./index.js');
 
+// return all hotdogs with id and readable timestamps
 const all = async () => {
     return new Promise((resolve, reject) => {
         dbindex.firebase.firestore().collection('hotdogs').get()

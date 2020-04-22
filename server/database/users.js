@@ -1,16 +1,18 @@
 // imports
 const dbindex = require('./index.js');
 
-// return true if login successful, otherwise return firebase error
+// return user details if login successful, otherwise return firebase error
 const login = async (email, password) => {
-	console.log("Firebase email: " + email);
-	console.log("Firebase password: " + password);
-	return(true);
-	// return new Promise((resolve, reject) => {
-	// 	dbindex.firebase.auth().signInWithEmailAndPassword(email, password)
-	// 	.then(() => resolve(true))
-	// 	.catch(err => reject(err));
-	// });
+	return new Promise((resolve, reject) => {
+		dbindex.firebase.auth().signInWithEmailAndPassword(email, password)
+		.then(credential => {
+			// credential is a UserCredential: https://firebase.google.com/docs/reference/js/firebase.auth#usercredential
+			// TODO: send user details on successful login
+			console.log("users.js: userId = " + credential.user.uid);
+			resolve(credential.user.uid);
+		})
+		.catch(err => reject(err));
+	});
 }
 
 exports.login = login;
