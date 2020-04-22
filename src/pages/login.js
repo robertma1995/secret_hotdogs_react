@@ -1,9 +1,8 @@
-import React, { useState, useContext } from 'react';
-// material ui
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Button, Container, TextField } from '@material-ui/core';
-import { PageTitle } from '../components';
-// context
+import isEmail from 'validator/lib/isEmail';
 import { UserContext } from '../userContext';
+import { PageTitle } from '../components';
 
 
 function Login() {
@@ -12,20 +11,45 @@ function Login() {
     const [emailError, setEmailError] = useState("");
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    const emptyError = "Please fill out this field";
 
-    // set id if user login successful
+    function handleEmailChange(email) {
+        setEmail(email);
+    }
+
+    function handlePasswordChange(password) {
+        setPassword(password);
+    }
+
     const { userId, setCurrentUserId } = useContext(UserContext);
-    function login(id) {
+    function handleLogin() {
+        // setError functions are asynchronous, so use local vars instead for login check
+        var emailValid = false;
+        var passwordValid = false;
 
-        // TODO: validate email (self-coded like in php app, or use: https://www.npmjs.com/package/react-material-ui-form-validator )
-        if (email !== "kappa") {
-            setEmailError("Incorrect email");
+        // handle empty email/invalid syntax
+        if (!email) {
+            setEmailError(emptyError);
+        } else if (!isEmail(email)) {
+            setEmailError("Invalid email");
         } else {
-            setEmailError("Correct email smile smile :)")
+            setEmailError("");
+            emailValid = true;
         }
 
-        // TODO: call firebase login, pass email + password to api to handle login
-        setCurrentUserId(id);
+        // handle empty password
+        if (!password) {
+            setPasswordError(emptyError);
+        } else {
+            setPasswordError("");
+            passwordValid = true;
+        }
+
+        if (emailValid && passwordValid) {
+            console.log("CHECKING IF EMAIL AND PASSWORD MATCH");
+            // TODO: call firebase login, pass email + password to api to handle login
+            // setCurrentUserId(id);
+        }
 
         // TODO (optional): add a form to allow for login via pressing enter (<form action=login()>)
     }
@@ -45,8 +69,9 @@ function Login() {
                 <Box display="flex" flexDirection="column" justifyContent="center" p={2}>
                     <TextField 
                         label="Email"
+                        type="email"
                         value={email}
-                        onChange={(event) => setEmail(event.target.value)}
+                        onChange={(event) => handleEmailChange(event.target.value)}
                         error={emailError}
                         helperText={emailError}
                     />
@@ -54,8 +79,9 @@ function Login() {
                 <Box display="flex" flexDirection="column" justifyContent="center" p={2}>
                     <TextField 
                         label="Password" 
+                        type="password"
                         value={password}
-                        onChange={(event) => setPassword(event.target.value)}
+                        onChange={(event) => handlePasswordChange(event.target.value)}
                         error={passwordError}
                         helperText={passwordError}
                     />
@@ -65,7 +91,7 @@ function Login() {
                         href="#" 
                         color="primary" 
                         variant="contained" 
-                        onClick={() => login()}
+                        onClick={() => handleLogin()}
                         disableElevation
                     >
                         Login 

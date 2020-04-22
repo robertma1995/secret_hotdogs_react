@@ -6,12 +6,12 @@ import { Box, Container } from '@material-ui/core';
 // routing
 import { Switch, Route } from 'react-router-dom';
 import * as routes from './utils/routes';
+// context
+import { UserContextProvider } from './userContext';
 // my components/pages
 import brandTheme from './utils/theme';
 import { NavBar } from './components';
 import { Home, Login } from './pages';
-// context
-import { UserContextProvider } from './userContext';
 
 const theme = createMuiTheme(brandTheme);
 
