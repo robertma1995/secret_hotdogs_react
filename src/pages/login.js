@@ -46,9 +46,23 @@ function Login() {
         }
 
         if (emailValid && passwordValid) {
-            console.log("CHECKING IF EMAIL AND PASSWORD MATCH");
+            console.log("Email: " + email);
+            console.log("Password: " + password);
+            console.log("Current user id: " + userId);
             // TODO: call firebase login, pass email + password to api to handle login
-            // setCurrentUserId(id);
+            (async () => {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({email: email, password: password})
+                });
+                const loginStatus = await response.json();
+                console.log(loginStatus);
+            })();
+            // TODO: setCurrentUserId(id);
         }
 
         // TODO (optional): add a form to allow for login via pressing enter (<form action=login()>)

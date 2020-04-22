@@ -11,7 +11,6 @@ router.get('/api/hello', (req, res, next) => {
     res.json('Hello World :)');
 });
 
-// TODO: one route for each table (hotdogs, users)
 // TODO: need a route for inserting hotdog details too 
 // use await fetch(...method: 'POST', body: <hotdog details as JSON>) in frontend (e.g. home.js, add.js)
 //      https://stackoverflow.com/questions/29775797/fetch-post-json-data
@@ -26,5 +25,22 @@ router.get('/api/hotdogs', async (req, res) => {
         res.sendStatus(500);
     }
 });
+
+// logging in - takes details from frontend (login.js)
+router.post('/api/login', async (req, res) => {
+    // res.json('Hello World again :)');
+    const { email, password } = req.body;
+    console.log("post email: " + email);
+    console.log("post password: " + password);
+    res.json({postEmail: email, postPassword: password});
+
+    // try {
+    //     // let login = await DB.users.login(email, password);
+    //     // TODO: if login successful, return true
+    // } catch(e) {
+    //     console.log(e);
+    //     // TODO: if login not successful, return false
+    // }
+})
 
 module.exports = router;
