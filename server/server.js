@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const apiRouter = require('./routes.js');
 
 // initialize app to use defined routes
+// bodyParser needed otherwise req.body will be undefined in routes.js
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

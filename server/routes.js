@@ -30,17 +30,14 @@ router.get('/api/hotdogs', async (req, res) => {
 router.post('/api/login', async (req, res) => {
     // res.json('Hello World again :)');
     const { email, password } = req.body;
-    console.log("post email: " + email);
-    console.log("post password: " + password);
-    res.json({postEmail: email, postPassword: password});
-
-    // try {
-    //     // let login = await DB.users.login(email, password);
-    //     // TODO: if login successful, return true
-    // } catch(e) {
-    //     console.log(e);
-    //     // TODO: if login not successful, return false
-    // }
+    try {
+        let loginStatus = await DB.users.login(email, password);
+        console.log("loginStatus: " + loginStatus);
+        // TODO: if login successful, return true
+    } catch(e) {
+        console.log(e);
+        // TODO: if login not successful, return false
+    }
 })
 
 module.exports = router;
