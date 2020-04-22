@@ -27,16 +27,14 @@ router.get('/api/hotdogs', async (req, res) => {
 });
 
 // logging in - takes details from frontend (login.js)
+// returns user id if successful, false otherwise
 router.post('/api/login', async (req, res) => {
     // res.json('Hello World again :)');
     const { email, password } = req.body;
     try {
-        // TODO: if login successful, return user id
         let userId = await DB.users.login(email, password);
-        console.log("routes.js: userId = " + userId);
         res.json(userId);
     } catch(e) {
-        // TODO: if login not successful, return false
         console.log(e);
         res.json(false);
     }
