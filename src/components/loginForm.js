@@ -78,10 +78,6 @@ function LoginForm(props) {
                 }
             })();
         }
-
-        // TODO (optional): add a form to allow for login via pressing enter (<form action=login()>)
-
-        // TODO (optional): loading spinner (state variable called "loading", and useEffect)
     }
 
     return (
