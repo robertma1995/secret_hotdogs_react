@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 // material ui, email validator
-import { Box, Button, TextField } from '@material-ui/core';
+import { Box, Button, CircularProgress, TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import isEmail from 'validator/lib/isEmail';
 // routing
 import { withRouter } from 'react-router-dom';
@@ -8,14 +9,29 @@ import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
 
+// show loading spinner on top of login button
+const useStyles = makeStyles((theme) => ({
+    wrapper: {
+        margin: theme.spacing(1),
+        position: 'relative',
+    },
+    buttonProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
+    }
+}));
 
 function LoginForm(props) {
  	// context + state variables
     const { userId, setCurrentUserId } = useContext(UserContext);
     const [email, setEmail] = useState("");
-    const [emailError, setEmailError] = useState("");
+    const [emailError, setEmailError] = useState(" ");
     const [password, setPassword] = useState("");
-    const [passwordError, setPasswordError] = useState("");
+    const [passwordError, setPasswordError] = useState(" ");
+    const [loading, setLoading] = useState(false);
     const emptyError = "Please fill out this field";
 
     function handleEmailChange(email) {
@@ -37,7 +53,7 @@ function LoginForm(props) {
         } else if (!isEmail(email)) {
             setEmailError("Invalid email");
         } else {
-            setEmailError("");
+            setEmailError(" ");
             emailValid = true;
         }
 
@@ -45,7 +61,7 @@ function LoginForm(props) {
         if (!password) {
             setPasswordError(emptyError);
         } else {
-            setPasswordError("");
+            setPasswordError(" ");
             passwordValid = true;
         }
 
@@ -54,6 +70,7 @@ function LoginForm(props) {
             console.log("Password: " + password);
             console.log("Current user id: " + userId);
             // TODO: call firebase login, pass email + password to api to handle login
+            setLoading(true);
             (async () => {
                 const response = await fetch('/api/login', {
                     method: 'POST',
@@ -66,6 +83,7 @@ function LoginForm(props) {
                 // if login succeeds, set context user id and redirect to home page
                 const loginUserId = await response.json();
                 console.log("loginUserId: " + loginUserId);
+                setLoading(false);
                 if (!loginUserId) {
                     setEmailError("Incorrect email or password");
                     setPasswordError("Incorrect email or password");
@@ -81,6 +99,7 @@ function LoginForm(props) {
         // TODO (optional): loading spinner (state variable called "loading", and useEffect)
     }
 
+    const classes = useStyles();
     return (
         <Box 
             bgcolor="secondary.main"
@@ -95,7 +114,7 @@ function LoginForm(props) {
                     type="email"
                     value={email}
                     onChange={(event) => handleEmailChange(event.target.value)}
-                    error={emailError}
+                    error={emailError.trim()}
                     helperText={emailError}
                 />
             </Box>
@@ -105,20 +124,24 @@ function LoginForm(props) {
                     type="password"
                     value={password}
                     onChange={(event) => handlePasswordChange(event.target.value)}
-                    error={passwordError}
+                    error={passwordError.trim()}
                     helperText={passwordError}
                 />
             </Box>
             <Box display="flex" justifyContent="center" p={2}>
-                <Button 
-                    href="#" 
-                    color="primary" 
-                    variant="contained" 
-                    onClick={() => handleLogin()}
-                    disableElevation
-                >
-                    Login 
-                </Button>
+                <div className={classes.wrapper}>
+                    <Button
+                        href="#" 
+                        color="primary" 
+                        variant="contained"
+                        disabled={loading}
+                        onClick={() => handleLogin()}
+                        disableElevation
+                    >
+                        Login 
+                    </Button>
+                    {loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
+                </div>
             </Box>
         </Box>
     );
