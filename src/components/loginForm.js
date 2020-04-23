@@ -1,28 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
-// material ui, email validator
-import { Box, Button, CircularProgress, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+// material ui, email validator, loading spinner
+import { Box, TextField } from '@material-ui/core';
 import isEmail from 'validator/lib/isEmail';
+import ProgressButton from './progressButton';
 // routing
 import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
-
-// show loading spinner on top of login button
-const useStyles = makeStyles((theme) => ({
-    wrapper: {
-        margin: theme.spacing(1),
-        position: 'relative',
-    },
-    buttonProgress: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-        marginLeft: -12,
-    }
-}));
 
 function LoginForm(props) {
  	// context + state variables
@@ -99,7 +84,6 @@ function LoginForm(props) {
         // TODO (optional): loading spinner (state variable called "loading", and useEffect)
     }
 
-    const classes = useStyles();
     return (
         <Box 
             bgcolor="secondary.main"
@@ -129,19 +113,7 @@ function LoginForm(props) {
                 />
             </Box>
             <Box display="flex" justifyContent="center" p={2}>
-                <div className={classes.wrapper}>
-                    <Button
-                        href="#" 
-                        color="primary" 
-                        variant="contained"
-                        disabled={loading}
-                        onClick={() => handleLogin()}
-                        disableElevation
-                    >
-                        Login 
-                    </Button>
-                    {loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
-                </div>
+                <ProgressButton text="Login" loading={loading} onClick={() => handleLogin()}/>
             </Box>
         </Box>
     );
