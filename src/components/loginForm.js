@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 // material ui, email validator, loading spinner
-import { Box, TextField } from '@material-ui/core';
+import { Box, Grid, Link, TextField, Typography } from '@material-ui/core';
+import EmailIcon from '@material-ui/icons/Email';
+import LockIcon from '@material-ui/icons/Lock';
 import isEmail from 'validator/lib/isEmail';
 import ProgressButton from './progressButton';
 // routing
@@ -88,28 +90,45 @@ function LoginForm(props) {
             justifyContent="center"
             p={2}
         >
-            <Box display="flex" flexDirection="column" justifyContent="center" p={2}>
-                <TextField 
-                    label="Email"
-                    type="email"
-                    value={email}
-                    onChange={(event) => handleEmailChange(event.target.value)}
-                    error={emailError.trim()}
-                    helperText={emailError}
-                />
+            <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center" p={1}>
+                <Box mr={0.5}>
+                    <EmailIcon/>
+                </Box>
+                <Box flexGrow={1} p={1}>
+                    <TextField
+                        label="Email"
+                        type="email"
+                        fullWidth
+                        value={email}
+                        onChange={(event) => handleEmailChange(event.target.value)}
+                        error={emailError.trim()}
+                        helperText={emailError}
+                    />
+                </Box>
             </Box>
-            <Box display="flex" flexDirection="column" justifyContent="center" p={2}>
-                <TextField 
-                    label="Password" 
-                    type="password"
-                    value={password}
-                    onChange={(event) => handlePasswordChange(event.target.value)}
-                    error={passwordError.trim()}
-                    helperText={passwordError}
-                />
+            <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center" p={1}>
+                <Box mr={0.5}>
+                    <LockIcon/>
+                </Box>
+                <Box flexGrow={1} p={1}>
+                    <TextField
+                        label="Password" 
+                        type="password"
+                        fullWidth
+                        value={password}
+                        onChange={(event) => handlePasswordChange(event.target.value)}
+                        error={passwordError.trim()}
+                        helperText={passwordError}
+                    />
+                </Box>
             </Box>
-            <Box display="flex" justifyContent="center" p={2}>
+            <Box display="flex" justifyContent="center" p={1}>
                 <ProgressButton text="Login" loading={loading} onClick={() => handleLogin()}/>
+            </Box>
+            <Box display="flex" justifyContent="center" p={1}>
+                <Typography color="textSecondary" variant="body2">
+                    Don't have an account? <Link href={routes.REGISTER}> Sign Up </Link>
+                </Typography>
             </Box>
         </Box>
     );
