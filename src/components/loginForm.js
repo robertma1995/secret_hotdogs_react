@@ -112,7 +112,7 @@ function LoginForm(props) {
                 </Box>
                 <Box flexGrow={1} p={1}>
                     <TextField
-                        label="Password" 
+                        label="Password"
                         type="password"
                         fullWidth
                         value={password}

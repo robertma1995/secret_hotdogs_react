@@ -136,12 +136,40 @@ function LoginFormTest(props) {
 
     // let formProps = [<MyEmailIcon/>, <EmailField/>, <MyPasswordIcon/>, <PasswordField/>, <LoginButton/>];
     let formProps = {
-        "fields": [<MyEmailIcon/>, <EmailField/>, <MyPasswordIcon/>, <PasswordField/>],
+        "fields": {
+            "email": [<MyEmailIcon/>, <EmailField/>],
+            "password": [<MyPasswordIcon/>, <PasswordField/>],
+        },
         "button": <LoginButton/>
-    } 
+    }
 
     return (
-        <Form {...formProps}/>
+        <Box 
+            bgcolor="secondary.main"
+            display="flex" 
+            flexDirection="column"
+            justifyContent="center"
+            p={2}
+        >
+            {Object.keys(formProps.fields).map((fieldName) => (
+                <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center" p={1}>
+                    <Box mr={0.5}>
+                        {formProps.fields[fieldName][0]}
+                    </Box>
+                    <Box flexGrow={1} p={1}>
+                        {formProps.fields[fieldName][1]}
+                    </Box>
+                </Box>
+            ))}
+            <Box display="flex" justifyContent="center" p={1}>
+                {formProps.button}
+            </Box>
+            <Box display="flex" justifyContent="center" p={1}>
+                <Typography color="textSecondary" variant="body2">
+                    Don't have an account? <Link href={routes.REGISTER}> Sign Up </Link>
+                </Typography>
+            </Box>
+        </Box>
     );
 }
 
