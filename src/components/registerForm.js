@@ -24,6 +24,7 @@ function RegisterForm(props) {
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [passwordConfirmError, setPasswordConfirmError] = useState(" ");
     const [loading, setLoading] = useState(false);
+    const [registered, setRegistered] = useState(false);
     const emptyError = "Please fill out this field";
 
     function handleRegister() {
@@ -66,9 +67,30 @@ function RegisterForm(props) {
             passwordConfirmValid = true;
         }
 
-        // TODO: add more fields
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
             console.log("REGISTERING :)");
+            setLoading(true);
+            (async () => {
+                const bodyJson = {
+                    name: name,
+                    email: email,
+                    password: password 
+                }
+                const registerStatus = await apiPost('register', bodyJson);
+                console.log("registerStatus: " + registerStatus);
+                setLoading(false);
+
+                // if register succeeds, reset all fields and give user option to go to login 
+                if (!registerStatus) {
+                    setEmailError("Email already in use, please type in a different email");
+                } else {
+                    setName("");
+                    setEmail("");
+                    setPassword("");
+                    setPasswordConfirm("");
+                    setRegistered(true);                        
+                }
+            })();
         }
     }
 
@@ -111,6 +133,11 @@ function RegisterForm(props) {
                 loading={loading}
                 handleClick={handleRegister}
             />
+            {registered && 
+                <FormFooter>
+                    Registration successful, head to <Link href={routes.REGISTER}> Login </Link> page
+                </FormFooter>
+            }
         </Form>
     );
 }

@@ -29,7 +29,6 @@ router.get('/api/hotdogs', async (req, res) => {
 // logging in - takes details from frontend (login.js)
 // returns user id if successful, false otherwise
 router.post('/api/login', async (req, res) => {
-    // res.json('Hello World again :)');
     const { email, password } = req.body;
     try {
         let userId = await DB.users.login(email, password);
@@ -38,6 +37,18 @@ router.post('/api/login', async (req, res) => {
         console.log(e);
         res.json(false);
     }
-})
+});
+
+router.post('/api/register', async (req, res) => {
+    const { name, email, password } = req.body;
+    try {
+        let userId = await DB.users.register(name, email, password);
+        console.log("User with id " + userId + " successfully created");
+        res.json(true);
+    } catch(e) {
+        console.log(e);
+        res.json(false);
+    }
+});
 
 module.exports = router;
