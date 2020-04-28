@@ -135,7 +135,7 @@ function RegisterForm(props) {
             />
             {registered && 
                 <FormFooter>
-                    Registration successful, head to <Link href={routes.REGISTER}> Login </Link> page
+                    Registration successful, head to <Link href={routes.LOGIN}> Login </Link> page
                 </FormFooter>
             }
         </Form>
