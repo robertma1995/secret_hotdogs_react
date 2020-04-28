@@ -61,16 +61,6 @@ function LoginForm(props) {
                     password: password 
                 }
                 const loginUserId = await apiPost('login', bodyJson);
-
-                // const response = await fetch('/api/login', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Accept': 'application/json',
-                //         'Content-Type': 'application/json'
-                //     },
-                //     body: JSON.stringify({email: email, password: password})
-                // });
-                // const loginUserId = await response.json();
                 console.log("loginUserId: " + loginUserId);
                 setLoading(false);
                 if (!loginUserId) {
