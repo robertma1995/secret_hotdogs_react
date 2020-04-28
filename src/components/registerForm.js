@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 // material ui, email validator
 import Link from '@material-ui/core/Link';
 import isEmail from 'validator/lib/isEmail';
@@ -10,20 +10,20 @@ import FormFooter from './formFooter';
 // routing
 import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
-// context
-import { UserContext } from '../userContext';
 
-function LoginForm(props) {
- 	// context + state variables
-    const { userId, setCurrentUserId } = useContext(UserContext);
+function RegisterForm(props) {
+ 	// state variables
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(" ");
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState(" ");
+    const [passwordConfirm, setPasswordConfirm] = useState("");
+    const [passwordConfirmError, setPasswordConfirmError] = useState(" ");
     const [loading, setLoading] = useState(false);
     const emptyError = "Please fill out this field";
 
-    function handleLogin() {
+    function handleRegister() {
         // setError functions are asynchronous, so use local vars instead for login check
         var emailValid = false;
         var passwordValid = false;
@@ -46,38 +46,22 @@ function LoginForm(props) {
             passwordValid = true;
         }
 
+        // TODO: add more fields
         if (emailValid && passwordValid) {
-            console.log("Email: " + email);
-            console.log("Password: " + password);
-            console.log("Current user id: " + userId);
-            // TODO: call firebase login, pass email + password to api to handle login
-            setLoading(true);
-            (async () => {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({email: email, password: password})
-                });
-                // if login succeeds, set context user id and redirect to home page
-                const loginUserId = await response.json();
-                console.log("loginUserId: " + loginUserId);
-                setLoading(false);
-                if (!loginUserId) {
-                    setEmailError("Incorrect email or password");
-                    setPasswordError("Incorrect email or password");
-                } else {
-                    setCurrentUserId(loginUserId);
-                    props.history.push(routes.HOME);
-                }
-            })();
+            
         }
     }
 
     return (
         <Form>
+            <FormField
+                type="text"
+                iconName="user"
+                label="Name"
+                value={name}
+                setValue={setName}
+                error={" "}
+            />
             <FormField
                 type="email"
                 iconName="email"
@@ -94,16 +78,21 @@ function LoginForm(props) {
                 setValue={setPassword}
                 error={passwordError}
             />
-            <FormButton
-                text="Login"
-                loading={loading}
-                handleClick={handleLogin}
+            <FormField
+                type="password"
+                iconName="passwordConfirm"
+                label="Confirm Password"
+                value={passwordConfirm}
+                setValue={setPasswordConfirm}
+                error={passwordConfirmError}
             />
-            <FormFooter>
-                Don't have an account? <Link href={routes.REGISTER}> Sign Up </Link>
-            </FormFooter>
+            <FormButton
+                text="Register"
+                loading={loading}
+                handleClick={handleRegister}
+            />
         </Form>
     );
 }
 
-export default withRouter(LoginForm);
+export default withRouter(RegisterForm);

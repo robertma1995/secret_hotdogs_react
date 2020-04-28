@@ -1,9 +1,9 @@
 import Home from './home';
 import Login from './login';
-
-// TODO: add one for each page (imports look cleaner in App.js)
+import Register from './register';
 
 export {
 	Home,
-	Login
+	Login,
+	Register
 }

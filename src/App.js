@@ -11,7 +11,7 @@ import { UserContextProvider } from './userContext';
 // my components/pages
 import brandTheme from './utils/theme';
 import { NavBar } from './components';
-import { Home, Login } from './pages';
+import { Home, Login, Register } from './pages';
 
 const theme = createMuiTheme(brandTheme);
 
@@ -29,6 +29,7 @@ function App() {
                         <Switch>
                             <Route exact path={routes.HOME} component={Home}></Route>
                             <Route exact path={routes.LOGIN} component={Login}></Route>
+                            <Route exact path={routes.REGISTER} component={Register}></Route>
                         </Switch>
                     </Container>
                 </Box>
