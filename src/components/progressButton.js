@@ -18,10 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ProgressButton(props) {
-    const text = props.text;
-    var loading = props.loading;
-    var onClick = props.onClick;
-
+    const { text, loading, handleClick } = props;
     const classes = useStyles();
     return (
         <div className={classes.wrapper}>
@@ -30,7 +27,7 @@ function ProgressButton(props) {
                 color="primary" 
                 variant="contained"
                 disabled={loading}
-                onClick={() => onClick()}
+                onClick={() => handleClick()}
                 disableElevation
             >
                 {text}

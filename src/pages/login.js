@@ -9,7 +9,7 @@ function Login() {
             <Box p={2}>
                 <PageTitle text="Login"/>
             </Box>
-            <LoginForm/>
+            <LoginFormTest/>
         </Container>
     );
 }

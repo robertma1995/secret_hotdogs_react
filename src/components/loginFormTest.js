@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 // material ui, email validator, loading spinner
 import { Box, Grid, Link, TextField, Typography } from '@material-ui/core';
-import EmailIcon from '@material-ui/icons/Email';
-import LockIcon from '@material-ui/icons/Lock';
 import isEmail from 'validator/lib/isEmail';
 import ProgressButton from './progressButton';
 import Form from './form';
+import FormField from './formField';
+import FormButton from './formButton';
+import FormFooter from './formFooter';
 // routing
 import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
@@ -83,93 +84,31 @@ function LoginFormTest(props) {
         }
     }
 
-    // TODO: Building the form with the slot pattern (see form.js)
-    // slot pattern: https://daveceddia.com/pluggable-slots-in-react-components/ 
-    // passing dynamic no. of props to a component: https://stackoverflow.com/questions/40868189/how-to-create-a-dynamic-prop-name-in-react
-    // consider formProps = 
-    /*
-        [0] => {
-                "icon": <MyEmailIcon/>
-                "field": <EmailField/>
-                },
-        [1] => {},
-        [2] => ...
-    */
-    // at the moment, don't see a way out of building the array manually...
-
-
-    const MyEmailIcon = () => (
-        <EmailIcon color="primary"/>
-    );
-    
-    const EmailField = () => (
-        <TextField
-            label="Email"
-            type="email"
-            fullWidth
-            value={email}
-            onChange={(event) => handleEmailChange(event.target.value)}
-            error={emailError.trim()}
-            helperText={emailError}
-        />
-    );
-
-    const MyPasswordIcon = () => (
-        <LockIcon color="primary"/>
-    );
-
-    const PasswordField = () => (
-        <TextField
-            label="Password" 
-            type="password"
-            fullWidth
-            value={password}
-            onChange={(event) => handlePasswordChange(event.target.value)}
-            error={passwordError.trim()}
-            helperText={passwordError}
-        />
-    );
-
-    const LoginButton = () => (
-        <ProgressButton text="Login" loading={loading} onClick={() => handleLogin()}/>
-    );
-
-    // let formProps = [<MyEmailIcon/>, <EmailField/>, <MyPasswordIcon/>, <PasswordField/>, <LoginButton/>];
-    let formProps = {
-        "fields": {
-            "email": [<MyEmailIcon/>, <EmailField/>],
-            "password": [<MyPasswordIcon/>, <PasswordField/>],
-        },
-        "button": <LoginButton/>
-    }
-
     return (
-        <Box 
-            bgcolor="secondary.main"
-            display="flex" 
-            flexDirection="column"
-            justifyContent="center"
-            p={2}
-        >
-            {Object.keys(formProps.fields).map((fieldName) => (
-                <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center" p={1}>
-                    <Box mr={0.5}>
-                        {formProps.fields[fieldName][0]}
-                    </Box>
-                    <Box flexGrow={1} p={1}>
-                        {formProps.fields[fieldName][1]}
-                    </Box>
-                </Box>
-            ))}
-            <Box display="flex" justifyContent="center" p={1}>
-                {formProps.button}
-            </Box>
-            <Box display="flex" justifyContent="center" p={1}>
-                <Typography color="textSecondary" variant="body2">
-                    Don't have an account? <Link href={routes.REGISTER}> Sign Up </Link>
-                </Typography>
-            </Box>
-        </Box>
+        <Form>
+            <FormField
+                type="email"
+                label="Email"
+                value={email}
+                setValue={setEmail}
+                error={emailError}
+            />
+            <FormField
+                type="password"
+                label="Password"
+                value={password}
+                setValue={setPassword}
+                error={passwordError}
+            />
+            <FormButton
+                text="Login"
+                loading={loading}
+                handleClick={handleLogin}
+            />
+            <FormFooter>
+                Don't have an account? <Link href={routes.REGISTER}> Sign Up </Link>
+            </FormFooter>
+        </Form>
     );
 }
 
