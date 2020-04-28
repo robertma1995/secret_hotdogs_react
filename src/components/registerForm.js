@@ -10,10 +10,13 @@ import FormFooter from './formFooter';
 // routing
 import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
+// helper for accessing api
+import { apiPost } from '../utils/apiHelper';
 
 function RegisterForm(props) {
  	// state variables
     const [name, setName] = useState("");
+    const [nameError, setNameError] = useState(" ");
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(" ");
     const [password, setPassword] = useState("");
@@ -24,11 +27,19 @@ function RegisterForm(props) {
     const emptyError = "Please fill out this field";
 
     function handleRegister() {
-        // setError functions are asynchronous, so use local vars instead for login check
+        // setError functions are asynchronous, so use local vars instead for final check
+        var nameValid = false;
         var emailValid = false;
         var passwordValid = false;
+        var passwordConfirmValid = false;
 
-        // handle empty email/invalid syntax (" " error prevents form from looking hideous)
+        if (!name) {
+            setNameError(emptyError);
+        } else {
+            setNameError(" ");
+            nameValid = true;
+        }
+
         if (!email) {
             setEmailError(emptyError);
         } else if (!isEmail(email)) {
@@ -38,17 +49,26 @@ function RegisterForm(props) {
             emailValid = true;
         }
 
-        // handle empty password
+        const passwordLength = 6;
         if (!password) {
             setPasswordError(emptyError);
+        } else if (password.length < passwordLength) {
+            setPasswordError("Password must be at least " + passwordLength + " characters long")
         } else {
             setPasswordError(" ");
             passwordValid = true;
         }
 
+        if (passwordConfirm !== password) {
+            setPasswordConfirmError("Please make sure your passwords match");
+        } else {
+            setPasswordConfirmError(" ");
+            passwordConfirmValid = true;
+        }
+
         // TODO: add more fields
-        if (emailValid && passwordValid) {
-            
+        if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
+            console.log("REGISTERING :)");
         }
     }
 
@@ -60,7 +80,7 @@ function RegisterForm(props) {
                 label="Name"
                 value={name}
                 setValue={setName}
-                error={" "}
+                error={nameError}
             />
             <FormField
                 type="email"

@@ -6,10 +6,10 @@ import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 const icons = {
-    "user": <AccountCircleIcon/>,
-    "email": <EmailIcon/>,
-    "password": <LockIcon/>,
-    "passwordConfirm": <LockOpenIcon/>,
+    user: <AccountCircleIcon/>,
+    email: <EmailIcon/>,
+    password: <LockIcon/>,
+    passwordConfirm: <LockOpenIcon/>,
 }
 
 // Text field with icon - to be wrapped in a Form

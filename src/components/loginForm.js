@@ -12,6 +12,8 @@ import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
+// helper for accessing api
+import { apiPost } from '../utils/apiHelper'; 
 
 function LoginForm(props) {
  	// context + state variables
@@ -53,16 +55,22 @@ function LoginForm(props) {
             // TODO: call firebase login, pass email + password to api to handle login
             setLoading(true);
             (async () => {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({email: email, password: password})
-                });
                 // if login succeeds, set context user id and redirect to home page
-                const loginUserId = await response.json();
+                const bodyJson = {
+                    email: email,
+                    password: password 
+                }
+                const loginUserId = await apiPost('login', bodyJson);
+
+                // const response = await fetch('/api/login', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Accept': 'application/json',
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify({email: email, password: password})
+                // });
+                // const loginUserId = await response.json();
                 console.log("loginUserId: " + loginUserId);
                 setLoading(false);
                 if (!loginUserId) {
