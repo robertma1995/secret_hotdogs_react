@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Container } from '@material-ui/core';
 import { LoginForm, PageTitle } from '../components';
-import { LoginFormTest } from '../components';
 
 function Login() {
     return (
@@ -9,7 +8,7 @@ function Login() {
             <Box p={2}>
                 <PageTitle text="Login"/>
             </Box>
-            <LoginFormTest/>
+            <LoginForm/>
         </Container>
     );
 }
