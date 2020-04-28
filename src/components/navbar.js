@@ -21,7 +21,7 @@ function NavBar() {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <AppBar position="static" color="transparent" elevation="0">
+            <AppBar position="static" color="transparent" elevation={0}>
                 <Toolbar disableGutters>
                     <Typography variant="h4" className={classes.title}>
                         <Link href={routes.HOME} color="primary" underline="none">

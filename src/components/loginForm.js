@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-// material ui, email validator, loading spinner
-import { Box, Grid, Link, TextField, Typography } from '@material-ui/core';
+import React, { useContext, useState } from 'react';
+// material ui, email validator
+import Link from '@material-ui/core/Link';
 import isEmail from 'validator/lib/isEmail';
-import ProgressButton from './progressButton';
+// my components
 import Form from './form';
 import FormField from './formField';
 import FormButton from './formButton';
@@ -23,20 +23,12 @@ function LoginFormTest(props) {
     const [loading, setLoading] = useState(false);
     const emptyError = "Please fill out this field";
 
-    function handleEmailChange(email) {
-        setEmail(email);
-    }
-
-    function handlePasswordChange(password) {
-        setPassword(password);
-    }
-
     function handleLogin() {
         // setError functions are asynchronous, so use local vars instead for login check
         var emailValid = false;
         var passwordValid = false;
 
-        // handle empty email/invalid syntax
+        // handle empty email/invalid syntax (" " error prevents form from looking hideous)
         if (!email) {
             setEmailError(emptyError);
         } else if (!isEmail(email)) {

@@ -22,7 +22,7 @@ function FormField(props) {
                     type={type}
                     value={value}
                     onChange={(event) => setValue(event.target.value)}
-                    error={error.trim()}
+                    error={error.trim() !== ""}
                     helperText={error}
                     fullWidth
                 />
