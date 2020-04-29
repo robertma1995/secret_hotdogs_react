@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Box, Button, IconButton, Link, Snackbar, Typography }  from '@material-ui/core';
+import { Box, Button, IconButton, Snackbar, Typography }  from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CloseIcon from '@material-ui/icons/Close';
-import * as routes from '../utils/routes';
 
 function SuccessSnackbar(props) {
     // snackbar only open if parent opens it and not timed out

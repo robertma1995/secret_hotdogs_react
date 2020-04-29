@@ -1,57 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
-import { PageTitle } from '../components'; 
-import { UserContext } from '../userContext';
+import React from 'react';
+import { Box, Container } from '@material-ui/core';
+import { HomeHotdogGrid, PageTitle } from '../components'; 
 
-// index.php
-function Home() {
-    // context + state variables
-    const { userId, setCurrentUserId } = useContext(UserContext);
-    const [hotdogs, setHotdogs] = useState([]);
-
-    // console.log("home.js: userId = " + userId);
-
-    // similar to componentDidMount
-    useEffect(() => {
-        async function callBackendApi () {
-            const response = await fetch('/api/hotdogs');
-            const hotdogs = await response.json();
-            setHotdogs(hotdogs);
-        }
-        callBackendApi();
-    });
-    
-    // read a state variable by simply placing {} around the variable name
+function Home() {    
     return (
-        <div>
+        <Container>
             <Box p={2}>
                 <PageTitle text="Your Hotdogs"/>
             </Box>
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell> id </TableCell>
-                            <TableCell> title </TableCell>
-                            <TableCell> ingredients </TableCell>
-                            <TableCell> creator </TableCell>
-                            <TableCell> ts </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {hotdogs.map((hotdog) => (
-                            <TableRow key={hotdog.id}>
-                                <TableCell component="th" scope="row"> {hotdog.id} </TableCell>
-                                <TableCell> {hotdog.title} </TableCell>
-                                <TableCell> {hotdog.ingredients} </TableCell>
-                                <TableCell> {hotdog.creator} </TableCell>
-                                <TableCell> {hotdog.ts} </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+            <HomeHotdogGrid/>
+        </Container>
     );
 }
 

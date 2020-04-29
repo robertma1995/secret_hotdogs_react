@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-// material ui, email validator
-import { Box, Link, Snackbar, Typography }  from '@material-ui/core';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-// import Alert from '@material-ui/lab/Alert';
+// email validator
 import isEmail from 'validator/lib/isEmail';
 // my components
 import Form from './form';
 import FormField from './formField';
 import FormButton from './formButton';
-import FormFooter from './formFooter';
 import SuccessSnackbar from './successSnackbar';
 // routing
 import * as routes from '../utils/routes';
