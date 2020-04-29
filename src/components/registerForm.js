@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 // material ui, email validator
-import Link from '@material-ui/core/Link';
+import { Box, Link, Snackbar, Typography }  from '@material-ui/core';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+// import Alert from '@material-ui/lab/Alert';
 import isEmail from 'validator/lib/isEmail';
 // my components
 import Form from './form';
 import FormField from './formField';
 import FormButton from './formButton';
 import FormFooter from './formFooter';
+import SuccessSnackbar from './successSnackbar';
 // routing
-import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
 // helper for accessing api
 import { apiPost } from '../utils/apiHelper';
@@ -133,13 +135,14 @@ function RegisterForm(props) {
                 loading={loading}
                 handleClick={handleRegister}
             />
-            {registered && 
-                <FormFooter>
-                    Registration successful, head to <Link href={routes.LOGIN}> Login </Link> page
-                </FormFooter>
-            }
+            <SuccessSnackbar
+                parentOpen={!registered}
+                message="Registration successful"
+                action="LOGIN"
+                actionRoute={routes.LOGIN}
+            />
         </Form>
     );
 }
 
-export default withRouter(RegisterForm);
+export default RegisterForm;

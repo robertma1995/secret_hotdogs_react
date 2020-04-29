@@ -27,16 +27,29 @@ const theme = {
         ].join(','),
     },
     overrides: {
-        // white button text - contained Button "color" only changes background color
+        // white button text - Button "color" only changes background color
         MuiButton: {
             containedPrimary: {
                 color: '#ffffff'
-            }
+            },
+            textPrimary: {
+                color: '#ffffff',
+                // '&:hover': {
+                //     backgroundColor: '#fafafa'
+                // }
+            },
         },
         // font size for a TextField label
         MuiInputLabel: {
             root: {
                 fontSize: 14
+            }
+        },
+        // background color for a Snackbar
+        MuiSnackbarContent: {
+            root: {
+                backgroundColor: '#00e676'
+                // backgroundColor: '#00c853'
             }
         }
     }
