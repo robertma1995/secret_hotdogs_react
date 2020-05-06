@@ -23,7 +23,7 @@ function HomeHotdogGrid() {
     return (
         <Grid container spacing={3}>
             {hotdogs.map((hotdog) => (
-                <Grid item xs={6}>
+                <Grid item key={hotdog.id} xs={4}>
                     <HotdogCard
                         id={hotdog.id}
                         title={hotdog.title}

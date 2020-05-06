@@ -13,11 +13,11 @@ import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
 // helper for accessing api
-import { apiPost } from '../utils/apiHelper'; 
+import { apiPost, apiGetUser } from '../utils/apiHelper'; 
 
 function LoginForm(props) {
  	// context + state variables
-    const { userId, setCurrentUserId } = useContext(UserContext);
+    const { userId, setCurrentUserId,userName, setCurrentUserName } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(" ");
     const [password, setPassword] = useState("");
@@ -67,6 +67,11 @@ function LoginForm(props) {
                     setEmailError("Incorrect email or password");
                     setPasswordError("Incorrect email or password");
                 } else {
+                    // TODO: get user's other details (not firebase auth) from backend, then set context var
+                    const loginUser = await apiGetUser(loginUserId);
+                    console.log("loginUser: " + loginUser);
+                    console.log("loginUserName: " + loginUser.name);
+                    setCurrentUserName(loginUser.name);
                     setCurrentUserId(loginUserId);
                     props.history.push(routes.HOME);
                 }

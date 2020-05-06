@@ -9,10 +9,10 @@ const all = async () => {
             // note: each "row" is a "DocumentSnapshot": https://firebase.google.com/docs/reference/js/firebase.firestore.DocumentSnapshot
             let hotdogs = [];
             data.forEach(row => {
-                // add document id and convert timestamp to a Date
+                // add document id
                 formattedRow = row.data();
                 formattedRow["id"] = row.id;
-                formattedRow.ts = row.data().ts.toDate();
+                formattedRow.ts = row.data().ts.seconds;
                 hotdogs.push(formattedRow);
             });
             return resolve(hotdogs);

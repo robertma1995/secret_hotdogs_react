@@ -31,5 +31,22 @@ const register = async (name, email, password) => {
     });
 }
 
+// get user details given firebase auth id
+const get = async (id) => {
+    console.log("getting user with id: " + id);
+    return new Promise((resolve, reject) => {
+        dbindex.firebase.firestore().collection('users').doc(id).get()
+        .then(snapshot => {
+            console.log(snapshot.data());
+            return resolve(snapshot.data());
+        })
+        .catch(err => {
+            console.log(err);
+            return reject(err);
+        })
+    });
+}
+
 exports.login = login;
 exports.register = register;
+exports.get = get;

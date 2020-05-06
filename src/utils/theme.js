@@ -51,7 +51,20 @@ const theme = {
                 backgroundColor: '#00e676'
                 // backgroundColor: '#00c853'
             }
-        }
+        },
+        // hotdog grid item size
+        MuiCard: {
+            root: {
+                // maxWidth: 300,
+            }
+        },
+        // height has to be specified for cardmedia, otherwise image invisible
+        MuiCardMedia: {
+            root: {
+                height: 0,
+                paddingTop: '100%',
+            }
+        },
     }
 }
 

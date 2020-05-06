@@ -3,11 +3,6 @@ import { AppBar, Toolbar, Typography, Button, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import * as routes from '../utils/routes';
 
-// TODO: currently using material ui "Link" - might need to replace with react-router-dom "Link"
-// when using dynamic paths...
-// import { Link } from 'react-router-dom'; 
-
-
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,

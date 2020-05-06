@@ -26,6 +26,18 @@ router.get('/api/hotdogs', async (req, res) => {
     }
 });
 
+// gets details of user from "users" collection (not firebase.auth)
+router.get('/api/users/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        let user = await DB.users.get(id);
+        res.json(user);
+    } catch(e) {
+        console.log(e);
+        res.json(false);
+    }
+});
+
 // login: returns user id if successful, false otherwise
 router.post('/api/login', async (req, res) => {
     const { email, password } = req.body;

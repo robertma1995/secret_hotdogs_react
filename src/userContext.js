@@ -13,14 +13,19 @@ const UserContext = React.createContext();
 
 // import UserContextProvider wrapper in App.js (parent)
 function UserContextProvider(props) {
-	const [userId, setUserId] = useState("initial id");
+	const [userId, setUserId] = useState(null);
+	const [userName, setUserName] = useState(null);
 
 	function setCurrentUserId(id) {
 		setUserId(userId => id);
 	}
 
+	function setCurrentUserName(name) {
+		setUserName(userName => name);
+	}
+
 	return (
-		<UserContext.Provider value={{ userId, setCurrentUserId }}>
+		<UserContext.Provider value={{ userId, setCurrentUserId, userName, setCurrentUserName }}>
 			{props.children}
 		</UserContext.Provider>
 	);

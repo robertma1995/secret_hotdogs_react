@@ -13,6 +13,13 @@ async function apiPost(path, bodyJson) {
     return response.json();
 }
 
+// await apiGet('users/' + loginUserId)
+async function apiGetUser(id) {
+    const response = await fetch('/api/users/' + id);
+    return response.json();
+}
+
 export {
-    apiPost
+    apiPost,
+    apiGetUser
 }
