@@ -19,7 +19,7 @@ function NavBar(props) {
     return (
         <AppBar position="static" color="transparent" elevation={0}>
             <Toolbar disableGutters>
-                <Box display="flex" width={1}>
+                <Box display="flex" alignItems="center" width={1}>
                     <Box flexGrow={1}>
                         <Typography variant="h4">
                             <Link href={routes.HOME} color="primary" underline="none">
