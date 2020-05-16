@@ -23,7 +23,6 @@ function ProgressButton(props) {
     return (
         <div className={classes.wrapper}>
             <Button
-                href="#" 
                 color="primary" 
                 variant="contained"
                 disabled={loading}

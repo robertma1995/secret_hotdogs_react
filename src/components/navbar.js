@@ -6,10 +6,15 @@ import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
 
-function NavBar() { 
+function NavBar(props) { 
     const { userId, setCurrentUserId, userName, setCurrentUserName } = useContext(UserContext);
     
-    // TODO: change navbar depending on if user is logged in - useEffect?
+    // unset context vars and redirect to login page
+    function handleLogout() {
+        setCurrentUserId(null);
+        setCurrentUserName(null);
+        props.history.push(routes.LOGIN);
+    }
 
     return (
         <AppBar position="static" color="transparent" elevation={0}>
@@ -23,8 +28,17 @@ function NavBar() {
                         </Typography>
                     </Grid>
                     <Grid item>
-                        { userId && <Button href={routes.LOGIN} color="primary" variant="contained" disableElevation> Logout </Button> }
                         { !userId && <Button href={routes.LOGIN} color="primary" variant="contained" disableElevation> Login </Button> }
+                        { userId && 
+                            <Button 
+                                color="primary" 
+                                variant="contained" 
+                                disableElevation
+                                onClick={() => handleLogout()}
+                            > 
+                                Logout 
+                            </Button>
+                        }
                     </Grid>
                 </Grid>
             </Toolbar>
@@ -32,4 +46,4 @@ function NavBar() {
     );
 }
 
-export default NavBar;
+export default withRouter(NavBar);
