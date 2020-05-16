@@ -27,6 +27,13 @@ function NavBar(props) {
                             </Link>
                         </Typography>
                     </Box>
+                    { userId &&
+                        <Box p={2}>
+                            <Typography variant="subtitle" color="textSecondary">
+                                Welcome, {userName}!
+                            </Typography>
+                        </Box>
+                    }
                     <Box>
                         { !userId && <Button href={routes.LOGIN} color="primary" variant="contained" disableElevation> Login </Button> }
                         { userId &&
