@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { AppBar, Grid, Toolbar, Typography, Button, Link } from '@material-ui/core';
+import { AppBar, Button, Grid, Link, Toolbar, Typography, } from '@material-ui/core';
 // routing
 import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
@@ -23,7 +23,8 @@ function NavBar() {
                         </Typography>
                     </Grid>
                     <Grid item>
-                        <Button href={routes.LOGIN} color="primary" variant="contained" disableElevation> Login </Button>
+                        { userId && <Button href={routes.LOGIN} color="primary" variant="contained" disableElevation> Logout </Button> }
+                        { !userId && <Button href={routes.LOGIN} color="primary" variant="contained" disableElevation> Login </Button> }
                     </Grid>
                 </Grid>
             </Toolbar>

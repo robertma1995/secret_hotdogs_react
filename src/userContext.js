@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // User context - currently only holds the id of the currently logged in user
 // id is set to null if not logged in
@@ -13,25 +13,42 @@ const UserContext = React.createContext();
 
 // import UserContextProvider wrapper in App.js (parent)
 function UserContextProvider(props) {
-	const [userId, setUserId] = useState(null);
-	const [userName, setUserName] = useState(null);
+    const [userId, setUserId] = useState(null);
+    const [userName, setUserName] = useState(null);
 
-	function setCurrentUserId(id) {
-		setUserId(userId => id);
-	}
+    function setCurrentUserId(id) {
+        setUserId(userId => id);
+    }
 
-	function setCurrentUserName(name) {
-		setUserName(userName => name);
-	}
+    function setCurrentUserName(name) {
+        setUserName(userName => name);
+    }
+    
+    // persist context if page refreshes/rerouted to different page
+    useEffect(() => {
+        const id = sessionStorage.getItem('userId');
+        const name = sessionStorage.getItem('userName');
+        setUserId(id);
+        setUserName(name);
+    }, []);
 
-	return (
-		<UserContext.Provider value={{ userId, setCurrentUserId, userName, setCurrentUserName }}>
-			{props.children}
-		</UserContext.Provider>
-	);
+    // save context to session whenever variable changes
+    useEffect(() => {
+        sessionStorage.setItem('userId', JSON.stringify(userId));
+    }, [userId]);
+
+    useEffect(() => {
+        sessionStorage.setItem('userName', JSON.stringify(userName));
+    }, [userName]);
+
+    return (
+        <UserContext.Provider value={{ userId, setCurrentUserId, userName, setCurrentUserName }}>
+            {props.children}
+        </UserContext.Provider>
+    );
 }
 
 export {
-	UserContext,
-	UserContextProvider,
+    UserContext,
+    UserContextProvider,
 };
