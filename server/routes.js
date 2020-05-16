@@ -11,11 +11,7 @@ router.get('/api/hello', (req, res, next) => {
     res.json('Hello World :)');
 });
 
-// TODO: need a route for inserting hotdog details too 
-// use await fetch(...method: 'POST', body: <hotdog details as JSON>) in frontend (e.g. home.js, add.js)
-//      https://stackoverflow.com/questions/29775797/fetch-post-json-data
-// and in this file (routes.js), maybe use router.post, then use the "req" variable to get the <hotdog details>
-//      https://expressjs.com/en/guide/routing.html
+// gets all hotdogs
 router.get('/api/hotdogs', async (req, res) => {
     try {
         let hotdogs = await DB.hotdogs.all();

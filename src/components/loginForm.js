@@ -52,10 +52,9 @@ function LoginForm(props) {
             console.log("Email: " + email);
             console.log("Password: " + password);
             console.log("Current user id: " + userId);
-            // TODO: call firebase login, pass email + password to api to handle login
             setLoading(true);
+            // if login succeeds, set context user id and redirect to home page
             (async () => {
-                // if login succeeds, set context user id and redirect to home page
                 const bodyJson = {
                     email: email,
                     password: password 
@@ -67,9 +66,7 @@ function LoginForm(props) {
                     setEmailError("Incorrect email or password");
                     setPasswordError("Incorrect email or password");
                 } else {
-                    // TODO: get user's other details (not firebase auth) from backend, then set context var
                     const loginUser = await apiGetUser(loginUserId);
-                    console.log("loginUser: " + loginUser);
                     console.log("loginUserName: " + loginUser.name);
                     setCurrentUserName(loginUser.name);
                     setCurrentUserId(loginUserId);
