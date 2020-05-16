@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { AppBar, Button, Grid, Link, Toolbar, Typography, } from '@material-ui/core';
+import { AppBar, Box, Button, Grid, Link, Toolbar, Typography, } from '@material-ui/core';
 // routing
 import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
@@ -19,17 +19,17 @@ function NavBar(props) {
     return (
         <AppBar position="static" color="transparent" elevation={0}>
             <Toolbar disableGutters>
-                <Grid container justify="space-between">
-                    <Grid item>
+                <Box display="flex" width={1}>
+                    <Box flexGrow={1}>
                         <Typography variant="h4">
                             <Link href={routes.HOME} color="primary" underline="none">
                                 Secret Ninja Hotdogs
                             </Link>
                         </Typography>
-                    </Grid>
-                    <Grid item>
+                    </Box>
+                    <Box>
                         { !userId && <Button href={routes.LOGIN} color="primary" variant="contained" disableElevation> Login </Button> }
-                        { userId && 
+                        { userId &&
                             <Button 
                                 color="primary" 
                                 variant="contained" 
@@ -39,11 +39,31 @@ function NavBar(props) {
                                 Logout 
                             </Button>
                         }
-                    </Grid>
-                </Grid>
+                    </Box>
+                </Box>
             </Toolbar>
         </AppBar>
     );
 }
+
+/*
+{ userId &&
+    <Grid container justify="space-between">
+        <Grid item>
+            Arisette
+        </Grid>
+        <Grid item>
+            <Button 
+                color="primary" 
+                variant="contained" 
+                disableElevation
+                onClick={() => handleLogout()}
+            > 
+                Logout 
+            </Button>
+        </Grid>
+    </Grid>
+}
+*/
 
 export default withRouter(NavBar);

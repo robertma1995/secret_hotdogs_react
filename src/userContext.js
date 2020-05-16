@@ -34,19 +34,11 @@ function UserContextProvider(props) {
 
     // save context to session whenever variable changes (delete from session if variable set to null)
     useEffect(() => {
-        if (!userId) {
-            sessionStorage.removeItem('userId');
-        } else {
-            sessionStorage.setItem('userId', JSON.stringify(userId));
-        }
+        sessionStorage.setItem('userId', userId);
     }, [userId]);
 
     useEffect(() => {
-        if (!userName) {
-            sessionStorage.removeItem('userName');
-        } else {
-            sessionStorage.setItem('userName', JSON.stringify(userName));
-        }
+        sessionStorage.setItem('userName', userName);
     }, [userName]);
 
     return (
