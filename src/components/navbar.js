@@ -1,32 +1,33 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Link } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useContext, useState } from 'react';
+import { AppBar, Grid, Toolbar, Typography, Button, Link } from '@material-ui/core';
+// routing
+import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-    },
-    title: {
-        flexGrow: 1,
-    },
-}));
+// context
+import { UserContext } from '../userContext';
 
 function NavBar() { 
-    const classes = useStyles();
+    const { userId, setCurrentUserId, userName, setCurrentUserName } = useContext(UserContext);
+    
+    // TODO: change navbar depending on if user is logged in - useEffect?
+
     return (
-        <div className={classes.root}>
-            <AppBar position="static" color="transparent" elevation={0}>
-                <Toolbar disableGutters>
-                    <Typography variant="h4" className={classes.title}>
-                        <Link href={routes.HOME} color="primary" underline="none">
-                            Secret Ninja Hotdogs
-                        </Link>
-                    </Typography>
-                    <Button href={routes.LOGIN} color="primary" variant="contained" disableElevation> Login </Button>
-                </Toolbar>
-            </AppBar>
-        </div>
+        <AppBar position="static" color="transparent" elevation={0}>
+            <Toolbar disableGutters>
+                <Grid container justify="space-between">
+                    <Grid item>
+                        <Typography variant="h4">
+                            <Link href={routes.HOME} color="primary" underline="none">
+                                Secret Ninja Hotdogs
+                            </Link>
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <Button href={routes.LOGIN} color="primary" variant="contained" disableElevation> Login </Button>
+                    </Grid>
+                </Grid>
+            </Toolbar>
+        </AppBar>
     );
 }
 

@@ -17,7 +17,7 @@ import { apiPost, apiGetUser } from '../utils/apiHelper';
 
 function LoginForm(props) {
  	// context + state variables
-    const { userId, setCurrentUserId,userName, setCurrentUserName } = useContext(UserContext);
+    const { userId, setCurrentUserId, userName, setCurrentUserName } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(" ");
     const [password, setPassword] = useState("");
@@ -49,9 +49,6 @@ function LoginForm(props) {
         }
 
         if (emailValid && passwordValid) {
-            console.log("Email: " + email);
-            console.log("Password: " + password);
-            console.log("Current user id: " + userId);
             setLoading(true);
             // if login succeeds, set context user id and redirect to home page
             (async () => {
