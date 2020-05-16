@@ -46,24 +46,4 @@ function NavBar(props) {
     );
 }
 
-/*
-{ userId &&
-    <Grid container justify="space-between">
-        <Grid item>
-            Arisette
-        </Grid>
-        <Grid item>
-            <Button 
-                color="primary" 
-                variant="contained" 
-                disableElevation
-                onClick={() => handleLogout()}
-            > 
-                Logout 
-            </Button>
-        </Grid>
-    </Grid>
-}
-*/
-
 export default withRouter(NavBar);
