@@ -17,7 +17,7 @@ import { apiPost, apiGetUser } from '../utils/apiHelper';
 
 function LoginForm(props) {
  	// context + state variables
-    const { userId, setCurrentUserId, userName, setCurrentUserName } = useContext(UserContext);
+    const { setCurrentUserId, setCurrentUserName } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(" ");
     const [password, setPassword] = useState("");

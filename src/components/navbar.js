@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 // material ui
-import { AppBar, Box, Button, Grid, Toolbar, Typography, } from '@material-ui/core';
+import { AppBar, Box, Button, Toolbar, Typography, } from '@material-ui/core';
 // routing
 import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
@@ -33,7 +33,7 @@ function NavBar(props) {
                     { userId &&
                         // TODO: instead of a welcome message, display user avatar with dropdown menu
                         <Box p={2}>
-                            <Typography variant="subtitle" color="textSecondary">
+                            <Typography variant="subtitle1" color="textSecondary">
                                 Welcome, {userName}!
                             </Typography>
                         </Box>

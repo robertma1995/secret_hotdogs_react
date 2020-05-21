@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Grid } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import { UserContext } from '../userContext';
 import HotdogCard from './hotdogCard';
 
 function HomeHotdogGrid() {
     // context + state variables
-    const { userId, setCurrentUserId } = useContext(UserContext);
+    const { userId } = useContext(UserContext);
     const [hotdogs, setHotdogs] = useState([]);
 
     // console.log("home.js: userId = " + userId);
