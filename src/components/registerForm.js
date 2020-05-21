@@ -132,7 +132,7 @@ function RegisterForm(props) {
                 handleClick={handleRegister}
             />
             <SuccessSnackbar
-                parentOpen={!registered}
+                parentOpen={registered}
                 message="Registration successful"
                 action="LOGIN"
                 actionRoute={routes.LOGIN}
