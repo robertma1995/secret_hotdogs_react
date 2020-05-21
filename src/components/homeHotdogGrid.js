@@ -10,14 +10,12 @@ function HomeHotdogGrid() {
 
     // console.log("home.js: userId = " + userId);
 
-    // similar to componentDidMount
     useEffect(() => {
-        async function callBackendApi () {
+        (async () => {
             const response = await fetch('/api/hotdogs');
-            const hotdogs = await response.json();
-            setHotdogs(hotdogs);
-        }
-        callBackendApi();
+            const hotdogsJson = await response.json();
+            setHotdogs(hotdogsJson);
+        })();
     });
 
     return (
