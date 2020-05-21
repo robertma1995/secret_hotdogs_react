@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Button, IconButton, Link, Snackbar, Typography }  from '@material-ui/core';
+// material ui
+import { Box, Button, IconButton, Snackbar, Typography }  from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CloseIcon from '@material-ui/icons/Close';
-import { Link as RouterLink } from 'react-router-dom';
+// my components
+import RouterLink from './routerLink';
 
 function SuccessSnackbar(props) {
     // snackbar only open if parent opens it and not timed out
@@ -35,14 +37,9 @@ function SuccessSnackbar(props) {
     const snackbarAction = (
         <div>
             <Button color="primary" disableElevation> 
-                <Link
-                    component={RouterLink}
-                    color="secondary"
-                    underline="none"
-                    to={actionRoute}
-                >
+                <RouterLink color="secondary" underline="none" to={actionRoute}>
                     {action}
-                </Link>
+                </RouterLink>
             </Button>
             <IconButton size="small" aria-label="close" onClick={handleClose}>
                 <CloseIcon color="secondary" fontSize="small"/>

@@ -1,15 +1,14 @@
 import React, { useContext, useState } from 'react';
-// material ui, email validator
-import Link from '@material-ui/core/Link';
+// email validator
 import isEmail from 'validator/lib/isEmail';
 // my components
 import Form from './form';
 import FormField from './formField';
 import FormButton from './formButton';
 import FormFooter from './formFooter';
+import RouterLink from './routerLink';
 // routing
 import { withRouter } from 'react-router-dom';
-import { Link as RouterLink } from 'react-router-dom';
 import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
@@ -98,7 +97,7 @@ function LoginForm(props) {
                 handleClick={handleLogin}
             />
             <FormFooter>
-                Don't have an account? <Link component={RouterLink} to={routes.REGISTER}> Sign Up </Link>
+                Don't have an account? <RouterLink color="primary" underline="hover" to={routes.REGISTER}> Sign Up </RouterLink>
             </FormFooter>
         </Form>
     );

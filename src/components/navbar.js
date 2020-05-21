@@ -1,9 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { AppBar, Box, Button, Grid, Link, Toolbar, Typography, } from '@material-ui/core';
+// material ui
+import { AppBar, Box, Button, Grid, Toolbar, Typography, } from '@material-ui/core';
 // routing
 import { withRouter } from 'react-router-dom';
-import { Link as RouterLink } from 'react-router-dom';
 import * as routes from '../utils/routes';
+// my components
+import RouterLink from './routerLink';
 // context
 import { UserContext } from '../userContext';
 
@@ -23,14 +25,9 @@ function NavBar(props) {
                 <Box display="flex" alignItems="center" width={1}>
                     <Box flexGrow={1}>
                         <Typography variant="h4">
-                            <Link
-                                component={RouterLink}
-                                color="primary" 
-                                underline="none"
-                                to={routes.HOME}
-                            >
+                            <RouterLink color="primary" underline="none" to={routes.HOME}>
                                 Secret Ninja Hotdogs
-                            </Link>
+                            </RouterLink>
                         </Typography>
                     </Box>
                     { userId &&
@@ -44,14 +41,9 @@ function NavBar(props) {
                     <Box>
                         { !userId && 
                             <Button color="primary" variant="contained" disableElevation> 
-                                <Link
-                                    component={RouterLink}
-                                    color="secondary"
-                                    underline="none"
-                                    to={routes.LOGIN}
-                                >
+                                <RouterLink color="secondary" underline="none" to={routes.LOGIN}>
                                     Login
-                                </Link>
+                                </RouterLink>
                             </Button>
                         }
                         { userId &&
@@ -60,7 +52,7 @@ function NavBar(props) {
                                 variant="contained" 
                                 disableElevation
                                 onClick={() => handleLogout()}
-                            > 
+                            >
                                 Logout 
                             </Button>
                         }
