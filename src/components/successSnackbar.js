@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Button, IconButton, Snackbar, Typography }  from '@material-ui/core';
+import { Box, Button, IconButton, Link, Snackbar, Typography }  from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CloseIcon from '@material-ui/icons/Close';
+import { Link as RouterLink } from 'react-router-dom';
 
 function SuccessSnackbar(props) {
     // snackbar only open if parent opens it and not timed out
@@ -33,8 +34,15 @@ function SuccessSnackbar(props) {
     // TODO: may generalize to add onclick functionality to action button
     const snackbarAction = (
         <div>
-            <Button href={actionRoute} color="primary" disableElevation> 
-                {action} 
+            <Button color="primary" disableElevation> 
+                <Link
+                    component={RouterLink}
+                    color="secondary"
+                    underline="none"
+                    to={actionRoute}
+                >
+                    {action}
+                </Link>
             </Button>
             <IconButton size="small" aria-label="close" onClick={handleClose}>
                 <CloseIcon color="secondary" fontSize="small"/>

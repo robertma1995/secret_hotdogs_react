@@ -9,6 +9,7 @@ import FormButton from './formButton';
 import FormFooter from './formFooter';
 // routing
 import { withRouter } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
@@ -97,7 +98,7 @@ function LoginForm(props) {
                 handleClick={handleLogin}
             />
             <FormFooter>
-                Don't have an account? <Link href={routes.REGISTER}> Sign Up </Link>
+                Don't have an account? <Link component={RouterLink} to={routes.REGISTER}> Sign Up </Link>
             </FormFooter>
         </Form>
     );
