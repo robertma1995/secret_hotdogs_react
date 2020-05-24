@@ -4,12 +4,16 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EmailIcon from '@material-ui/icons/Email';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import RestaurantIcon from '@material-ui/icons/Restaurant';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 const icons = {
     user: <AccountCircleIcon/>,
     email: <EmailIcon/>,
     password: <LockIcon/>,
     passwordConfirm: <LockOpenIcon/>,
+    hotdogTitle: <RestaurantIcon/>,
+    ingredients: <ShoppingCartIcon/>,
 }
 
 // Text field with icon - to be wrapped in a Form

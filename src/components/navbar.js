@@ -32,10 +32,19 @@ function NavBar(props) {
                     </Box>
                     { userId &&
                         // TODO: instead of a welcome message, display user avatar with dropdown menu
-                        <Box p={2}>
+                        <Box p={1}>
                             <Typography variant="subtitle1" color="textSecondary">
                                 Welcome, {userName}!
                             </Typography>
+                        </Box>
+                    }
+                    { userId && 
+                        <Box p={1}>
+                            <Button color="primary" variant="contained" disableElevation> 
+                                <RouterLink color="secondary" underline="none" to={routes.ADD}>
+                                    Add a hotdog
+                                </RouterLink>
+                            </Button>
                         </Box>
                     }
                     <Box>
