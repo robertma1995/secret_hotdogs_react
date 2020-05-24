@@ -24,5 +24,27 @@ const all = async () => {
     });
 }
 
+// returns all hotdogs where creator == given user id
+const getCreatedBy = async (id) => {
+    return new Promise((resolve, reject) => {
+        dbindex.firebase.firestore().collection('hotdogs').where("creator", "==", id).get()
+        .then(data => {
+            let hotdogs = [];
+            data.forEach(row => {
+                // add document id
+                formattedRow = row.data();
+                formattedRow["id"] = row.id;
+                formattedRow.ts = row.data().ts.seconds;
+                hotdogs.push(formattedRow);
+            });
+            return resolve(hotdogs);
+        })
+        .catch(err => {
+            console.log(err);
+            return reject(err);
+        })
+    });
+}
+
 exports.all = all;
-// TODO: define all hotdog table stuff here (i.e. get, insert, update, etc.)
+exports.getCreatedBy = getCreatedBy;

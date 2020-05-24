@@ -11,8 +11,8 @@ router.get('/api/hello', (req, res, next) => {
     res.json('Hello World :)');
 });
 
-// gets all hotdogs
-router.get('/api/hotdogs', async (req, res) => {
+// gets all hotdogs of every user
+router.get('/api/hotdogs/all', async (req, res) => {
     try {
         let hotdogs = await DB.hotdogs.all();
         res.json(hotdogs);
@@ -21,6 +21,32 @@ router.get('/api/hotdogs', async (req, res) => {
         res.sendStatus(500);
     }
 });
+
+// gets all hotdogs belonging to a specific user
+router.get('/api/hotdogs/createdBy/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        let hotdogs = await DB.hotdogs.getCreatedBy(id);
+        res.json(hotdogs);
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+// TODO: add a new hotdog
+/*
+router.post('/api/hotdogs/add', async (req, res) => {
+    
+});
+*/
+
+// TODO (when hotdogs get likes and comments): gets hotdog given hotdog id 
+/*
+router.get('/api/hotdogs/:id', async (req, res) => {
+    ...DB.hotdogs.get(id);
+});
+*/
 
 // gets details of user from "users" collection (not firebase.auth)
 router.get('/api/users/:id', async (req, res) => {

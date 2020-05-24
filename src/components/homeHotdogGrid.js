@@ -10,9 +10,10 @@ function HomeHotdogGrid() {
 
     // console.log("home.js: userId = " + userId);
 
+    // display hotdogs created by current user
     useEffect(() => {
         (async () => {
-            const response = await fetch('/api/hotdogs');
+            const response = await fetch('/api/hotdogs/createdBy/' + userId);
             const hotdogsJson = await response.json();
             setHotdogs(hotdogsJson);
         })();

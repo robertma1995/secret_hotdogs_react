@@ -28,7 +28,7 @@ function HotdogCard(props) {
             />
             <CardContent>
                 <Typography variant="body2" color="textSecondary">
-                    {ingredients}
+                    {ingredients} - created by "{creator}"
                 </Typography>
             </CardContent>
             <CardActions>
