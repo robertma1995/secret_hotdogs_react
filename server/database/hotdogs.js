@@ -27,7 +27,7 @@ const all = async () => {
 // returns all hotdogs where creator == given user id
 const getCreatedBy = async (id) => {
     return new Promise((resolve, reject) => {
-        dbindex.firebase.firestore().collection('hotdogs').where("creator", "==", id).get()
+        dbindex.firebase.firestore().collection('hotdogs').where("creatorId", "==", id).get()
         .then(data => {
             let hotdogs = [];
             data.forEach(row => {

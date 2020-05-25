@@ -27,7 +27,8 @@ function HomeHotdogGrid() {
                         id={hotdog.id}
                         title={hotdog.title}
                         ingredients={hotdog.ingredients}
-                        creator={hotdog.creator}
+                        creatorId={hotdog.creatorId}
+                        creatorName={hotdog.creatorName}
                         ts={hotdog.ts}
                     />
                 </Grid>

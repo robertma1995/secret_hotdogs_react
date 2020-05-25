@@ -3,7 +3,7 @@ import { Avatar, Card, CardHeader, CardMedia, CardContent, CardActions, IconButt
 import FavoriteIcon from '@material-ui/icons/Favorite';
 
 function HotdogCard(props) {
-    const { id, title, ingredients, creator, ts } = props;
+    const { id, title, ingredients, creatorId, creatorName, ts } = props;
 
     var date = new Date(1970, 0, 1);
     date.setTime(ts * 1000);
@@ -15,6 +15,8 @@ function HotdogCard(props) {
             A
         </Avatar>
     );
+
+    // TODO: use regex to separate ingredients string into array
 
     return (
         <Card>
@@ -28,7 +30,7 @@ function HotdogCard(props) {
             />
             <CardContent>
                 <Typography variant="body2" color="textSecondary">
-                    {ingredients} - created by "{creator}"
+                    {ingredients} - created by "{creatorId}" AKA "{creatorName}"
                 </Typography>
             </CardContent>
             <CardActions>
