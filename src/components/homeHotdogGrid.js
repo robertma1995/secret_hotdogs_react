@@ -26,7 +26,6 @@ function HomeHotdogGrid() {
                     <HotdogCard
                         id={hotdog.id}
                         title={hotdog.title}
-                        // TODO: might not be able to pass json object through props
                         ingredients={hotdog.ingredients}
                         creatorId={hotdog.creatorId}
                         creatorName={hotdog.creatorName}

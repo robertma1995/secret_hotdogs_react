@@ -65,6 +65,12 @@ const theme = {
                 paddingTop: '100%',
             }
         },
+        // capitalize ListItemText
+        MuiListItem: {
+            root: {
+                textTransform: "capitalize"
+            }
+        },
     }
 }
 

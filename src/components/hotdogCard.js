@@ -1,6 +1,15 @@
 import React from 'react';
-import { Avatar, Card, CardHeader, CardMedia, CardContent, CardActions, IconButton, Typography } from '@material-ui/core';
+import { 
+    Avatar, 
+    IconButton, 
+    Typography,
+    Card, CardHeader, CardMedia, CardContent, CardActions, 
+    List, ListItem, ListItemIcon, ListItemText, ListSubheader
+} from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import OutdoorGrillIcon from '@material-ui/icons/OutdoorGrill';
+import WavesIcon from '@material-ui/icons/Waves';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 function HotdogCard(props) {
     const { id, title, ingredients, creatorId, creatorName, ts } = props;
@@ -15,9 +24,7 @@ function HotdogCard(props) {
         <Avatar>
             {creatorName.charAt(0).toUpperCase()}
         </Avatar>
-    );
-
-    // TODO: 
+    ); 
 
     return (
         <Card>
@@ -30,9 +37,29 @@ function HotdogCard(props) {
                 image="https://www.svgrepo.com/show/133687/hot-dog.svg"
             />
             <CardContent>
-                <Typography variant="body2" color="textSecondary">
-                    {ingredients["sausage"]}, {ingredients["sauce"]}, {ingredients["toppingA"]}, {ingredients["toppingB"]}
-                </Typography>
+                <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}>
+                    <ListItem divider>
+                        <ListItemIcon>
+                            <OutdoorGrillIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary={ingredients["sausage"]}/>
+                    </ListItem>
+                    <ListItem divider>
+                        <ListItemIcon>
+                            <WavesIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary={ingredients["sauce"]}/>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemIcon>
+                            <ShoppingCartIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary={ingredients["toppingA"]}/>
+                    </ListItem>
+                    <ListItem divider>
+                        <ListItemText inset primary={ingredients["toppingB"]}/>
+                    </ListItem>
+                </List>
             </CardContent>
             <CardActions>
                 <IconButton>
@@ -42,5 +69,11 @@ function HotdogCard(props) {
         </Card>
     );
 }
+
+/*
+<Typography variant="body2" color="textSecondary">
+    {ingredients["sausage"]}, {ingredients["sauce"]}, {ingredients["toppingA"]}, {ingredients["toppingB"]}
+</Typography>
+*/
 
 export default HotdogCard;
