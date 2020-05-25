@@ -17,12 +17,11 @@ const register = async (name, email, password) => {
     return new Promise((resolve, reject) => {
         dbindex.firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(credential => {
-            // TODO: test if hotdogs needs to be set manually
+            // add to users collection and set name if register successful
             const userId = credential.user.uid;
             dbindex.firebase.firestore().collection('users')
             .doc(userId).set({
-                name: name,
-                hotdogs: [],
+                name: name
             })
             .then(() => resolve(userId))
             .catch(err => reject(err));
@@ -35,14 +34,8 @@ const register = async (name, email, password) => {
 const get = async (id) => {
     return new Promise((resolve, reject) => {
         dbindex.firebase.firestore().collection('users').doc(id).get()
-        .then(snapshot => {
-            console.log(snapshot.data());
-            return resolve(snapshot.data());
-        })
-        .catch(err => {
-            console.log(err);
-            return reject(err);
-        })
+        .then(snapshot => resolve(snapshot.data()))
+        .catch(err => reject(err));
     });
 }
 

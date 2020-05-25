@@ -15,12 +15,9 @@ const all = async () => {
                 formattedRow.ts = row.data().ts.seconds;
                 hotdogs.push(formattedRow);
             });
-            return resolve(hotdogs);
+            resolve(hotdogs);
         })
-        .catch(err => {
-            console.log(err);
-            return reject(err);
-        })
+        .catch(err => reject(err))
     });
 }
 
@@ -37,12 +34,9 @@ const getCreatedBy = async (id) => {
                 formattedRow.ts = row.data().ts.seconds;
                 hotdogs.push(formattedRow);
             });
-            return resolve(hotdogs);
+            resolve(hotdogs);
         })
-        .catch(err => {
-            console.log(err);
-            return reject(err);
-        })
+        .catch(err => reject(err))
     });
 }
 
