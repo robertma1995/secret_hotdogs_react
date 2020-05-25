@@ -12,7 +12,7 @@ function HotdogCard(props) {
     // TODO: letter avatar based on creator's name
     const avatar = (
         <Avatar>
-            A
+            {creatorName.charAt(0).toUpperCase()}
         </Avatar>
     );
 
