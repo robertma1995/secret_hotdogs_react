@@ -16,7 +16,7 @@ import { UserContext } from '../userContext';
 import { apiPost, apiGetUser } from '../utils/apiHelper'; 
 
 function LoginForm(props) {
- 	// context + state variables
+ 	// context + state variables (default error " " prevents form from looking ugly)
     const { setCurrentUserId, setCurrentUserName } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(" ");
@@ -30,17 +30,18 @@ function LoginForm(props) {
         var emailValid = false;
         var passwordValid = false;
 
-        // handle empty email/invalid syntax (" " error prevents form from looking hideous)
-        if (!email) {
+        // remove trailing whitespace from email before checking validity
+        const emailTrimmed = email.trim();
+        if (!emailTrimmed) {
             setEmailError(emptyError);
-        } else if (!isEmail(email)) {
+        } else if (!isEmail(emailTrimmed)) {
             setEmailError("Invalid email");
         } else {
             setEmailError(" ");
             emailValid = true;
         }
+        setEmail(emailTrimmed);
 
-        // handle empty password
         if (!password) {
             setPasswordError(emptyError);
         } else {
@@ -52,9 +53,10 @@ function LoginForm(props) {
             setLoading(true);
             // if login succeeds, set context user id and redirect to home page
             (async () => {
+                // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
                 const bodyJson = {
-                    email: email,
-                    password: password 
+                    email: email.trim(),
+                    password: password
                 }
                 const loginUserId = await apiPost('login', bodyJson);
                 console.log("loginUserId: " + loginUserId);
@@ -76,7 +78,7 @@ function LoginForm(props) {
     return (
         <Form>
             <FormField
-                type="email"
+                type="text"
                 iconName="email"
                 label="Email"
                 value={email}
