@@ -11,6 +11,27 @@ import { UserContext } from '../userContext';
 // helper for accessing api
 import { apiPost } from '../utils/apiHelper';
 
+
+// helper: trims form input and checks validity (no special characters)
+function isValid(input, setInput, setInputError) {
+    var inputValid = false;
+    const emptyError = "Please fill out this field";
+    const invalidError = "Invalid input - special characters not allowed";
+
+    const inputTrimmed = input.trim();
+    if (!inputTrimmed) {
+        setInputError(emptyError);
+    } else if (!inputTrimmed.match(/^[A-Za-z0-9]+$/g)) {
+        setInputError(invalidError);
+    } else {
+        setInputError(" ");
+        inputValid = true;
+    }
+    setInput(inputTrimmed);
+
+    return inputValid;
+}
+
 function AddForm() {
     const [title, setTitle] = useState("");
     const [titleError, setTitleError] = useState(" ");
@@ -25,11 +46,22 @@ function AddForm() {
     
     const [loading, setLoading] = useState(false);
     const [added, setAdded] = useState(false);
-    const emptyError = "Please fill out this field";
-    const invalidError = "Invalid input - ";
 
     function handleAdd() {
-        console.log("SUBMITTED NEW HOTDOG :)");
+        var titleValid, sausageValid, sauceValid, toppingAValid, toppingBValid;
+        titleValid = sausageValid = sauceValid = toppingAValid = toppingBValid = false;
+
+        titleValid = isValid(title, setTitle, setTitleError);
+        sausageValid = isValid(sausage, setSausage, setSausageError);
+        sauceValid = isValid(sauce, setSauce, setSauceError);
+        toppingAValid = isValid(toppingA, setToppingA, setToppingAError);
+        toppingBValid = isValid(toppingB, setToppingB, setToppingBError);
+
+        console.log("titleValid: " + titleValid);
+        console.log("sausageValid: " + sausageValid);
+        console.log("sauceValid: " + sauceValid);
+        console.log("toppingAValid: " + toppingAValid);
+        console.log("toppingBValid: " + toppingBValid);
     }
 
     return (
