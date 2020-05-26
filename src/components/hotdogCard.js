@@ -65,15 +65,9 @@ function HotdogCard(props) {
                 <IconButton>
                     <FavoriteIcon/>
                 </IconButton>
-            </CardActions>         
+            </CardActions>
         </Card>
     );
 }
-
-/*
-<Typography variant="body2" color="textSecondary">
-    {ingredients["sausage"]}, {ingredients["sauce"]}, {ingredients["toppingA"]}, {ingredients["toppingB"]}
-</Typography>
-*/
 
 export default HotdogCard;

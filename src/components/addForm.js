@@ -14,12 +14,19 @@ import { apiPost } from '../utils/apiHelper';
 function AddForm() {
     const [title, setTitle] = useState("");
     const [titleError, setTitleError] = useState(" ");
-    const [ing, setIng] = useState("");
-    const [ingError, setIngError] = useState(" ");
+    const [sausage, setSausage] = useState("");
+    const [sausageError, setSausageError] = useState(" ");
+    const [sauce, setSauce] = useState("");
+    const [sauceError, setSauceError] = useState(" ");
+    const [toppingA, setToppingA] = useState("");
+    const [toppingAError, setToppingAError] = useState(" ");
+    const [toppingB, setToppingB] = useState("");
+    const [toppingBError, setToppingBError] = useState(" ");
     
     const [loading, setLoading] = useState(false);
     const [added, setAdded] = useState(false);
     const emptyError = "Please fill out this field";
+    const invalidError = "Invalid input - ";
 
     function handleAdd() {
         console.log("SUBMITTED NEW HOTDOG :)");
@@ -37,11 +44,35 @@ function AddForm() {
             />
             <FormField
                 type="text"
-                iconName="ingredients"
-                label="Ingredients"
-                value={ing}
-                setValue={setIng}
-                error={ingError}
+                iconName="hotdogSausage"
+                label="Sausage"
+                value={sausage}
+                setValue={setSausage}
+                error={sausageError}
+            />
+            <FormField
+                type="text"
+                iconName="hotdogSauce"
+                label="Sauce"
+                value={sauce}
+                setValue={setSauce}
+                error={sauceError}
+            />
+            <FormField
+                type="text"
+                iconName="hotdogTopping"
+                label="Topping A"
+                value={toppingA}
+                setValue={setToppingA}
+                error={toppingAError}
+            />
+            <FormField
+                type="text"
+                iconName="none"
+                label="Topping B"
+                value={toppingB}
+                setValue={setToppingB}
+                error={toppingBError}
             />
             <FormButton
                 text="Submit"

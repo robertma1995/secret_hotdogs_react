@@ -5,6 +5,8 @@ import EmailIcon from '@material-ui/icons/Email';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import RestaurantIcon from '@material-ui/icons/Restaurant';
+import OutdoorGrillIcon from '@material-ui/icons/OutdoorGrill';
+import WavesIcon from '@material-ui/icons/Waves';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 const icons = {
@@ -13,10 +15,14 @@ const icons = {
     password: <LockIcon/>,
     passwordConfirm: <LockOpenIcon/>,
     hotdogTitle: <RestaurantIcon/>,
-    ingredients: <ShoppingCartIcon/>,
+    hotdogSausage: <OutdoorGrillIcon/>,
+    hotdogSauce: <WavesIcon/>,
+    hotdogTopping: <ShoppingCartIcon/>,
+    none: <ShoppingCartIcon color="secondary"/>,
 }
 
 // Text field with icon - to be wrapped in a Form
+// To display errors correctly, set error as " " if there is no error
 function FormField(props) {
     const { type, iconName, label, value, setValue, error } = props;
     return (

@@ -32,21 +32,26 @@ function RegisterForm(props) {
         var passwordValid = false;
         var passwordConfirmValid = false;
 
-        if (!name) {
+        // remove trailing whitespace before checking inputs
+        const nameTrimmed = name.trim();
+        if (!nameTrimmed) {
             setNameError(emptyError);
         } else {
             setNameError(" ");
             nameValid = true;
         }
+        setName(nameTrimmed);
 
-        if (!email) {
+        const emailTrimmed = email.trim();
+        if (!emailTrimmed) {
             setEmailError(emptyError);
-        } else if (!isEmail(email)) {
+        } else if (!isEmail(emailTrimmed)) {
             setEmailError("Invalid email");
         } else {
             setEmailError(" ");
             emailValid = true;
         }
+        setEmail(emailTrimmed);
 
         const passwordLength = 6;
         if (!password) {
@@ -66,7 +71,6 @@ function RegisterForm(props) {
         }
 
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
-            console.log("REGISTERING :)");
             setLoading(true);
             (async () => {
                 const bodyJson = {
@@ -103,7 +107,7 @@ function RegisterForm(props) {
                 error={nameError}
             />
             <FormField
-                type="email"
+                type="text"
                 iconName="email"
                 label="Email"
                 value={email}
