@@ -26,6 +26,8 @@ function RegisterForm(props) {
     const emptyError = "Please fill out this field";
 
     function handleRegister() {
+        // set added to false again to handle consecutive adds on same page (no reload)
+        setRegistered(false);
         // setError functions are asynchronous, so use local vars instead for final check
         var nameValid = false;
         var emailValid = false;
@@ -137,7 +139,8 @@ function RegisterForm(props) {
                 handleClick={handleRegister}
             />
             <SuccessSnackbar
-                parentOpen={registered}
+                open={registered}
+                setOpen={setRegistered}
                 message="Registration successful"
                 action="LOGIN"
                 actionRoute={routes.LOGIN}
