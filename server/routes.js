@@ -35,11 +35,18 @@ router.get('/api/hotdogs/createdBy/:id', async (req, res) => {
 });
 
 // TODO: add a new hotdog
-/*
 router.post('/api/hotdogs/add', async (req, res) => {
-    
+    // const { creatorId, title, sausage, sauce, toppingA, toppingB } = req.body;
+    try {
+        let hotdogId = await DB.hotdogs.add(req.body);
+        console.log("Hotdog with id " + hotdogId + " successfully created");
+        res.json(true);
+    } catch(e) {
+        console.log(e);
+        res.json(false);
+    }
 });
-*/
+
 
 // TODO (when hotdogs get likes and comments): gets hotdog given hotdog id 
 /*

@@ -7,9 +7,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import RouterLink from './routerLink';
 
 function SuccessSnackbar(props) {
-    // snackbar only open if parent opens it and not timed out
-    const { parentOpen, message, action, actionRoute } = props;
-    const [open, setOpen] = useState(true);
+    // snackbar only opens if parent opens it, sets parent val to false if time out
+    const { open, setOpen, message, action, actionRoute } = props;
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -51,7 +50,7 @@ function SuccessSnackbar(props) {
     const autoHideDuration = 10000;
     return (
         <Snackbar 
-            open={parentOpen && open}
+            open={open}
             autoHideDuration={autoHideDuration}
             onClose={handleClose}
             message={snackbarMessage}

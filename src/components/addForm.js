@@ -44,10 +44,13 @@ function AddForm() {
     const [toppingB, setToppingB] = useState("");
     const [toppingBError, setToppingBError] = useState(" ");
     
+    const { userId, userName } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
     const [added, setAdded] = useState(false);
 
     function handleAdd() {
+        // set added to false again to handle consecutive adds on same page (no reload)
+        setAdded(false);
         var titleValid, sausageValid, sauceValid, toppingAValid, toppingBValid;
         titleValid = sausageValid = sauceValid = toppingAValid = toppingBValid = false;
 
@@ -57,11 +60,40 @@ function AddForm() {
         toppingAValid = isValid(toppingA, setToppingA, setToppingAError);
         toppingBValid = isValid(toppingB, setToppingB, setToppingBError);
 
-        console.log("titleValid: " + titleValid);
-        console.log("sausageValid: " + sausageValid);
-        console.log("sauceValid: " + sauceValid);
-        console.log("toppingAValid: " + toppingAValid);
-        console.log("toppingBValid: " + toppingBValid);
+        // TODO: backend for add hotdog
+        if (titleValid && sausageValid && sauceValid && toppingAValid && toppingBValid) {
+            setLoading(true);
+            (async () => {
+                // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
+                const bodyJson = {
+                    creatorId: userId,
+                    creatorName: userName,
+                    title: title.trim(),
+                    ingredients: {
+                        sausage: sausage.trim(),
+                        sauce: sauce.trim(),
+                        toppingA: toppingA.trim(),
+                        toppingB: toppingB.trim(),
+                    }
+                }
+                const addStatus = await apiPost('hotdogs/add', bodyJson);
+                console.log("addStatus: " + addStatus);
+                setLoading(false);
+
+                // if add hotdog succeeds, reset all fields and give user option to go back to homepage 
+                // no restrictions on field values for now, so shouldn't fail
+                if (!addStatus) {
+                    console.log("addForm.js: something went wrong :(");
+                } else {
+                    setTitle("");
+                    setSausage("");
+                    setSauce("");
+                    setToppingA("");
+                    setToppingB("");
+                    setAdded(true);
+                }
+            })();
+        }
     }
 
     return (
@@ -112,7 +144,8 @@ function AddForm() {
                 handleClick={handleAdd}
             />
             <SuccessSnackbar
-                parentOpen={added}
+                open={added}
+                setOpen={setAdded}
                 message="Posted new hotdog!"
                 action="HOME"
                 actionRoute={routes.HOME}
