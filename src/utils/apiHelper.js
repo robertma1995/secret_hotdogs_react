@@ -19,6 +19,8 @@ async function apiGetUser(id) {
     return response.json();
 }
 
+// TODO: CRUD standards - add apiPut, apiDelete when necessary
+
 export {
     apiPost,
     apiGetUser

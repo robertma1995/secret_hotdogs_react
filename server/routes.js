@@ -38,9 +38,16 @@ router.get('/api/hotdogs/createdBy/:id', async (req, res) => {
     }
 });
 
+// TODO (when hotdogs get likes and comments): gets hotdog given hotdog id 
+/*
+router.get('/api/hotdogs/:id', async (req, res) => {
+    ...DB.hotdogs.get(id);
+});
+*/
+
 // add a new hotdog
 // TODO: remove "add" endpoint
-router.post('/api/hotdogs/add', async (req, res) => {
+router.post('/api/hotdogs', async (req, res) => {
     // const { creatorId, title, sausage, sauce, toppingA, toppingB } = req.body;
     try {
         let hotdogId = await DB.hotdogs.add(req.body);
@@ -53,12 +60,6 @@ router.post('/api/hotdogs/add', async (req, res) => {
 });
 
 
-// TODO (when hotdogs get likes and comments): gets hotdog given hotdog id 
-/*
-router.get('/api/hotdogs/:id', async (req, res) => {
-    ...DB.hotdogs.get(id);
-});
-*/
 
 // ========================================= USERS =========================================
 // gets details of user from "users" collection (not firebase.auth)
