@@ -1,6 +1,10 @@
-// helper functions for accessing api
+// helper functions for accessing api (CRUD standards): get, post, put, delete
 
-// post request
+async function apiGet(path) {
+    const response = await fetch('/api/' + path);
+    return response.json();
+}
+
 async function apiPost(path, bodyJson) {
     const response = await fetch('/api/' + path, {
         method: 'POST',
@@ -13,15 +17,10 @@ async function apiPost(path, bodyJson) {
     return response.json();
 }
 
-// get a user's details given firebase auth id
-async function apiGetUser(id) {
-    const response = await fetch('/api/users/' + id);
-    return response.json();
-}
 
-// TODO: CRUD standards - add apiPut, apiDelete when necessary
+// TODO: add put + delete when necessary
 
 export {
+    apiGet,
     apiPost,
-    apiGetUser
 }

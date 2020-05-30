@@ -76,7 +76,7 @@ function AddForm() {
                         toppingB: toppingB.trim(),
                     }
                 }
-                const addStatus = await apiPost('hotdogs', bodyJson);
+                const addStatus = await apiPost("hotdogs", bodyJson);
                 console.log("addStatus: " + addStatus);
                 setLoading(false);
 

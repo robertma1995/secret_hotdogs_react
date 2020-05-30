@@ -15,29 +15,6 @@ router.get('/api/hello', (req, res, next) => {
 });
 
 // ========================================= HOTDOGS =========================================
-// gets all hotdogs of every user
-router.get('/api/hotdogs/all', async (req, res) => {
-    try {
-        let hotdogs = await DB.hotdogs.all();
-        res.json(hotdogs);
-    } catch(e) {
-        console.log(e);
-        res.sendStatus(500);
-    }
-});
-
-// gets all hotdogs belonging to a specific user
-router.get('/api/hotdogs/createdBy/:id', async (req, res) => {
-    const id = req.params.id;
-    try {
-        let hotdogs = await DB.hotdogs.getCreatedBy(id);
-        res.json(hotdogs);
-    } catch(e) {
-        console.log(e);
-        res.sendStatus(500);
-    }
-});
-
 // TODO (when hotdogs get likes and comments): gets hotdog given hotdog id 
 /*
 router.get('/api/hotdogs/:id', async (req, res) => {
@@ -46,7 +23,6 @@ router.get('/api/hotdogs/:id', async (req, res) => {
 */
 
 // add a new hotdog
-// TODO: remove "add" endpoint
 router.post('/api/hotdogs', async (req, res) => {
     // const { creatorId, title, sausage, sauce, toppingA, toppingB } = req.body;
     try {
@@ -59,6 +35,28 @@ router.post('/api/hotdogs', async (req, res) => {
     }
 });
 
+// gets all hotdogs of every user
+router.get('/api/hotdogs/all', async (req, res) => {
+    try {
+        let hotdogs = await DB.hotdogs.all();
+        res.json(hotdogs);
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+// gets all hotdogs belonging to a specific user
+router.get('/api/hotdogs/creator/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        let hotdogs = await DB.hotdogs.getCreatedBy(id);
+        res.json(hotdogs);
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
 
 
 // ========================================= USERS =========================================

@@ -2,19 +2,17 @@ import React, { useContext, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { UserContext } from '../userContext';
 import HotdogCard from './hotdogCard';
+import { apiGet } from '../utils/apiHelper';
 
 function HomeHotdogGrid() {
     // context + state variables
     const { userId } = useContext(UserContext);
     const [hotdogs, setHotdogs] = useState([]);
 
-    // console.log("home.js: userId = " + userId);
-
     // display hotdogs created by current user
     useEffect(() => {
         (async () => {
-            const response = await fetch('/api/hotdogs/createdBy/' + userId);
-            const hotdogsJson = await response.json();
+            const hotdogsJson = await apiGet("hotdogs/creator/" + userId);
             setHotdogs(hotdogsJson);
         })();
     });

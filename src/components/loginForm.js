@@ -13,7 +13,7 @@ import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
 // helper for accessing api
-import { apiPost, apiGetUser } from '../utils/apiHelper'; 
+import { apiPost, apiGet } from '../utils/apiHelper'; 
 
 function LoginForm(props) {
  	// context + state variables (default error " " prevents form from looking ugly)
@@ -58,14 +58,14 @@ function LoginForm(props) {
                     email: email.trim(),
                     password: password
                 }
-                const loginUserId = await apiPost('login', bodyJson);
+                const loginUserId = await apiPost("login", bodyJson);
                 console.log("loginUserId: " + loginUserId);
                 setLoading(false);
                 if (!loginUserId) {
                     setEmailError("Incorrect email or password");
                     setPasswordError("Incorrect email or password");
                 } else {
-                    const loginUser = await apiGetUser(loginUserId);
+                    const loginUser = await apiGet("users/" + loginUserId);
                     console.log("loginUserName: " + loginUser.name);
                     setCurrentUserName(loginUser.name);
                     setCurrentUserId(loginUserId);

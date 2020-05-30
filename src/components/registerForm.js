@@ -81,7 +81,7 @@ function RegisterForm(props) {
                     email: email.trim(),
                     password: password 
                 }
-                const registerStatus = await apiPost('users', bodyJson);
+                const registerStatus = await apiPost("users", bodyJson);
                 console.log("registerStatus: " + registerStatus);
                 setLoading(false);
 
