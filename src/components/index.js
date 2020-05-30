@@ -4,6 +4,7 @@ import LoginForm from './loginForm';
 import RegisterForm from './registerForm';
 import HomeHotdogGrid from './homeHotdogGrid';
 import AddForm from './addForm';
+import Landing from './landing';
 
 export {
 	NavBar,
@@ -12,4 +13,5 @@ export {
 	RegisterForm,
 	HomeHotdogGrid,
 	AddForm,
+	Landing,
 }
