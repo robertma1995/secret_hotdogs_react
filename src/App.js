@@ -20,19 +20,17 @@ function App() {
         <UserContextProvider>
             <ThemeProvider theme={theme}>
                 <Box bgcolor="secondary.main">
-                    <Container maxWidth="md">
+                    <Container maxWidth={false}>
                         <NavBar/>
                     </Container>
                 </Box>
                 <Box>
-                    <Container maxWidth="md">
-                        <Switch>
-                            <Route exact path={routes.HOME} component={Home}></Route>
-                            <Route exact path={routes.LOGIN} component={Login}></Route>
-                            <Route exact path={routes.REGISTER} component={Register}></Route>
-                            <Route exact path={routes.ADD} component={Add}></Route>
-                        </Switch>
-                    </Container>
+                    <Switch>
+                        <Route exact path={routes.HOME} component={Home}></Route>
+                        <Route exact path={routes.LOGIN} component={Login}></Route>
+                        <Route exact path={routes.REGISTER} component={Register}></Route>
+                        <Route exact path={routes.ADD} component={Add}></Route>
+                    </Switch>
                 </Box>
             </ThemeProvider>
         </UserContextProvider>
