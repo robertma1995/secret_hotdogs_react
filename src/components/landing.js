@@ -15,10 +15,11 @@ const useStyles = makeStyles((theme) => ({
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         height: '100%',
-        width: '100%',
         backgroundSize: 'cover',
-        position: 'absolute',
     },
+    welcome: {
+        height: '100%',
+    }
 }));
 
 // TODO: fancy looking welcome page
@@ -27,22 +28,18 @@ const useStyles = makeStyles((theme) => ({
 function Landing() {
     const classes = useStyles();
     return (
-       <Box>
-            <Box className={classes.background}>
-                <Container maxWidth="xs">
-                    <Box 
-                        display="flex" 
-                        flexDirection="column"
-                        justifyContent="center"
-                        p={2}
-                    >
-                        <Typography align="center" color="secondary" variant="h2">
-                            HELLO
-                        </Typography>
-                    </Box>
-                </Container>
+        <Container maxWidth={false} className={classes.background}>
+            <Box
+                className={classes.welcome}
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+            >
+                <Typography align="center" color="secondary" variant="h2">
+                    HELLO
+                </Typography>
             </Box>
-        </Box>
+        </Container>
     );
 }
 
