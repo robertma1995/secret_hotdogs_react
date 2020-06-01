@@ -13,6 +13,9 @@ function HomeHotdogGrid() {
     useEffect(() => {
         (async () => {
             const hotdogsJson = await apiGet("hotdogs/creator/" + userId);
+            hotdogsJson.sort((a, b) => {
+                return b.ts - a.ts;
+            });
             setHotdogs(hotdogsJson);
         })();
     });
