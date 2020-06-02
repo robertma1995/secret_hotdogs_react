@@ -33,7 +33,7 @@ const theme = {
                 color: '#ffffff'
             },
             textPrimary: {
-                color: '#ffffff',
+                color: '#cbb09c',
                 // '&:hover': {
                 //     backgroundColor: '#fafafa'
                 // }

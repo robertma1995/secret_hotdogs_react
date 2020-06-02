@@ -24,7 +24,7 @@ function NavBar(props) {
             <Toolbar disableGutters>
                 <Box display="flex" alignItems="center" width={1}>
                     <Box flexGrow={1}>
-                        <Typography variant="h4">
+                        <Typography variant="h6">
                             <RouterLink color="primary" underline="none" to={routes.HOME}>
                                 Secret Ninja Hotdogs
                             </RouterLink>
@@ -40,7 +40,7 @@ function NavBar(props) {
                     }
                     { userId && 
                         <Box p={1}>
-                            <Button color="primary" variant="contained" disableElevation> 
+                            <Button color="primary" variant="text" disableElevation> 
                                 <RouterLink color="secondary" underline="none" to={routes.ADD}>
                                     Add a hotdog
                                 </RouterLink>
@@ -49,16 +49,16 @@ function NavBar(props) {
                     }
                     <Box>
                         { !userId && 
-                            <Button color="primary" variant="contained" disableElevation> 
-                                <RouterLink color="secondary" underline="none" to={routes.LOGIN}>
+                            <Button color="primary" variant="text" disableElevation> 
+                                <RouterLink color="primary" underline="none" to={routes.LOGIN}>
                                     Login
                                 </RouterLink>
                             </Button>
                         }
                         { userId &&
-                            <Button 
-                                color="primary" 
-                                variant="contained" 
+                            <Button
+                                color="primary"
+                                variant="text" 
                                 disableElevation
                                 onClick={() => handleLogout()}
                             >

@@ -20,7 +20,7 @@ function App() {
         <UserContextProvider>
             <ThemeProvider theme={theme}>
                 <Box display="flex" flexDirection="column" style={{ height: '100vh' }}>
-                    <Box display="flex" bgcolor="secondary.main">
+                    <Box display="flex" bgcolor="text.primary">
                         <Container maxWidth={false}>
                             <NavBar/>
                         </Container>
