@@ -19,6 +19,7 @@ function NavBar(props) {
         props.history.push(routes.LOGIN);
     }
 
+    // TODO: fix navbar colours + buttons after add hotdog and login are modals
     return (
         <AppBar position="static" color="transparent" elevation={0}>
             <Toolbar disableGutters>
