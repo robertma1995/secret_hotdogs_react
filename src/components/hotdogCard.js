@@ -33,9 +33,7 @@ function HotdogCard(props) {
                 title={title + " by " + creatorName}
                 subheader={subheader}
             />
-            <CardMedia
-                image="https://www.svgrepo.com/show/133687/hot-dog.svg"
-            />
+            <CardMedia image="https://www.svgrepo.com/show/133687/hot-dog.svg"/>
             <CardContent>
                 <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}>
                     <ListItem divider>
