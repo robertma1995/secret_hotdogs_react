@@ -6,6 +6,7 @@ import RouterLink from './routerLink';
 import { PageTitle } from '../components'; 
 // routing
 import * as routes from '../utils/routes';
+import { Link } from 'react-router-dom';
 
 // TODO: narrow down to one option
 const backgroundImageA = "https://res.cloudinary.com/noctisvirtus/image/upload/b_rgb:000000,o_30/v1590980759/hotdog_a.jpg";
@@ -46,10 +47,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+
 // TODO: fancy looking welcome page
 // template preview: https://material-ui.com/premium-themes/onepirate/
 // template source: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/premium-themes/onepirate/Home.js
 function Landing() {
+    
     const classes = useStyles();
     return (
         <Container maxWidth={false} className={classes.background}>
@@ -73,23 +76,19 @@ function Landing() {
                 </Typography>
                 <Box display="flex" flexDirection="row" justifyContent="center">
                     <Button
+                        component={Link}
+                        to={routes.REGISTER}
                         className={classes.button}
                         color="primary"
                         variant="contained"
                         size="large"
                     >
-                        <RouterLink color="secondary" underline="none" to={routes.REGISTER}>
-                            Sign Up
-                        </RouterLink>
+                        Sign Up
                     </Button>
                 </Box>
             </Box>
         </Container>
     );
 }
-
-/*
-
-*/
 
 export default Landing;

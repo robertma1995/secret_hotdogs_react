@@ -6,6 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import AddForm from './addForm';
 
 const useStyles = makeStyles((theme) => ({
+    // anchor fab to bottom right of screen
     fab: {
         position: 'fixed',
         bottom: theme.spacing(4),
@@ -13,9 +14,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
 // Dialog wrapper for AddForm used on home page (HomeHotdogGrid)
-// FAB at bottom right of screen opens the dialog
+// clicking on fab opens the dialog
 function AddFormDialog() {
     const [open, setOpen] = useState(false);
 
