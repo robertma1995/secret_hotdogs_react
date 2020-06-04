@@ -16,7 +16,7 @@ function NavBar(props) {
     function handleLogout() {
         setCurrentUserId(null);
         setCurrentUserName(null);
-        props.history.push(routes.LOGIN);
+        props.history.push(routes.HOME);
     }
 
     // TODO: fix navbar colours + buttons after add hotdog and login are modals
