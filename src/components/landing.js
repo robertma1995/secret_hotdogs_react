@@ -8,18 +8,18 @@ import { PageTitle } from '../components';
 import * as routes from '../utils/routes';
 import { Link } from 'react-router-dom';
 
-// TODO: narrow down to one option
-const backgroundImageA = "https://res.cloudinary.com/noctisvirtus/image/upload/b_rgb:000000,o_30/v1590980759/hotdog_a.jpg";
-const backgroundImageB = "https://res.cloudinary.com/noctisvirtus/image/upload/b_rgb:000000,o_15/v1590981061/hotdog_b.jpg";
+// get background image from cloudinary (pre-faded)
+const backgroundImage = "https://res.cloudinary.com/noctisvirtus/image/upload/b_rgb:000000,o_15/v1590981061/hotdog_b.jpg";
 
 const useStyles = makeStyles((theme) => ({
     background: {
-        backgroundImage: `url(${backgroundImageB})`,
+        backgroundImage: `url(${backgroundImage})`,
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         height: '100%',
         backgroundSize: 'cover',
     },
+    // make box full height to vertically centre children
     wrapper: {
         height: '100%',
     },
@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-// TODO: fancy looking welcome page
 // template preview: https://material-ui.com/premium-themes/onepirate/
 // template source: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/premium-themes/onepirate/Home.js
 function Landing() {
