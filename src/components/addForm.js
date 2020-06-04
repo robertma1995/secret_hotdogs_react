@@ -147,8 +147,6 @@ function AddForm() {
                 open={added}
                 setOpen={setAdded}
                 message="Posted new hotdog!"
-                action="HOME"
-                actionRoute={routes.HOME}
             />
         </Form>
     );

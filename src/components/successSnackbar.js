@@ -31,25 +31,29 @@ function SuccessSnackbar(props) {
         </Box>
     );
 
-    // main action button + close button
-    // TODO: may generalize to add onclick functionality to action button
-    const snackbarAction = (
-        <div>
-            <Button
-                component={Link}
-                to={actionRoute} 
-                color="secondary"
-                variant="text" 
-                disableElevation
-            > 
-                {action}
-            </Button>
-            <IconButton size="small" aria-label="close" onClick={handleClose}>
-                <CloseIcon color="secondary" fontSize="small"/>
-            </IconButton>
-        </div>
+    // main action button + close button - only render action button if action specified
+    const snackbarClose = (
+        <IconButton size="small" aria-label="close" onClick={handleClose}>
+            <CloseIcon color="secondary" fontSize="small"/>
+        </IconButton>
     );
-
+    var snackbarAction = snackbarClose;
+    if (action) {
+        snackbarAction = (
+            <div>
+                <Button
+                    component={Link}
+                    to={actionRoute} 
+                    color="secondary"
+                    variant="text" 
+                    disableElevation
+                > 
+                    {action}
+                </Button>
+                { snackbarClose }
+            </div>
+        );
+    }
 
     const autoHideDuration = 10000;
     return (
