@@ -5,19 +5,38 @@
 const express = require('express');
 const DB = require('./database');
 
+
+// initialize router
 const router = express.Router();
+
 // testing api
 router.get('/api/hello', (req, res, next) => {
     res.json('Hello World :)');
 });
 
-// TODO: one route for each table (hotdogs, users)
-// TODO: need a route for inserting hotdog details too 
-// use await fetch(...method: 'POST', body: <hotdog details as JSON>) in frontend (e.g. home.js, add.js)
-//      https://stackoverflow.com/questions/29775797/fetch-post-json-data
-// and in this file (routes.js), maybe use router.post, then use the "req" variable to get the <hotdog details>
-//      https://expressjs.com/en/guide/routing.html
-router.get('/api/hotdogs', async (req, res) => {
+// ========================================= HOTDOGS =========================================
+// TODO (when hotdogs get likes and comments): gets hotdog given hotdog id 
+/*
+router.get('/api/hotdogs/:id', async (req, res) => {
+    ...DB.hotdogs.get(id);
+});
+*/
+
+// add a new hotdog
+router.post('/api/hotdogs', async (req, res) => {
+    // const { creatorId, title, sausage, sauce, toppingA, toppingB } = req.body;
+    try {
+        let hotdogId = await DB.hotdogs.add(req.body);
+        console.log("Hotdog with id " + hotdogId + " successfully created");
+        res.json(true);
+    } catch(e) {
+        console.log(e);
+        res.json(false);
+    }
+});
+
+// gets all hotdogs of every user
+router.get('/api/hotdogs/all', async (req, res) => {
     try {
         let hotdogs = await DB.hotdogs.all();
         res.json(hotdogs);
@@ -26,5 +45,57 @@ router.get('/api/hotdogs', async (req, res) => {
         res.sendStatus(500);
     }
 });
+
+// gets all hotdogs belonging to a specific user
+router.get('/api/hotdogs/creator/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        let hotdogs = await DB.hotdogs.getCreatedBy(id);
+        res.json(hotdogs);
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+
+// ========================================= USERS =========================================
+// gets details of user from "users" collection (not firebase.auth)
+router.get('/api/users/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        let user = await DB.users.get(id);
+        res.json(user);
+    } catch(e) {
+        console.log(e);
+        res.json(false);
+    }
+});
+
+// registration: logs user id for backend debugging
+router.post('/api/users', async (req, res) => {
+    const { name, email, password } = req.body;
+    try {
+        let userId = await DB.users.register(name, email, password);
+        console.log("User with id " + userId + " successfully created");
+        res.json(true);
+    } catch(e) {
+        console.log(e);
+        res.json(false);
+    }
+});
+
+// login: returns user id if successful, false otherwise
+router.post('/api/login', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        let userId = await DB.users.login(email, password);
+        res.json(userId);
+    } catch(e) {
+        console.log(e);
+        res.json(false);
+    }
+});
+
 
 module.exports = router;

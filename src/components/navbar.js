@@ -1,38 +1,76 @@
-import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Button, Link } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useContext } from 'react';
+// material ui
+import { AppBar, Box, Button, Toolbar, Typography, } from '@material-ui/core';
+// routing
+import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
+// my components
+import RouterLink from './routerLink';
+// context
+import { UserContext } from '../userContext';
 
-// TODO: currently using material ui "Link" - might need to replace with react-router-dom "Link"
-// when using dynamic paths...
-// import { Link } from 'react-router-dom'; 
+function NavBar(props) { 
+    const { userId, setCurrentUserId, userName, setCurrentUserName } = useContext(UserContext);
+    
+    // unset context vars and redirect to login page
+    function handleLogout() {
+        setCurrentUserId(null);
+        setCurrentUserName(null);
+        props.history.push(routes.HOME);
+    }
 
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-    },
-    title: {
-        flexGrow: 1,
-    },
-}));
-
-function NavBar() { 
-    const classes = useStyles();
+    // TODO: fix navbar colours + buttons after add hotdog and login are modals
     return (
-        <div className={classes.root}>
-            <AppBar position="static" color="transparent" elevation="0">
-                <Toolbar disableGutters>
-                    <Typography variant="h4" className={classes.title}>
-                        <Link href={routes.HOME} underline="none" color="primary">
-                            Secret Ninja Hotdogs
-                        </Link>
-                    </Typography>
-                    <Button color="primary" variant="contained" disableElevation> Login </Button>
-                </Toolbar>
-            </AppBar>
-        </div>
+        <AppBar position="static" color="transparent" elevation={0}>
+            <Toolbar disableGutters>
+                <Box display="flex" alignItems="center" width={1}>
+                    <Box flexGrow={1}>
+                        <Typography variant="h6">
+                            <RouterLink color="primary" underline="none" to={routes.HOME}>
+                                Secret Ninja Hotdogs
+                            </RouterLink>
+                        </Typography>
+                    </Box>
+                    { userId &&
+                        // TODO: instead of a welcome message, display user avatar with dropdown menu
+                        <Box p={1}>
+                            <Typography variant="subtitle1" color="textSecondary">
+                                Welcome, {userName}!
+                            </Typography>
+                        </Box>
+                    }
+                    { userId && 
+                        <Box p={1}>
+                            <Button color="primary" variant="text" disableElevation> 
+                                <RouterLink color="secondary" underline="none" to={routes.ADD}>
+                                    Add a hotdog
+                                </RouterLink>
+                            </Button>
+                        </Box>
+                    }
+                    <Box>
+                        { !userId && 
+                            <Button color="primary" variant="text" disableElevation> 
+                                <RouterLink color="primary" underline="none" to={routes.LOGIN}>
+                                    Login
+                                </RouterLink>
+                            </Button>
+                        }
+                        { userId &&
+                            <Button
+                                color="primary"
+                                variant="text" 
+                                disableElevation
+                                onClick={() => handleLogout()}
+                            >
+                                Logout 
+                            </Button>
+                        }
+                    </Box>
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
 }
 
-export default NavBar;
+export default withRouter(NavBar);
