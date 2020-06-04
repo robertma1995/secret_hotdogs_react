@@ -6,6 +6,8 @@ import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
 // my components
 import RouterLink from './routerLink';
+// routing
+import { Link } from 'react-router-dom';
 // context
 import { UserContext } from '../userContext';
 
@@ -39,21 +41,16 @@ function NavBar(props) {
                             </Typography>
                         </Box>
                     }
-                    { userId && 
-                        <Box p={1}>
-                            <Button color="primary" variant="text" disableElevation> 
-                                <RouterLink color="secondary" underline="none" to={routes.ADD}>
-                                    Add a hotdog
-                                </RouterLink>
-                            </Button>
-                        </Box>
-                    }
                     <Box>
                         { !userId && 
-                            <Button color="primary" variant="text" disableElevation> 
-                                <RouterLink color="primary" underline="none" to={routes.LOGIN}>
-                                    Login
-                                </RouterLink>
+                            <Button 
+                                component={Link}
+                                to={routes.LOGIN}
+                                color="primary" 
+                                variant="text" 
+                                disableElevation
+                            > 
+                                Login
                             </Button>
                         }
                         { userId &&

@@ -82,6 +82,7 @@ function Landing() {
                         color="primary"
                         variant="contained"
                         size="large"
+                        disableElevation
                     >
                         Sign Up
                     </Button>
