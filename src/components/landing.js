@@ -1,9 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box, Button, Container, Typography } from '@material-ui/core';
-// my components
-import RouterLink from './routerLink';
-import { PageTitle } from '../components'; 
 // routing
 import * as routes from '../utils/routes';
 import { Link } from 'react-router-dom';

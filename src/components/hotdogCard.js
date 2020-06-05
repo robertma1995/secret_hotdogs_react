@@ -2,7 +2,6 @@ import React from 'react';
 import { 
     Avatar, 
     IconButton, 
-    Typography,
     Card, CardHeader, CardMedia, CardContent, CardActions, 
     List, ListItem, ListItemIcon, ListItemText, ListSubheader
 } from '@material-ui/core';
@@ -12,7 +11,7 @@ import WavesIcon from '@material-ui/icons/Waves';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 function HotdogCard(props) {
-    const { id, title, ingredients, creatorId, creatorName, ts } = props;
+    const { id, title, ingredients, creatorName, ts } = props;
 
     // format timestamp seconds to readable date
     var date = new Date(1970, 0, 1);

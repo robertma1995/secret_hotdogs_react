@@ -1,5 +1,5 @@
-import React, { useContext, useCallback, useEffect, useState } from 'react';
-import { Grid, Fab } from '@material-ui/core';
+import React, { useContext, useEffect, useState } from 'react';
+import { Grid } from '@material-ui/core';
 // my components
 import HotdogCard from './hotdogCard';
 import AddFormDialog from './addFormDialog';
@@ -38,7 +38,6 @@ function HomeHotdogGrid() {
                             id={hotdog.id}
                             title={hotdog.title}
                             ingredients={hotdog.ingredients}
-                            creatorId={hotdog.creatorId}
                             creatorName={hotdog.creatorName}
                             ts={hotdog.ts}
                         />

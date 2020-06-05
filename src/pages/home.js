@@ -1,8 +1,6 @@
 import React, { useContext } from 'react';
 import { Box, Container } from '@material-ui/core';
 import { HomeHotdogGrid, Landing, PageTitle } from '../components'; 
-// routing
-import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
 
