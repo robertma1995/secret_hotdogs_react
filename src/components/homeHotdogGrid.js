@@ -26,12 +26,10 @@ function HomeHotdogGrid() {
         })();
     }, [userId]);
 
-    // TODO: floating action button for adding hotdogs - opens AddFormDialog on click
-    // think about FAB + addform dialog in one component rather than two as it is now
-
+    // TODO: infinite side scrolling cards instead of vertical scroll
     return (
         <div>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} style={{ height: '81vh', overflowY: 'auto'}}>
                 {hotdogs.map((hotdog) => (
                     <Grid item key={hotdog.id} xs={4}>
                         <HotdogCard
