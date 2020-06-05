@@ -14,10 +14,14 @@ function Home() {
     } else if (userId) {
         return (
             <Container maxWidth="md">
-                <Box p={2}>
-                    <PageTitle text="Your Hotdogs"/>
+                <Box display="flex" flexDirection="column" style={{ height: '100%' }}>
+                    <Box p={2} display="flex" flexDirection="row" justifyContent="center">
+                        <PageTitle text="Your Hotdogs"/>
+                    </Box>
+                    <Box display="flex" flexDirection="row" justifyContent="center" flexGrow={1}>
+                        <HomeHotdogGrid/>
+                    </Box>
                 </Box>
-                <HomeHotdogGrid/>
             </Container>
         );
     }
