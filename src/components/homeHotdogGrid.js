@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useCallback, useEffect, useState } from 'react';
 import { Grid, Fab } from '@material-ui/core';
 // my components
 import HotdogCard from './hotdogCard';
@@ -13,7 +13,10 @@ function HomeHotdogGrid() {
     const [hotdogs, setHotdogs] = useState([]);
 
     // display hotdogs created by current user
+    // TODO: only renders once, so adding hotdogs won't update the grid anymore
+    // - experiment with firestore realtime updates: https://firebase.google.com/docs/firestore/query-data/listen
     useEffect(() => {
+        console.log("CALLED");
         (async () => {
             const hotdogsJson = await apiGet("hotdogs/creator/" + userId);
             hotdogsJson.sort((a, b) => {
@@ -21,7 +24,7 @@ function HomeHotdogGrid() {
             });
             setHotdogs(hotdogsJson);
         })();
-    });
+    }, [userId]);
 
     // TODO: floating action button for adding hotdogs - opens AddFormDialog on click
     // think about FAB + addform dialog in one component rather than two as it is now
