@@ -35,14 +35,15 @@ function HomeHotdogGrid() {
             display="flex"
             flexDirection="column"
             justifyContent="center"
-            // alignItems="center"
+            alignItems="center"
             height="100%"
+            width="100%"
         >
             { loading && 
                 <CircularProgress color="primary" size={100}/>
             }
             { !loading && 
-                <Grid container spacing={3} style={{ height: '81vh', overflowY: 'auto'}}>
+                <Grid container spacing={3}>
                     {hotdogs.map((hotdog) => (
                         <Grid item key={hotdog.id} xs={4}>
                             <HotdogCard
@@ -62,7 +63,5 @@ function HomeHotdogGrid() {
 }
 
 /*
-            { hotdogs && 
-            }
 */
 export default HomeHotdogGrid;

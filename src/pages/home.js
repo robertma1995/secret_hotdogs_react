@@ -14,11 +14,11 @@ function Home() {
     } else if (userId) {
         return (
             <Container maxWidth="md">
-                <Box display="flex" flexDirection="column" style={{ height: '100%' }}>
+                <Box display="flex" flexDirection="column" height="100%">
                     <Box p={2} display="flex" flexDirection="row" justifyContent="center">
                         <PageTitle text="Your Hotdogs"/>
                     </Box>
-                    <Box display="flex" flexDirection="row" justifyContent="center" flexGrow={1}>
+                    <Box display="flex" flexDirection="row" justifyContent="center" flexGrow={1} width="100%">
                         <HomeHotdogGrid/>
                     </Box>
                 </Box>

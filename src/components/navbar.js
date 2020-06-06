@@ -22,8 +22,8 @@ function NavBar(props) {
     }
 
     return (
-        <AppBar position="static" color="transparent" elevation={0}>
-            <Toolbar disableGutters>
+        <AppBar position="sticky" elevation={0}>
+            <Toolbar>
                 <Box display="flex" alignItems="center" width={1}>
                     <Box flexGrow={1}>
                         <Typography variant="h6">

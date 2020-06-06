@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
 // template preview: https://material-ui.com/premium-themes/onepirate/
 // template source: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/premium-themes/onepirate/Home.js
 function Landing() {
-    
     const classes = useStyles();
     return (
         <Container maxWidth={false} className={classes.background}>

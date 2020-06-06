@@ -71,6 +71,13 @@ const theme = {
                 textTransform: "capitalize"
             }
         },
+        // appbar color same as text.primary
+        MuiAppBar: {
+            colorPrimary: {
+                backgroundColor: '#212121',
+            }
+        }
+
     }
 }
 
