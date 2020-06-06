@@ -6,7 +6,7 @@ function Register() {
     return (
         <Container maxWidth="xs">
             <Box p={2}>
-                <PageTitle text="Register"/>
+                <PageTitle text="Sign Up"/>
             </Box>
             <RegisterForm/>
         </Container>

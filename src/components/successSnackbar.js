@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 // material ui
 import { Box, Button, IconButton, Snackbar, Typography }  from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CloseIcon from '@material-ui/icons/Close';
-// my components
-import RouterLink from './routerLink';
+// routing
+import { Link } from 'react-router-dom';
 
 function SuccessSnackbar(props) {
     // snackbar only opens if parent opens it, sets parent val to false if time out
@@ -31,21 +31,29 @@ function SuccessSnackbar(props) {
         </Box>
     );
 
-    // main action button + close button
-    // TODO: may generalize to add onclick functionality to action button
-    const snackbarAction = (
-        <div>
-            <Button color="primary" disableElevation> 
-                <RouterLink color="secondary" underline="none" to={actionRoute}>
-                    {action}
-                </RouterLink>
-            </Button>
-            <IconButton size="small" aria-label="close" onClick={handleClose}>
-                <CloseIcon color="secondary" fontSize="small"/>
-            </IconButton>
-        </div>
+    // main action button + close button - only render action button if action specified
+    const snackbarClose = (
+        <IconButton size="small" aria-label="close" onClick={handleClose}>
+            <CloseIcon color="secondary" fontSize="small"/>
+        </IconButton>
     );
-
+    var snackbarAction = snackbarClose;
+    if (action) {
+        snackbarAction = (
+            <div>
+                <Button
+                    component={Link}
+                    to={actionRoute} 
+                    color="secondary"
+                    variant="text" 
+                    disableElevation
+                > 
+                    {action}
+                </Button>
+                { snackbarClose }
+            </div>
+        );
+    }
 
     const autoHideDuration = 10000;
     return (

@@ -6,6 +6,8 @@ import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
 // my components
 import RouterLink from './routerLink';
+// routing
+import { Link } from 'react-router-dom';
 // context
 import { UserContext } from '../userContext';
 
@@ -19,7 +21,6 @@ function NavBar(props) {
         props.history.push(routes.HOME);
     }
 
-    // TODO: fix navbar colours + buttons after add hotdog and login are modals
     return (
         <AppBar position="static" color="transparent" elevation={0}>
             <Toolbar disableGutters>
@@ -31,32 +32,26 @@ function NavBar(props) {
                             </RouterLink>
                         </Typography>
                     </Box>
-                    { userId &&
-                        // TODO: instead of a welcome message, display user avatar with dropdown menu
-                        <Box p={1}>
-                            <Typography variant="subtitle1" color="textSecondary">
+                    <Box p={1}>
+                        { userId && 
+                            <Typography variant="subtitle1" color="secondary">
                                 Welcome, {userName}!
                             </Typography>
-                        </Box>
-                    }
-                    { userId && 
-                        <Box p={1}>
-                            <Button color="primary" variant="text" disableElevation> 
-                                <RouterLink color="secondary" underline="none" to={routes.ADD}>
-                                    Add a hotdog
-                                </RouterLink>
-                            </Button>
-                        </Box>
-                    }
-                    <Box>
+                        }
                         { !userId && 
-                            <Button color="primary" variant="text" disableElevation> 
-                                <RouterLink color="primary" underline="none" to={routes.LOGIN}>
-                                    Login
-                                </RouterLink>
+                            <Button 
+                                component={Link}
+                                to={routes.REGISTER}
+                                color="secondary" 
+                                variant="text" 
+                                disableElevation
+                            > 
+                                Sign Up
                             </Button>
                         }
-                        { userId &&
+                    </Box>
+                    <Box>
+                        { userId && 
                             <Button
                                 color="primary"
                                 variant="text" 
@@ -64,6 +59,17 @@ function NavBar(props) {
                                 onClick={() => handleLogout()}
                             >
                                 Logout 
+                            </Button>
+                        }
+                        { !userId && 
+                            <Button 
+                                component={Link}
+                                to={routes.LOGIN}
+                                color="primary"
+                                variant="text" 
+                                disableElevation
+                            > 
+                                Login
                             </Button>
                         }
                     </Box>

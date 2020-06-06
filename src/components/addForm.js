@@ -4,8 +4,6 @@ import Form from './form';
 import FormField from './formField';
 import FormButton from './formButton';
 import SuccessSnackbar from './successSnackbar';
-// routing
-import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
 // helper for accessing api
@@ -147,8 +145,6 @@ function AddForm() {
                 open={added}
                 setOpen={setAdded}
                 message="Posted new hotdog!"
-                action="HOME"
-                actionRoute={routes.HOME}
             />
         </Form>
     );
