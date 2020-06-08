@@ -8,8 +8,12 @@ import FormButton from './formButton';
 import SuccessSnackbar from './successSnackbar';
 // routing
 import * as routes from '../utils/routes';
+// database
+import * as DB from '../database';
+
 // helper for accessing api
-import { apiPost } from '../utils/apiHelper';
+// import { apiPost } from '../utils/apiHelper';
+
 
 function RegisterForm(props) {
  	// state variables
@@ -75,6 +79,7 @@ function RegisterForm(props) {
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
             setLoading(true);
             (async () => {
+                /*
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
                 const bodyJson = {
                     name: name.trim(),
@@ -82,9 +87,17 @@ function RegisterForm(props) {
                     password: password 
                 }
                 const registerStatus = await apiPost("users", bodyJson);
+                */
+                var registerStatus = false;
+                try {
+                    let userId = await DB.users.register(name.trim(), email.trim(), password);
+                    console.log("User with id " + userId + " successfully created");
+                    registerStatus = true;
+                } catch(e) {
+                    console.log(e);
+                }
                 console.log("registerStatus: " + registerStatus);
                 setLoading(false);
-
                 // if register succeeds, reset all fields and give user option to go to login 
                 if (!registerStatus) {
                     setEmailError("Email already in use, please type in a different email");
