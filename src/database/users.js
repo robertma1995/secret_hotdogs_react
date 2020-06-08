@@ -1,5 +1,4 @@
 // imports
-// const dbindex = require('./index.js');
 import { firebase } from './index';
 
 // return user details if login successful, otherwise return firebase error
@@ -45,9 +44,3 @@ export {
     register,
     get
 }
-
-/*
-exports.login = login;
-exports.register = register;
-exports.get = get;
-*/

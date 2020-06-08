@@ -1,5 +1,4 @@
 // imports
-// const dbindex = require('./index.js');
 import { firebase } from './index';
 
 // return all hotdogs with id and readable timestamps
@@ -42,8 +41,8 @@ const getCreatedBy = async (id) => {
 }
 
 // insert - returns newly created hotdog id if successful
-const add = async(hotdog) => {
-    hotdog["ts"] = firebase.firestore.Timestamp.now();
+const add = async (hotdog) => {
+    hotdog["ts"] = firebase.firestore().Timestamp.now();
     return new Promise((resolve, reject) => {
         // add returns a "DocumentReference"
         firebase.firestore().collection('hotdogs').add(hotdog)
@@ -57,9 +56,3 @@ export {
     getCreatedBy,
     add
 }
-
-/*
-exports.all = all;
-exports.getCreatedBy = getCreatedBy;
-exports.add = add;
-*/

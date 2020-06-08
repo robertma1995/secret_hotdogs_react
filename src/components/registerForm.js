@@ -79,15 +79,7 @@ function RegisterForm(props) {
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
             setLoading(true);
             (async () => {
-                /*
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
-                const bodyJson = {
-                    name: name.trim(),
-                    email: email.trim(),
-                    password: password 
-                }
-                const registerStatus = await apiPost("users", bodyJson);
-                */
                 var registerStatus = false;
                 try {
                     let userId = await DB.users.register(name.trim(), email.trim(), password);
