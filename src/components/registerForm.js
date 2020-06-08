@@ -9,7 +9,7 @@ import SuccessSnackbar from './successSnackbar';
 // routing
 import * as routes from '../utils/routes';
 // database
-import * as DB from '../database';
+import * as DB from '../database/wrapper';
 
 function RegisterForm(props) {
  	// state variables
@@ -76,14 +76,7 @@ function RegisterForm(props) {
             setLoading(true);
             (async () => {
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
-                var registerStatus = false;
-                try {
-                    let userId = await DB.users.register(name.trim(), email.trim(), password);
-                    console.log("User with id " + userId + " successfully created");
-                    registerStatus = true;
-                } catch(e) {
-                    console.log(e);
-                }
+                var registerStatus = await DB.register(name.trim(), email.trim(), password);
                 console.log("registerStatus: " + registerStatus);
                 setLoading(false);
                 // if register succeeds, reset all fields and give user option to go to login 

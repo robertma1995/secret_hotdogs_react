@@ -12,8 +12,8 @@ import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
-// helper for accessing api
-import { apiPost, apiGet } from '../utils/apiHelper'; 
+// database
+import * as DB from '../database/wrapper';
 
 function LoginForm(props) {
  	// context + state variables (default error " " prevents form from looking ugly)
@@ -53,19 +53,22 @@ function LoginForm(props) {
             setLoading(true);
             // if login succeeds, set context user id and redirect to home page
             (async () => {
-                // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
+                /*
                 const bodyJson = {
                     email: email.trim(),
                     password: password
                 }
-                const loginUserId = await apiPost("login", bodyJson);
+                */
+                // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
+                const loginUserId = await DB.login(email.trim(), password);
                 console.log("loginUserId: " + loginUserId);
                 setLoading(false);
                 if (!loginUserId) {
                     setEmailError("Incorrect email or password");
                     setPasswordError("Incorrect email or password");
                 } else {
-                    const loginUser = await apiGet("users/" + loginUserId);
+                    // get user details (users currently only have a name)
+                    const loginUser = await DB.getUser(loginUserId);
                     console.log("loginUserName: " + loginUser.name);
                     setCurrentUserName(loginUser.name);
                     setCurrentUserId(loginUserId);
