@@ -53,12 +53,6 @@ function LoginForm(props) {
             setLoading(true);
             // if login succeeds, set context user id and redirect to home page
             (async () => {
-                /*
-                const bodyJson = {
-                    email: email.trim(),
-                    password: password
-                }
-                */
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
                 const loginUserId = await DB.login(email.trim(), password);
                 console.log("loginUserId: " + loginUserId);
