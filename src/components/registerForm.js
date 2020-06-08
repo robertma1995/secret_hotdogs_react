@@ -11,10 +11,6 @@ import * as routes from '../utils/routes';
 // database
 import * as DB from '../database';
 
-// helper for accessing api
-// import { apiPost } from '../utils/apiHelper';
-
-
 function RegisterForm(props) {
  	// state variables
     const [name, setName] = useState("");
