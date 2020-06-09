@@ -37,8 +37,8 @@ const getUser = async (id) => {
 // ========================================= HOTDOGS =========================================
 const getAllHotdogs = async () => {
     try {
-        let hotdogs = await hotdogs.all();
-        return hotdogs;
+        let res = await hotdogs.all();
+        return res;
     } catch(e) {
         console.log("database: " + e);
         return [];
@@ -47,8 +47,8 @@ const getAllHotdogs = async () => {
 
 const getHotdogsCreatedBy = async (id) => {
     try {
-        let hotdogs = await hotdogs.getCreatedBy(id);
-        return hotdogs;
+        let res = await hotdogs.getCreatedBy(id);
+        return res;
     } catch(e) {
         console.log("database: " + e);
         return [];

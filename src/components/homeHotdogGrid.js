@@ -5,26 +5,26 @@ import HotdogCard from './hotdogCard';
 import AddFormDialog from './addFormDialog';
 // context
 import { UserContext } from '../userContext';
-// helper for accessing api
-import { apiGet } from '../utils/apiHelper';
+// database
+import * as DB from '../database/wrapper';
 
 function HomeHotdogGrid() {
     const { userId } = useContext(UserContext);
     const [hotdogs, setHotdogs] = useState([]);
     const [loading, setLoading] = useState(false);
     
-    // display hotdogs created by current user
+    // display hotdogs created by current user (reverse chronology)
     // TODO: only renders once, so adding hotdogs won't update the grid anymore
     // - experiment with firestore realtime updates: https://firebase.google.com/docs/firestore/query-data/listen
     useEffect(() => {
         setLoading(true);
         console.log("CALLED");
         (async () => {
-            const hotdogsJson = await apiGet("hotdogs/creator/" + userId);
-            hotdogsJson.sort((a, b) => {
+            const res = await DB.getHotdogsCreatedBy(userId);
+            res.sort((a, b) => {
                 return b.ts - a.ts;
             });
-            setHotdogs(hotdogsJson);
+            setHotdogs(res);
             setLoading(false);
         })();
     }, [userId]);
