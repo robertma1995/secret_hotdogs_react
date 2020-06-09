@@ -69,6 +69,11 @@ const getHotdogsCreatedBy = async (id) => {
     */
 }
 
+const getHotdogsCreatedByQuery = async (id) => {
+    let query = await hotdogs.getCreatedByQuery(id);
+    return query;
+}
+
 const addHotdog = async (hotdog) => {
     try {
         let hotdogId = await hotdogs.add(hotdog);
@@ -86,5 +91,6 @@ export {
     getUser,
     getAllHotdogs,
     getHotdogsCreatedBy,
+    getHotdogsCreatedByQuery,
     addHotdog,
 }

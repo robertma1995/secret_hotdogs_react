@@ -20,11 +20,30 @@ function HomeHotdogGrid() {
         setLoading(true);
         console.log("CALLED");
         (async () => {
+            /*
             const res = await DB.getHotdogsCreatedBy(userId);
             res.sort((a, b) => {
                 return b.ts - a.ts;
             });
             setHotdogs(res);
+            */
+            // TODO: set up snapshot listener
+            let query = await DB.getHotdogsCreatedByQuery(userId);
+            query.onSnapshot(snapshot => {
+                var res = [];
+                // onSnapshot returns a QuerySnapshot
+                snapshot.forEach(row => {
+                    var formattedRow = row.data();
+                    formattedRow["id"] = row.id;
+                    formattedRow.ts = row.data().ts.seconds;
+                    res.push(formattedRow);
+                });
+                console.log(res);
+                res.sort((a, b) => {
+                    return b.ts - a.ts;
+                });
+                setHotdogs(res);
+            });
             setLoading(false);
         })();
     }, [userId]);

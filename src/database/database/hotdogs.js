@@ -40,6 +40,11 @@ const getCreatedBy = async (id) => {
     });
 }
 
+// TODO: real-time query - returned to hotdogGrid where onSnapshot will be called
+const getCreatedByQuery = async (id) => {
+    return firebase.firestore().collection('hotdogs').where("creatorId", "==", id);
+}
+
 // insert - returns newly created hotdog id if successful
 const add = async (hotdog) => {
     hotdog["ts"] = firebase.firestore.Timestamp.now();
@@ -54,5 +59,6 @@ const add = async (hotdog) => {
 export {
     all,
     getCreatedBy,
-    add
+    getCreatedByQuery,
+    add,
 }

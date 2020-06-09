@@ -47,7 +47,6 @@ function AddForm() {
     const [added, setAdded] = useState(false);
 
     function handleAdd() {
-        console.log("HELLOOOJDOGSIDG");
         // set added to false again to handle consecutive adds on same page (no reload)
         setAdded(false);
         var titleValid, sausageValid, sauceValid, toppingAValid, toppingBValid;
