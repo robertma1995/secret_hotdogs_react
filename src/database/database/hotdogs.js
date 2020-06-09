@@ -42,7 +42,7 @@ const getCreatedBy = async (id) => {
 
 // insert - returns newly created hotdog id if successful
 const add = async (hotdog) => {
-    hotdog["ts"] = firebase.firestore().Timestamp.now();
+    hotdog["ts"] = firebase.firestore.Timestamp.now();
     return new Promise((resolve, reject) => {
         // add returns a "DocumentReference"
         firebase.firestore().collection('hotdogs').add(hotdog)

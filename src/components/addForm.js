@@ -6,8 +6,8 @@ import FormButton from './formButton';
 import SuccessSnackbar from './successSnackbar';
 // context
 import { UserContext } from '../userContext';
-// helper for accessing api
-import { apiPost } from '../utils/apiHelper';
+// database
+import * as DB from '../database/wrapper';
 
 
 // helper: trims form input and checks validity (no special characters)
@@ -47,6 +47,7 @@ function AddForm() {
     const [added, setAdded] = useState(false);
 
     function handleAdd() {
+        console.log("HELLOOOJDOGSIDG");
         // set added to false again to handle consecutive adds on same page (no reload)
         setAdded(false);
         var titleValid, sausageValid, sauceValid, toppingAValid, toppingBValid;
@@ -63,7 +64,7 @@ function AddForm() {
             setLoading(true);
             (async () => {
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
-                const bodyJson = {
+                const hotdog = {
                     creatorId: userId,
                     creatorName: userName,
                     title: title.trim(),
@@ -74,7 +75,7 @@ function AddForm() {
                         toppingB: toppingB.trim(),
                     }
                 }
-                const addStatus = await apiPost("hotdogs", bodyJson);
+                const addStatus = await DB.addHotdog(hotdog);
                 console.log("addStatus: " + addStatus);
                 setLoading(false);
 

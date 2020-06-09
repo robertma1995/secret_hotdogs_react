@@ -72,7 +72,7 @@ const getHotdogsCreatedBy = async (id) => {
 const addHotdog = async (hotdog) => {
     try {
         let hotdogId = await hotdogs.add(hotdog);
-        console.log("Hotdog with id " + hotdogId + " successfully created");
+        console.log("database: Hotdog with id " + hotdogId + " successfully created");
         return true;
     } catch(e) {
         console.log("database: " + e);
