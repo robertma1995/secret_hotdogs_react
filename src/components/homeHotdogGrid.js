@@ -11,40 +11,43 @@ import * as DB from '../database/wrapper';
 function HomeHotdogGrid() {
     const { userId } = useContext(UserContext);
     const [hotdogs, setHotdogs] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     
     // display hotdogs created by current user (reverse chronology)
     // TODO: only renders once, so adding hotdogs won't update the grid anymore
     // - experiment with firestore realtime updates: https://firebase.google.com/docs/firestore/query-data/listen
     useEffect(() => {
-        setLoading(true);
         console.log("CALLED");
         (async () => {
-            /*
-            const res = await DB.getHotdogsCreatedBy(userId);
-            res.sort((a, b) => {
-                return b.ts - a.ts;
-            });
-            setHotdogs(res);
-            */
-            // TODO: set up snapshot listener
             let query = await DB.getHotdogsCreatedByQuery(userId);
+            // set up snapshot listener
             query.onSnapshot(snapshot => {
-                var res = [];
-                // onSnapshot returns a QuerySnapshot
-                snapshot.forEach(row => {
-                    var formattedRow = row.data();
-                    formattedRow["id"] = row.id;
-                    formattedRow.ts = row.data().ts.seconds;
-                    res.push(formattedRow);
+                // onSnapshot returns a QuerySnapshot, docChanges gets all items on initial snapshot
+                var changes = [];
+                var changeType = "";
+                snapshot.docChanges().forEach(change => {
+                    var formattedRow = change.doc.data();
+                    formattedRow["id"] = change.doc.id;
+                    formattedRow.ts = change.doc.data().ts.seconds;
+                    changeType = change.type;
+                    changes.push(formattedRow);
                 });
-                console.log(res);
-                res.sort((a, b) => {
-                    return b.ts - a.ts;
-                });
-                setHotdogs(res);
+                console.log("CHANGES:");
+                console.log(changes);
+                // sort on the first render - only one hotdog added/removed at a time for successive renders
+                if (changes.length > 1) {
+                    changes.sort((a, b) => {
+                        return b.ts - a.ts;
+                    });
+                }
+                // prepend new hotdog(s), or filter out deleted hotdog based on id
+                if (changeType === "added") {
+                    setHotdogs(oldHotdogs => [...changes, ...oldHotdogs]);
+                } else if (changeType === "removed") {
+                    setHotdogs(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== changes[0].id))
+                }
+                setLoading(false);
             });
-            setLoading(false);
         })();
     }, [userId]);
 
