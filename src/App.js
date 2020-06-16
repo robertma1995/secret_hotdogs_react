@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 // material ui
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { Box } from '@material-ui/core';
 // routing
 import { Switch, Route } from 'react-router-dom';
 import * as routes from './utils/routes';
