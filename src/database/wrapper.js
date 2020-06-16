@@ -53,20 +53,6 @@ const getHotdogsCreatedBy = async (id) => {
         console.log("database: " + e);
         return [];
     }
-    // TEMP: working real-time database call
-    /*
-        dbindex.firebase.firestore().collection('hotdogs').where("creatorId", "==", id)
-        .onSnapshot(snapshot => {
-            // onSnapshot returns a QuerySnapshot
-            snapshot.forEach(row => {
-                formattedRow = row.data();
-                formattedRow["id"] = row.id;
-                formattedRow.ts = row.data().ts.seconds;
-                hotdogs.push(formattedRow);
-            });
-            console.log(hotdogs);
-        });
-    */
 }
 
 const getHotdogsCreatedByQuery = async (id) => {
