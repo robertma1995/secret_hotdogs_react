@@ -19,15 +19,13 @@ function App() {
     return (
         <UserContextProvider>
             <ThemeProvider theme={theme}>
-                <Box display="flex" flexDirection="column" height="100vh">
+                <Box display="flex" flexDirection="column">
                     <NavBar/>
-                    <Box display="flex" flexGrow={1}>
-                        <Switch>
-                            <Route exact path={routes.HOME} component={Home}></Route>
-                            <Route exact path={routes.LOGIN} component={Login}></Route>
-                            <Route exact path={routes.REGISTER} component={Register}></Route>
-                        </Switch>
-                    </Box>  
+                    <Switch>
+                        <Route exact path={routes.HOME} component={Home}></Route>
+                        <Route exact path={routes.LOGIN} component={Login}></Route>
+                        <Route exact path={routes.REGISTER} component={Register}></Route>
+                    </Switch>
                 </Box>
             </ThemeProvider>
         </UserContextProvider>
