@@ -8,6 +8,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body, html {
+  height: 100% !important;
+  margin: 0;
+}
+
+#root, .App {
+  height: 100% !important;
+}
+
+#root {
+	overflow: auto;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

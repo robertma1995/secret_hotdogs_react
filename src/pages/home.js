@@ -9,9 +9,7 @@ function Home() {
     const { userId } = useContext(UserContext);
     if (!userId) {
         return (
-            <Box height="92.1vh">
-                <Landing/>
-            </Box>
+            <Landing/>
         );
     } else if (userId) {
         return (
