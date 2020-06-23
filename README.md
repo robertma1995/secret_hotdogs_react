@@ -4,6 +4,16 @@ A web app based on React and Firebase that allows users to post and share hotdog
 ## Demo
 Working live demo: TODO: add demo link
 
+## Site
+### Landing page
+HELLO
+### Login
+HELLO
+### Registration
+HELLO
+### Posting
+HELLO
+
 ## Startup
 If you want to test the code yourself (requires nodejs and npm):
 1. Install required packages
@@ -15,15 +25,10 @@ npm i
 npm start
 ```
 
-## Site
-### Landing page
-HELLO
-### Login
-HELLO
-### Registration
-HELLO
-### Posting
-HELLO
+## Built with
+- React       (16.13.1)
+- Firebase    (7.14.1)
+- Material-UI (4.9.10) 
 
 ## TODO
 - [x] Convert app from PHP + MySQL to React + Firebase
