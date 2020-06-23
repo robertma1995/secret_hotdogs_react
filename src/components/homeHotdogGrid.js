@@ -66,7 +66,6 @@ function HomeHotdogGrid() {
         setHd(oldHotdogs => [...oldHotdogs, ...next]);
     }
 
-    // TODO: infinite scroll
     return (
         <Box
             display="flex"
@@ -103,6 +102,4 @@ function HomeHotdogGrid() {
     );
 }
 
-/*
-*/
 export default HomeHotdogGrid;
