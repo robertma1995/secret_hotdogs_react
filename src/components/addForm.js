@@ -6,8 +6,8 @@ import FormButton from './formButton';
 import SuccessSnackbar from './successSnackbar';
 // context
 import { UserContext } from '../userContext';
-// helper for accessing api
-import { apiPost } from '../utils/apiHelper';
+// database
+import * as DB from '../database/wrapper';
 
 
 // helper: trims form input and checks validity (no special characters)
@@ -58,12 +58,11 @@ function AddForm() {
         toppingAValid = isValid(toppingA, setToppingA, setToppingAError);
         toppingBValid = isValid(toppingB, setToppingB, setToppingBError);
 
-        // TODO: backend for add hotdog
         if (titleValid && sausageValid && sauceValid && toppingAValid && toppingBValid) {
             setLoading(true);
             (async () => {
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
-                const bodyJson = {
+                const hotdog = {
                     creatorId: userId,
                     creatorName: userName,
                     title: title.trim(),
@@ -74,7 +73,7 @@ function AddForm() {
                         toppingB: toppingB.trim(),
                     }
                 }
-                const addStatus = await apiPost("hotdogs", bodyJson);
+                const addStatus = await DB.addHotdog(hotdog);
                 console.log("addStatus: " + addStatus);
                 setLoading(false);
 

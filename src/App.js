@@ -1,8 +1,7 @@
 import React from 'react';
-import './App.css';
 // material ui
+import Box from '@material-ui/core/Box';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { Box, Container } from '@material-ui/core';
 // routing
 import { Switch, Route } from 'react-router-dom';
 import * as routes from './utils/routes';
@@ -19,15 +18,17 @@ function App() {
     return (
         <UserContextProvider>
             <ThemeProvider theme={theme}>
-                <Box display="flex" flexDirection="column" height="100vh">
-                    <NavBar/>
-                    <Box display="flex" flexGrow={1}>
+                <Box display="flex" flexDirection="column" height="100%">
+                    <Box display="flex" flexDirection="row" justifyContent="center">
+                        <NavBar/>
+                    </Box>
+                    <Box display="flex" flexDirection="row" justifyContent="center" flexGrow={1} width="100%">
                         <Switch>
                             <Route exact path={routes.HOME} component={Home}></Route>
                             <Route exact path={routes.LOGIN} component={Login}></Route>
                             <Route exact path={routes.REGISTER} component={Register}></Route>
                         </Switch>
-                    </Box>  
+                    </Box>
                 </Box>
             </ThemeProvider>
         </UserContextProvider>

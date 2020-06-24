@@ -8,8 +8,8 @@ import FormButton from './formButton';
 import SuccessSnackbar from './successSnackbar';
 // routing
 import * as routes from '../utils/routes';
-// helper for accessing api
-import { apiPost } from '../utils/apiHelper';
+// database
+import * as DB from '../database/wrapper';
 
 function RegisterForm(props) {
  	// state variables
@@ -76,15 +76,9 @@ function RegisterForm(props) {
             setLoading(true);
             (async () => {
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
-                const bodyJson = {
-                    name: name.trim(),
-                    email: email.trim(),
-                    password: password 
-                }
-                const registerStatus = await apiPost("users", bodyJson);
+                var registerStatus = await DB.register(name.trim(), email.trim(), password);
                 console.log("registerStatus: " + registerStatus);
                 setLoading(false);
-
                 // if register succeeds, reset all fields and give user option to go to login 
                 if (!registerStatus) {
                     setEmailError("Email already in use, please type in a different email");

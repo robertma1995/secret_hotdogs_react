@@ -13,8 +13,8 @@ const useStyles = makeStyles((theme) => ({
         backgroundImage: `url(${backgroundImage})`,
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        height: '100%',
         backgroundSize: 'cover',
+        height: '100%',
     },
     // make box full height to vertically centre children
     wrapper: {

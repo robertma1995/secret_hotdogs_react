@@ -1,35 +1,71 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, Grid, CircularProgress } from '@material-ui/core';
+import { Waypoint } from 'react-waypoint';
 // my components
 import HotdogCard from './hotdogCard';
 import AddFormDialog from './addFormDialog';
 // context
 import { UserContext } from '../userContext';
-// helper for accessing api
-import { apiGet } from '../utils/apiHelper';
+// database
+import * as DB from '../database/wrapper';
 
 function HomeHotdogGrid() {
     const { userId } = useContext(UserContext);
     const [hotdogs, setHotdogs] = useState([]);
-    const [loading, setLoading] = useState(false);
-    
-    // display hotdogs created by current user
-    // TODO: only renders once, so adding hotdogs won't update the grid anymore
-    // - experiment with firestore realtime updates: https://firebase.google.com/docs/firestore/query-data/listen
+    const [loading, setLoading] = useState(true);
+    const [hd, setHd] = useState([]);
+
+    // display hotdogs created by current user (reverse chronology)
     useEffect(() => {
-        setLoading(true);
         console.log("CALLED");
         (async () => {
-            const hotdogsJson = await apiGet("hotdogs/creator/" + userId);
-            hotdogsJson.sort((a, b) => {
-                return b.ts - a.ts;
+            let query = await DB.getHotdogsCreatedByQuery(userId);
+            // set up snapshot listener
+            query.onSnapshot(snapshot => {
+                setLoading(true);
+                // onSnapshot returns a QuerySnapshot, docChanges gets all items on initial snapshot
+                var changes = [];
+                var changeType = "";
+                snapshot.docChanges().forEach(change => {
+                    var formattedRow = change.doc.data();
+                    formattedRow["id"] = change.doc.id;
+                    formattedRow.ts = change.doc.data().ts.seconds;
+                    changes.push(formattedRow);
+                    changeType = change.type;
+                });
+                console.log("CHANGES:");
+                console.log(changes);
+                // sort on the first render - only one hotdog added/removed at a time for successive renders
+                if (changes.length > 1) {
+                    changes.sort((a, b) => {
+                        return b.ts - a.ts;
+                    });
+                }
+                // prepend new hotdog(s), or filter out deleted hotdog based on id
+                if (changeType === "added") {
+                    setHotdogs(oldHotdogs => [...changes, ...oldHotdogs]);
+                    setHd(oldHotdogs => [...changes, ...oldHotdogs].slice(0, 3));
+                } else if (changeType === "removed") {
+                    setHotdogs(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== changes[0].id))
+                }
+                setLoading(false);
             });
-            setHotdogs(hotdogsJson);
-            setLoading(false);
         })();
     }, [userId]);
 
-    // TODO: infinite side scrolling cards instead of vertical scroll
+    // adds 3 more items from hotdogs list given index of next hotdog to render
+    function fetchMore(last) {
+        console.log("LAST: " + last);
+        // prevent overflow if last row of hotdogs
+        var numItems = 3;
+        if (last + numItems > hotdogs.length) {
+            numItems = hotdogs.length - last;
+        }
+        var next = hotdogs.slice(last, last + numItems);
+        console.log(next);
+        setHd(oldHotdogs => [...oldHotdogs, ...next]);
+    }
+
     return (
         <Box
             display="flex"
@@ -44,8 +80,12 @@ function HomeHotdogGrid() {
             }
             { !loading && 
                 <Grid container spacing={3}>
-                    {hotdogs.map((hotdog) => (
+                    { hd.map((hotdog, i) => (
                         <Grid item key={hotdog.id} xs={4}>
+                            { (i+1) % 3 === 0 && 
+                              hd.length < hotdogs.length &&
+                                <Waypoint onEnter={() => fetchMore(i+1)} />
+                            }
                             <HotdogCard
                                 id={hotdog.id}
                                 title={hotdog.title}
@@ -62,6 +102,4 @@ function HomeHotdogGrid() {
     );
 }
 
-/*
-*/
 export default HomeHotdogGrid;

@@ -16,6 +16,7 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "react-waypoint": "^9.0.2",
     "validator": "^13.0.0"
   },
   "scripts": {
@@ -38,6 +39,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "http://localhost:5000/"
+  }
 }

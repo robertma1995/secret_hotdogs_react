@@ -8,6 +8,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body, html {
+  height: 100% !important;
+  margin: 0;
+}
+
+#root, .App {
+  height: 100% !important;
+}
+
+/* prevent sticky navbar from disappearing on hotdog page due to root height - height: 100% alone isn't enough*/
+#root {
+	overflow: auto;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
