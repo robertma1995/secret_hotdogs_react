@@ -17,6 +17,7 @@ body, html {
   height: 100% !important;
 }
 
+/* prevent sticky navbar from disappearing on hotdog page due to root height - height: 100% alone isn't enough*/
 #root {
 	overflow: auto;
 }
