@@ -1,5 +1,6 @@
-// helper functions for accessing api (CRUD standards): get, post, put, delete
+// NOT USED IN CURRENT APP - NOW ACCESSING FIREBASE DIRECTLY INSTEAD OF USING AN API
 
+// helper functions for accessing api (CRUD standards): get, post, put, delete
 async function apiGet(path) {
     const response = await fetch('/api/' + path);
     return response.json();
