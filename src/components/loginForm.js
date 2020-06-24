@@ -55,7 +55,6 @@ function LoginForm(props) {
             (async () => {
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
                 const loginUserId = await DB.login(email.trim(), password);
-                console.log("loginUserId: " + loginUserId);
                 setLoading(false);
                 if (!loginUserId) {
                     setEmailError("Incorrect email or password");
@@ -63,7 +62,6 @@ function LoginForm(props) {
                 } else {
                     // get user details (users currently only have a name)
                     const loginUser = await DB.getUser(loginUserId);
-                    console.log("loginUserName: " + loginUser.name);
                     setCurrentUserName(loginUser.name);
                     setCurrentUserId(loginUserId);
                     props.history.push(routes.HOME);

@@ -77,7 +77,6 @@ function RegisterForm(props) {
             (async () => {
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
                 var registerStatus = await DB.register(name.trim(), email.trim(), password);
-                console.log("registerStatus: " + registerStatus);
                 setLoading(false);
                 // if register succeeds, reset all fields and give user option to go to login 
                 if (!registerStatus) {

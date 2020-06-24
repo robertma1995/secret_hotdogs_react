@@ -17,7 +17,7 @@ function HomeHotdogGrid() {
 
     // display hotdogs created by current user (reverse chronology)
     useEffect(() => {
-        console.log("CALLED");
+        // console.log("CALLED");
         (async () => {
             let query = await DB.getHotdogsCreatedByQuery(userId);
             // set up snapshot listener
@@ -33,8 +33,8 @@ function HomeHotdogGrid() {
                     changes.push(formattedRow);
                     changeType = change.type;
                 });
-                console.log("CHANGES:");
-                console.log(changes);
+                // console.log("CHANGES:");
+                // console.log(changes);
                 // sort on the first render - only one hotdog added/removed at a time for successive renders
                 if (changes.length > 1) {
                     changes.sort((a, b) => {
@@ -55,14 +55,14 @@ function HomeHotdogGrid() {
 
     // adds 3 more items from hotdogs list given index of next hotdog to render
     function fetchMore(last) {
-        console.log("LAST: " + last);
+        // console.log("LAST: " + last);
         // prevent overflow if last row of hotdogs
         var numItems = 3;
         if (last + numItems > hotdogs.length) {
             numItems = hotdogs.length - last;
         }
         var next = hotdogs.slice(last, last + numItems);
-        console.log(next);
+        // console.log(next);
         setHd(oldHotdogs => [...oldHotdogs, ...next]);
     }
 

@@ -74,7 +74,6 @@ function AddForm() {
                     }
                 }
                 const addStatus = await DB.addHotdog(hotdog);
-                console.log("addStatus: " + addStatus);
                 setLoading(false);
 
                 // if add hotdog succeeds, reset all fields and give user option to go back to homepage 
