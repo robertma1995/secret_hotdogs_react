@@ -76,11 +76,14 @@ function RegisterForm(props) {
             setLoading(true);
             (async () => {
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
-                var registerStatus = await DB.register(name.trim(), email.trim(), password);
+                // TEMP: stop new registrations since public hosting now
+                // var registerStatus = await DB.register(name.trim(), email.trim(), password);
+                var registerStatus = false;
                 setLoading(false);
                 // if register succeeds, reset all fields and give user option to go to login 
                 if (!registerStatus) {
-                    setEmailError("Email already in use, please type in a different email");
+                    // setEmailError("Email already in use, please type in a different email");
+                    setEmailError("Invalid email");
                 } else {
                     setName("");
                     setEmail("");
