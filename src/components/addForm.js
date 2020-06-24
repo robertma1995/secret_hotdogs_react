@@ -58,7 +58,6 @@ function AddForm() {
         toppingAValid = isValid(toppingA, setToppingA, setToppingAError);
         toppingBValid = isValid(toppingB, setToppingB, setToppingBError);
 
-        // TODO: backend for add hotdog
         if (titleValid && sausageValid && sauceValid && toppingAValid && toppingBValid) {
             setLoading(true);
             (async () => {

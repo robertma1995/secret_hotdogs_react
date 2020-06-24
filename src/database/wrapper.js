@@ -1,5 +1,5 @@
 // wrapper for database access and error catching
-// similar functionality as server/routes.js
+// similar functionality as old server/routes.js
 import { users, hotdogs } from './database';
 
 // ========================================= USERS ===========================================
