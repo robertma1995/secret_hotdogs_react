@@ -8,7 +8,7 @@ const login = async (email, password) => {
         let userId = await users.login(email, password);
         return userId;
     } catch(e) {
-        console.log("database: " + e);
+        // console.log("database: " + e);
         return false;
     }
 }
@@ -16,10 +16,10 @@ const login = async (email, password) => {
 const register = async (name, email, password) => {
     try {
         let userId = await users.register(name.trim(), email.trim(), password);
-        console.log("database: User with id " + userId + " successfully created");
+        // console.log("database: User with id " + userId + " successfully created");
         return true;
     } catch(e) {
-        console.log("database: " + e);
+        // console.log("database: " + e);
         return false;
     }
 }
@@ -29,7 +29,7 @@ const getUser = async (id) => {
         let user = await users.get(id);
         return user;
     } catch(e) {
-        console.log("database: " + e);
+        // console.log("database: " + e);
         return false;
     }
 }
@@ -40,7 +40,7 @@ const getAllHotdogs = async () => {
         let res = await hotdogs.all();
         return res;
     } catch(e) {
-        console.log("database: " + e);
+        // console.log("database: " + e);
         return [];
     }
 }
@@ -50,7 +50,7 @@ const getHotdogsCreatedBy = async (id) => {
         let res = await hotdogs.getCreatedBy(id);
         return res;
     } catch(e) {
-        console.log("database: " + e);
+        // console.log("database: " + e);
         return [];
     }
 }
@@ -63,10 +63,10 @@ const getHotdogsCreatedByQuery = async (id) => {
 const addHotdog = async (hotdog) => {
     try {
         let hotdogId = await hotdogs.add(hotdog);
-        console.log("database: Hotdog with id " + hotdogId + " successfully created");
+        // console.log("database: Hotdog with id " + hotdogId + " successfully created");
         return true;
     } catch(e) {
-        console.log("database: " + e);
+        // console.log("database: " + e);
         return false;
     }
 }
