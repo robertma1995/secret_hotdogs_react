@@ -2,7 +2,7 @@
 A web app based on React and Firebase that allows users to post and share hotdog recipes with each other. Users can interact with each other by liking and commenting on these recipes, and also add each other as friends.
 
 ## Demo
-Working live demo: TODO: add demo link
+Working live demo: https://secret-hotdogs.web.app
 
 ## Site
 ### Landing page
@@ -28,7 +28,7 @@ npm start
 ## Built with
 - React       (16.13.1)
 - Firebase    (7.14.1)
-- Material-UI (4.9.10) 
+- Material-UI (4.9.10)
 
 ## TODO
 - [x] Convert app from PHP + MySQL to React + Firebase
