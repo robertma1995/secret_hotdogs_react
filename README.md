@@ -9,10 +9,10 @@ Working live demo: https://secret-hotdogs.web.app
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png" width="800">
 
 ### Registration & Login
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png" height="400"><img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png" height="400">
+<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png" height="350"><img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png" height="350">
 
 ### Posting
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593058658/post_b.png" height="400">
+<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593058658/post_b.png" height="450">
 
 ### Homepage (before & after posting)
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593057445/post_a.png" width="800">
