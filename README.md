@@ -7,9 +7,9 @@ Working live demo: https://secret-hotdogs.web.app
 ## Site
 ### Landing page
 HELLO
-### Login
-HELLO
 ### Registration
+HELLO
+### Login
 HELLO
 ### Posting
 HELLO

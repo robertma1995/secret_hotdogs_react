@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Grid, CircularProgress } from '@material-ui/core';
+import { Box, Grid, CircularProgress, Typography } from '@material-ui/core';
 import { Waypoint } from 'react-waypoint';
 // my components
 import HotdogCard from './hotdogCard';
@@ -78,7 +78,12 @@ function HomeHotdogGrid() {
             { loading && 
                 <CircularProgress color="primary" size={100}/>
             }
-            { !loading && 
+            { !loading && hotdogs.length === 0 &&
+                <Typography variant="h6" color="primary" align="center">
+                    No hotdogs yet! Click the bottom right plus icon to post your first hotdog
+                </Typography>
+            }
+            { !loading && hotdogs.length !== 0 &&
                 <Grid container spacing={3}>
                     { hd.map((hotdog, i) => (
                         <Grid item key={hotdog.id} xs={4}>
