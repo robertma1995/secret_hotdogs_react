@@ -7,7 +7,7 @@ Working live demo: https://secret-hotdogs.web.app
 ## Site
 ### Landing page
 ![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png)
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png" width="48">		
+<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png" width="512">		
 ### Registration & Login
 ![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png)
 ![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png)
