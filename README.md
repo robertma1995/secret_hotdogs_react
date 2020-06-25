@@ -6,18 +6,17 @@ Working live demo: https://secret-hotdogs.web.app
 
 ## Site
 ### Landing page
-![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png)
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png" width="700">
-### Registration & Login
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png" width="300"><img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png" width="300"  style="float:left;">
+<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png" width="800">
 
-![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png)
-![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png)
+### Registration & Login
+<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png" width="400"><img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png" width="400">
+
 ### Posting
-![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593057445/post_a.png)
-![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593058658/post_b.png)
-### Homepage (after posting)
-![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593057444/homepage.png)
+<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593058658/post_b.png" width="800">
+
+### Homepage (before & after posting)
+<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593057445/post_a.png" width="800">
+<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593057444/homepage.png" width="800">
 
 ## Startup
 If you want to test the code yourself (requires nodejs and npm):
