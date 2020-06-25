@@ -2,16 +2,16 @@
 A web app based on React and Firebase that allows users to post and share hotdog recipes with each other. Users can interact with each other by liking and commenting on these recipes, and also add each other as friends.
 
 ## Demo
-Working live demo: https://secret-hotdogs.web.app
+https://secret-hotdogs.web.app
 
 ## Site
-### Landing page
+### Landing
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png" width="900">
 
 ### Forms: Registration, Login, Posting
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png" width="250">  <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png" width="250">  <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593058658/post_b.png" width="320">
 
-### Homepage (before & after posting)
+### Home (before & after posting)
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593057445/post_a.png" width="800">
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593057444/homepage.png" width="800">
 
