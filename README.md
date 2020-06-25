@@ -8,10 +8,8 @@ Working live demo: https://secret-hotdogs.web.app
 ### Landing page
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png" width="900">
 
-### Registration & Login
+### Forms: Registration, Login, Posting
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png" width="250">  <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png" width="250">  <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593058658/post_b.png" width="320">
-
-### Posting
 
 ### Homepage (before & after posting)
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593057445/post_a.png" width="800">
