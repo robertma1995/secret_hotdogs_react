@@ -8,11 +8,14 @@ Working live demo: https://secret-hotdogs.web.app
 ### Landing page
 ![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png)
 ### Registration
-HELLO
+![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593057244/registration.png)
 ### Login
-HELLO
+![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593057244/login.png)
 ### Posting
-HELLO
+![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593057445/post_a.png)
+![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593057444/post_b.png)
+### Homepage (after posting)
+![](https://res.cloudinary.com/noctisvirtus/image/upload/v1593057444/homepage.png)
 
 ## Startup
 If you want to test the code yourself (requires nodejs and npm):
