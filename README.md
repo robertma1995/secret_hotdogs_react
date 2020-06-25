@@ -4,7 +4,7 @@ A web app based on React and Firebase that allows users to post and share hotdog
 ## Demo
 https://secret-hotdogs.web.app
 
-## Site
+## Screenshots
 ### Landing
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png" width="900">
 
