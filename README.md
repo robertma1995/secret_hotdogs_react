@@ -3,6 +3,7 @@ A web app based on React and Firebase that allows users to post and share hotdog
 
 ## Demo
 https://secret-hotdogs.web.app 
+
 (Sign Up function is disabled in current hosted version - sample login credentials can be provided on request)
 
 ## Screenshots
