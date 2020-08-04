@@ -15,7 +15,7 @@ function Home() {
         return (
             <Container maxWidth="md">
                 <Box display="flex" flexDirection="column" height="100%">
-                    <Box p={2} display="flex" flexDirection="row" justifyContent="center">
+                    <Box p={5} display="flex" flexDirection="row" justifyContent="center">
                         <PageTitle text="Your Hotdogs"/>
                     </Box>
                     <Box display="flex" flexDirection="row" justifyContent="center" flexGrow={1} width="100%">

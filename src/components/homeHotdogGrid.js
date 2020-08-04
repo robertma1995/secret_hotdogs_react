@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, Grid, CircularProgress, Typography } from '@material-ui/core';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { Waypoint } from 'react-waypoint';
 // my components
 import HotdogCard from './hotdogCard';
@@ -69,21 +70,33 @@ function HomeHotdogGrid() {
     }
 
     return (
-        <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            height="100%"
-            width="100%"
-        >
+        <Box height="100%" width="100%">
             { loading && 
-                <CircularProgress color="primary" size={100}/>
+                // loading circle in center of section under page title
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    height="100%"
+                    width="100%"
+                >
+                    <CircularProgress color="primary" size={100}/>
+                </Box>
             }
             { !loading && hotdogs.length === 0 &&
-                <Typography variant="h6" color="primary" align="center">
-                    No hotdogs yet! Click the bottom right plus icon to post your first hotdog
-                </Typography>
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    height="100%"
+                    width="100%"
+                >
+                    <Typography variant="h6" color="primary">
+                        No hotdogs yet! Click on the bottom right <AddCircleIcon/> to post your first hotdog
+                    </Typography>
+                </Box>
             }
             { !loading && hotdogs.length !== 0 &&
                 <Grid container spacing={3}>
