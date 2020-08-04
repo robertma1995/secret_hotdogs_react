@@ -46,7 +46,8 @@ function HomeHotdogGrid() {
                     setHotdogs(oldHotdogs => [...changes, ...oldHotdogs]);
                     setHd(oldHotdogs => [...changes, ...oldHotdogs].slice(0, 3));
                 } else if (changeType === "removed") {
-                    setHotdogs(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== changes[0].id))
+                    setHotdogs(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== changes[0].id));
+                    setHd(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== changes[0].id));
                 }
                 setLoading(false);
             });
@@ -54,6 +55,7 @@ function HomeHotdogGrid() {
     }, [userId]);
 
     // adds 3 more items from hotdogs list given index of next hotdog to render
+    // TODO: improve fetching method - two sets of hotdog state vars is confusing
     function fetchMore(last) {
         // console.log("LAST: " + last);
         // prevent overflow if last row of hotdogs
