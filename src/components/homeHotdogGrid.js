@@ -38,22 +38,23 @@ function HomeHotdogGrid() {
                 });
                 // console.log("CHANGES:");
                 // console.log(changes);
-                // sort and set initial hotdog list on the first render - only one hotdog added/removed at a time for successive renders
-                // changeType is always "added" on first render, so no need to check here
+                // sort on the first render - only one hotdog added/removed at a time for successive renders
                 if (changes.length > 1) {
                     changes.sort((a, b) => {
                         return b.ts - a.ts;
                     });
-                    // TODO: does this need to be a state variable? only changes once, also not used directly for rendering
-                    setHotdogs(oldHotdogs => [...changes, ...oldHotdogs]);
+                    setHotdogs(changes);
+                    setHd(changes.slice(0, 3));
+                } else if (changes.length === 1) {
+                    if (changeType === "added") {
+                        setHotdogs(oldHotdogs => [...changes, ...oldHotdogs]);
+                        setHd(oldHotdogs => [...changes, ...oldHotdogs]);
+                    } else if (changeType === "removed") {
+                        setHotdogs(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== changes[0].id));
+                        setHd(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== changes[0].id));
+                    }
                 }
                 // prepend new hotdog(s), or filter out deleted hotdog based on id
-                // TODO: only need to assign setHotdogs on initial call - following calls only need to be added/removed from "hd"
-                if (changeType === "added") {
-                    setHd(oldHd => [...changes, ...oldHd].slice(0, 3));
-                } else if (changeType === "removed") {
-                    setHd(oldHd => oldHd.filter(hotdog => hotdog.id !== changes[0].id));
-                }
                 setLoading(false);
             });
         })();
@@ -61,8 +62,7 @@ function HomeHotdogGrid() {
 
     // adds 3 more items from hotdogs list given index of next hotdog to render
     // TODO: improve fetching method - two sets of hotdog state vars is confusing
-    // option 1: make db call to get all hotdogs of user, sort, get the slice 
-    //  - counter-intuitive, more complex than double state var method, still have to get all hotdogs
+    // (currently no better solution if want infinite scrolling )
     function fetchMore(last) {
         console.log("LAST: " + last);
         // prevent overflow if last row of hotdogs
@@ -106,12 +106,14 @@ function HomeHotdogGrid() {
             }
             { !loading && hotdogs.length !== 0 &&
                 // for every third hotdog scrolled past, fetch the next 3
+                // only fetch more if waypoint index is greater than the current length of hd
                 <Grid container spacing={3}>
                     { hd.map((hotdog, i) => (
                         <Grid item key={hotdog.id} xs={4}>
                             { (i+1) % 3 === 0 && 
+                              (i+1) >= hd.length && 
                               hd.length < hotdogs.length &&
-                                <Waypoint onEnter={() => fetchMore(i+1)} />
+                                <Waypoint onEnter={() => fetchMore(i+1)}/>
                             }
                             <HotdogCard
                                 id={hotdog.id}
