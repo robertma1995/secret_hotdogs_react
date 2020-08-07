@@ -77,7 +77,6 @@ const theme = {
                 backgroundColor: '#212121',
             }
         }
-
     }
 }
 
