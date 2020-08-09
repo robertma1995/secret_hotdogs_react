@@ -65,16 +65,22 @@ const theme = {
                 paddingTop: '100%',
             }
         },
-        // capitalize ListItemText
+        // capitalize ListItemText (hotdog card ingredients list)
         MuiListItem: {
             root: {
-                textTransform: "capitalize"
+                textTransform: 'capitalize'
             }
         },
         // appbar color same as text.primary
         MuiAppBar: {
             colorPrimary: {
                 backgroundColor: '#212121',
+            }
+        },
+        // remove margin from dialogcontenttext
+        MuiDialogContentText: {
+            root: {
+                marginBottom: 0
             }
         }
     }

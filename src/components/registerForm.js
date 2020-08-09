@@ -123,7 +123,7 @@ function RegisterForm(props) {
             />
             <FormField
                 type="password"
-                iconName="passwordConfirm"
+                iconName="none"
                 label="Confirm Password"
                 value={passwordConfirm}
                 setValue={setPasswordConfirm}

@@ -3,17 +3,16 @@ import { Box, TextField } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EmailIcon from '@material-ui/icons/Email';
 import LockIcon from '@material-ui/icons/Lock';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
 import RestaurantIcon from '@material-ui/icons/Restaurant';
 import OutdoorGrillIcon from '@material-ui/icons/OutdoorGrill';
 import WavesIcon from '@material-ui/icons/Waves';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
+// "none" = white "invisible" icon with ShoppingCart as a placeholder
 const icons = {
     user: <AccountCircleIcon/>,
     email: <EmailIcon/>,
     password: <LockIcon/>,
-    passwordConfirm: <LockOpenIcon/>,
     hotdogTitle: <RestaurantIcon/>,
     hotdogSausage: <OutdoorGrillIcon/>,
     hotdogSauce: <WavesIcon/>,
@@ -26,7 +25,7 @@ const icons = {
 function FormField(props) {
     const { type, iconName, label, value, setValue, error } = props;
     return (
-        <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center" p={1}>
+        <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center" p={0.5}>
             <Box mr={0.5}>
                 {icons[iconName]}
             </Box>
