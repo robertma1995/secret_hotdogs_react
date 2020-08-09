@@ -1,4 +1,7 @@
 import React, { useContext, useState } from 'react';
+// TODO: add separate "formX" component for add topping button if necessary
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 // my components
 import Form from './form';
 import FormField from './formField';
@@ -30,6 +33,7 @@ function isValid(input, setInput, setInputError) {
     return inputValid;
 }
 
+// TODO: add form with dynamic number of toppings
 function AddFormTest() {
     const [title, setTitle] = useState("");
     const [titleError, setTitleError] = useState(" ");
@@ -41,22 +45,11 @@ function AddFormTest() {
     // const [toppingAError, setToppingAError] = useState(" ");
     // const [toppingB, setToppingB] = useState("");
     // const [toppingBError, setToppingBError] = useState(" ");
-    const [toppings, setToppings] = useState([]);
-    /*
-    for each topping added, declare new state variables 
 
-        const [topping0, setTopping0] = useState("")
-        const [topping0Error, setTopping0Error] = useState(" ")
+    // TODO
+    // const [toppings, setToppings] = useState([]);
+    const [state, setState] = useState([]);
 
-    and push a new entry to toppings:
-
-        "0": {
-            label: "Topping 0"
-            value: topping0
-            setValue: setTopping0
-            error: topping0Error
-        }
-    */
     
     const { userId, userName } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
@@ -74,8 +67,12 @@ function AddFormTest() {
         sauceValid = isValid(sauce, setSauce, setSauceError);
         // toppingAValid = isValid(toppingA, setToppingA, setToppingAError);
         // toppingBValid = isValid(toppingB, setToppingB, setToppingBError);
+        
         // TODO: check isValid for all toppings
         toppingsValid = false;
+        // TODO: checking if values assigned correctly
+        console.log("TOPPINGS STATE: ");
+        console.log(state);
 
         // if (titleValid && sausageValid && sauceValid && toppingAValid && toppingBValid) {
         if (titleValid && sausageValid && sauceValid && toppingsValid) {
@@ -113,6 +110,55 @@ function AddFormTest() {
         }
     }
 
+    // adds a topping
+    /*
+        for each topping added, declare new state variables 
+
+            const [topping0, setTopping0] = useState("")
+            const [topping0Error, setTopping0Error] = useState(" ")
+            ...no way to declare dynamic variable names within useState, so have to use classic setState
+
+            const [state, setState] = useState({});
+            setState(state => {...state, ["topping" + next]: ""})
+            setState(state => {...state, ["topping" + next + "Error"]: " "})
+
+        and push a new entry to toppings:
+
+            "0": {
+                label: "Topping 0"
+                value: topping0
+                setValue: setTopping0
+                error: topping0Error
+            }
+            
+            "0": {
+                label: "Topping " + index
+                value: state["topping" + index]
+                error: state["topping" + index + "Error"]
+            }
+    */
+    function handleAddTopping() {
+        console.log("ADDED TOPPING");
+        // index of new topping 
+        var next = state.length;
+        // declare new state variables
+        var topping = {
+            value: "",
+            error: " "
+        };
+        setState(state => [...state, topping]);
+        // TODO: revert to old method (make state just a {} as before, but no separate "toppings" state variable)
+        /*
+            setState(state => {
+                return {...state, ["topping" + next]: ""}
+            })
+            setState(state => {
+                return {...state, ["topping" + next + "Error"]: " "}
+            })
+            
+        */
+    }
+
     return (
         <Form>
             <FormField
@@ -139,20 +185,50 @@ function AddFormTest() {
                 setValue={setSauce}
                 error={sauceError}
             />
-            { toppings.map(topping => (
-                <FormField
+            { state.map((topping, i) => (
+                // <FormField
+                //     type="text"
+                //     iconName="hotdogTopping"
+                //     // label="Topping A"
+                //     label={topping.label}
+                //     // value={toppingA}
+                //     value={topping.value}
+                //     // setValue={setToppingA}
+                //     setValue={topping.setValue}
+                //     // error={toppingAError}
+                //     error={topping.error}
+                // />
+                <TextField
+                    key={i}
+                    label={"Topping " + i}
                     type="text"
-                    iconName="hotdogTopping"
-                    // label="Topping A"
-                    label={topping.label}
-                    // value={toppingA}
-                    value={topping.value}
-                    // setValue={setToppingA}
-                    setValue={topping.setValue}
-                    // error={toppingAError}
-                    error={topping.error}
+                    value={state[i].value}
+                    onChange={(event) => {
+                        var val = event.target.value;
+                        // console.log("TOPPING " + i + ": " + val);
+                        // setState(state => {
+                        //     return {...state, [i]: {"value": val, "error": topping.error}}
+                        // });
+                        // TODO: revert to old method - below method is slow + inefficient
+                        let newState = [...state];
+                        newState[i].value = val;
+                        setState(newState);
+                    }}
+                    error={topping.error.trim() !== ""}
+                    helperText={topping.error}
+                    fullWidth
                 />
+
+                // TODO: revert to old method, but use a loop instead of .map (counter = state.length/2)
             ))}
+            <Button 
+                variant="contained" 
+                color="primary" 
+                disableElevation
+                onClick={() => handleAddTopping()}
+            >
+                Add topping
+            </Button>
             <FormButton
                 text="Submit"
                 loading={loading}
@@ -166,6 +242,29 @@ function AddFormTest() {
         </Form>
     );
 } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function AddForm() {
     const [title, setTitle] = useState("");
@@ -285,4 +384,4 @@ function AddForm() {
     );
 } 
 
-export default AddForm;
+export default AddFormTest;
