@@ -46,9 +46,11 @@ function AddFormTest() {
     // const [toppingB, setToppingB] = useState("");
     // const [toppingBError, setToppingBError] = useState(" ");
 
-    // TODO
-    // const [toppings, setToppings] = useState([]);
-    const [state, setState] = useState([]);
+    // const [state, setState] = useState([]);
+    // TODO: separate toppings and toppingErrors instead of using one "state" variable
+    // TODO: consider including all errors (title, sauce, sausage, toppings) in one "state" array
+     const [toppings, setToppings] = useState([]);
+     const [toppingErrors, setToppingErrors] = useState([]);
 
     
     const { userId, userName } = useContext(UserContext);
@@ -72,7 +74,9 @@ function AddFormTest() {
         toppingsValid = false;
         // TODO: checking if values assigned correctly
         console.log("TOPPINGS STATE: ");
-        console.log(state);
+        console.log(toppings);
+        console.log("ERRORS STATE: ");
+        console.log(toppingErrors);
 
         // if (titleValid && sausageValid && sauceValid && toppingAValid && toppingBValid) {
         if (titleValid && sausageValid && sauceValid && toppingsValid) {
@@ -140,23 +144,10 @@ function AddFormTest() {
     function handleAddTopping() {
         console.log("ADDED TOPPING");
         // index of new topping 
-        var next = state.length;
-        // declare new state variables
-        var topping = {
-            value: "",
-            error: " "
-        };
-        setState(state => [...state, topping]);
-        // TODO: revert to old method (make state just a {} as before, but no separate "toppings" state variable)
-        /*
-            setState(state => {
-                return {...state, ["topping" + next]: ""}
-            })
-            setState(state => {
-                return {...state, ["topping" + next + "Error"]: " "}
-            })
-            
-        */
+        var next = toppings.length;
+        // append new topping + error variables to respective state
+        setToppings(state => [...state, ""]);
+        setToppingErrors(state => [...state, " "]);
     }
 
     return (
@@ -185,41 +176,27 @@ function AddFormTest() {
                 setValue={setSauce}
                 error={sauceError}
             />
-            { state.map((topping, i) => (
-                // <FormField
-                //     type="text"
-                //     iconName="hotdogTopping"
-                //     // label="Topping A"
-                //     label={topping.label}
-                //     // value={toppingA}
-                //     value={topping.value}
-                //     // setValue={setToppingA}
-                //     setValue={topping.setValue}
-                //     // error={toppingAError}
-                //     error={topping.error}
-                // />
+            {toppings.map((topping, i) => (
                 <TextField
-                    key={i}
-                    label={"Topping " + i}
+                    fullWidth
                     type="text"
-                    value={state[i].value}
+                    key={i}
+                    label={"Topping " + (i+1)}
+                    value={topping}
                     onChange={(event) => {
                         var val = event.target.value;
-                        // console.log("TOPPING " + i + ": " + val);
-                        // setState(state => {
-                        //     return {...state, [i]: {"value": val, "error": topping.error}}
+                        // TODO: working, but still essentially same formula as before...
+                        let newToppings = [...toppings];
+                        newToppings[i] = val;
+                        setToppings(newToppings);
+                        // TODO: below doesn't work - incorrect syntax most likely, consider using useReducer
+                        // setToppings(state => {
+                        //     return {...state, [i]: val}
                         // });
-                        // TODO: revert to old method - below method is slow + inefficient
-                        let newState = [...state];
-                        newState[i].value = val;
-                        setState(newState);
                     }}
-                    error={topping.error.trim() !== ""}
-                    helperText={topping.error}
-                    fullWidth
+                    error={toppingErrors[i].trim() !== ""}
+                    helperText={toppingErrors[i]}
                 />
-
-                // TODO: revert to old method, but use a loop instead of .map (counter = state.length/2)
             ))}
             <Button 
                 variant="contained" 
@@ -244,6 +221,26 @@ function AddFormTest() {
 } 
 
 
+// MAP DOESN'T WANT TO WORK PROPERLY
+/*
+{toppings.map((topping, i) => (
+    <TextField
+        fullWidth
+        type="text"
+        key={i}
+        label={"Topping " + i}
+        value={topping}
+        onChange={(event) => {
+            var val = event.target.value;
+            setToppings(state => {
+                return {...state, [i]: val}
+            });
+        }}
+        error={toppingErrors[i].trim() !== ""}
+        helperText={toppingErrors[i]}
+    />
+))}
+*/
 
 
 
