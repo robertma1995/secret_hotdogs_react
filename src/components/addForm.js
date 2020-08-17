@@ -59,8 +59,6 @@ function AddFormTest() {
                 // TODO: untested - remove topping field given its index
                 return toppings.filter((_, id) => id !== index);
             case "update":
-                console.log("index: " + index);
-                console.log("value: " + value);
                 // TODO: update at given id
                 // same formula as before, but seems like the only choice for now
                 let newToppings = [...toppings];
@@ -71,16 +69,19 @@ function AddFormTest() {
         }
     }, []);
 
-    const [toppingErrors, dispatchToppingErrors] = useReducer((errors, { type, id, value }) => {
+    const [toppingErrors, dispatchToppingErrors] = useReducer((errors, { type, index, value }) => {
         switch (type) {
             case "add": 
                 return [...errors, " "];
             case "remove":
-                return errors.filter((_, index) => index !== id);
+                return errors.filter((_, id) => id !== index);
             case "update":
-                console.log("id: " + id);
+                console.log("index: " + index);
                 console.log("value: " + value);
                 // TODO: update at given id
+                let newErrors = [...toppingErrors];
+                newErrors[index] = value;
+                return newErrors;
             default:
                 return errors;
         }
@@ -105,13 +106,20 @@ function AddFormTest() {
         // toppingAValid = isValid(toppingA, setToppingA, setToppingAError);
         // toppingBValid = isValid(toppingB, setToppingB, setToppingBError);
         
-        // TODO: check isValid for all toppings
-        toppingsValid = false;
         // TODO: checking if values assigned correctly
         console.log("TOPPINGS STATE: ");
         console.log(toppings);
         console.log("ERRORS STATE: ");
         console.log(toppingErrors);
+
+        // TODO: check isValid for all toppings - how to pass dispatchX function like a setX function...?
+        // option 1: pass additional argument to isValid to distinguish between toppings and other variables
+        /*
+        toppingsValid = true;
+        for (var i = 0; i < toppings.length; i++) {
+            if (!isValid(toppings[i], dispatchToppings(type: "update", )))
+        }
+        */
 
         // if (titleValid && sausageValid && sauceValid && toppingAValid && toppingBValid) {
         if (titleValid && sausageValid && sauceValid && toppingsValid) {
@@ -183,7 +191,6 @@ function AddFormTest() {
         // append new topping + error variables to respective state
         // setToppings(state => [...state, ""]);
         // setToppingErrors(state => [...state, " "]);
-        // TODO: testing useReducer
         dispatchToppings({ type: "add" });
         dispatchToppingErrors({ type: "add" });
     }
@@ -215,6 +222,7 @@ function AddFormTest() {
                 error={sauceError}
             />
             {toppings.map((topping, i) => (
+                // TODO: modify formField to account for this if possible
                 <TextField
                     fullWidth
                     type="text"
@@ -247,39 +255,6 @@ function AddFormTest() {
         </Form>
     );
 } 
-
-
-// MAP DOESN'T WANT TO WORK PROPERLY
-/*
-{toppings.map((topping, i) => (
-    <TextField
-        fullWidth
-        type="text"
-        key={i}
-        label={"Topping " + i}
-        value={topping}
-        onChange={(event) => {
-            var val = event.target.value;
-            setToppings(state => {
-                return {...state, [i]: val}
-            });
-        }}
-        error={toppingErrors[i].trim() !== ""}
-        helperText={toppingErrors[i]}
-    />
-))}
-*/
-
-
-
-
-
-
-
-
-
-
-
 
 
 
