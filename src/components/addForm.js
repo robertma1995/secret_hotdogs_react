@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useReducer, useState } from 'react';
 // TODO: add separate "formX" component for add topping button if necessary
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -49,8 +49,43 @@ function AddFormTest() {
     // const [state, setState] = useState([]);
     // TODO: separate toppings and toppingErrors instead of using one "state" variable
     // TODO: consider including all errors (title, sauce, sausage, toppings) in one "state" array
-     const [toppings, setToppings] = useState([]);
-     const [toppingErrors, setToppingErrors] = useState([]);
+    // const [toppings, setToppings] = useState([]);
+    // const [toppingErrors, setToppingErrors] = useState([]);
+    const [toppings, dispatchToppings] = useReducer((toppings, { type, index, value }) => {
+        switch (type) {
+            case "add": 
+                return [...toppings, ""];
+            case "remove":
+                // TODO: untested - remove topping field given its index
+                return toppings.filter((_, id) => id !== index);
+            case "update":
+                console.log("index: " + index);
+                console.log("value: " + value);
+                // TODO: update at given id
+                // same formula as before, but seems like the only choice for now
+                let newToppings = [...toppings];
+                newToppings[index] = value;
+                return newToppings;
+            default:
+                return toppings;
+        }
+    }, []);
+
+    const [toppingErrors, dispatchToppingErrors] = useReducer((errors, { type, id, value }) => {
+        switch (type) {
+            case "add": 
+                return [...errors, " "];
+            case "remove":
+                return errors.filter((_, index) => index !== id);
+            case "update":
+                console.log("id: " + id);
+                console.log("value: " + value);
+                // TODO: update at given id
+            default:
+                return errors;
+        }
+    }, []);
+
 
     
     const { userId, userName } = useContext(UserContext);
@@ -146,8 +181,11 @@ function AddFormTest() {
         // index of new topping 
         var next = toppings.length;
         // append new topping + error variables to respective state
-        setToppings(state => [...state, ""]);
-        setToppingErrors(state => [...state, " "]);
+        // setToppings(state => [...state, ""]);
+        // setToppingErrors(state => [...state, " "]);
+        // TODO: testing useReducer
+        dispatchToppings({ type: "add" });
+        dispatchToppingErrors({ type: "add" });
     }
 
     return (
@@ -183,17 +221,7 @@ function AddFormTest() {
                     key={i}
                     label={"Topping " + (i+1)}
                     value={topping}
-                    onChange={(event) => {
-                        var val = event.target.value;
-                        // TODO: working, but still essentially same formula as before...
-                        let newToppings = [...toppings];
-                        newToppings[i] = val;
-                        setToppings(newToppings);
-                        // TODO: below doesn't work - incorrect syntax most likely, consider using useReducer
-                        // setToppings(state => {
-                        //     return {...state, [i]: val}
-                        // });
-                    }}
+                    onChange={event => dispatchToppings({ type: "update", index: i, value: event.target.value })}
                     error={toppingErrors[i].trim() !== ""}
                     helperText={toppingErrors[i]}
                 />
