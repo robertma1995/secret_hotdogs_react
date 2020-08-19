@@ -13,12 +13,14 @@ import { UserContext } from '../userContext';
 import * as DB from '../database/wrapper';
 
 
-// helper: trims form input and checks validity (no special characters)
+/* 
+    helper: trims form input and checks validity (no special characters)
+*/
+/*  
 function isValid(input, setInput, setInputError) {
     var inputValid = false;
     const emptyError = "Please fill out this field";
     const invalidError = "Invalid input - special characters not allowed";
-
     const inputTrimmed = input.trim();
     if (!inputTrimmed) {
         setInputError(emptyError);
@@ -32,8 +34,55 @@ function isValid(input, setInput, setInputError) {
 
     return inputValid;
 }
+*/
 
-// TODO: add form with dynamic number of toppings
+/* 
+    checks trimmed input, returning the appropriate error message
+    for now, each field has to be one word (no spaces between words)
+*/
+function checkInput(inputTrimmed) {
+    var error = " ";
+    const emptyError = "Please fill out this field";
+    const invalidError = "Invalid input - special characters not allowed";
+    if (!inputTrimmed) {
+        error = emptyError;
+    } else if (!inputTrimmed.match(/^[A-Za-z0-9]+$/g)) {
+        error = invalidError;
+    }
+    return error;
+}
+
+/*
+    helper: checks validity of input based on returned error, trims input, and sets input error
+*/
+function isValid(input, setInput, setInputError) {
+    const inputTrimmed = input.trim();
+    var error = checkInput(inputTrimmed);
+    setInput(inputTrimmed);
+    setInputError(error);
+    return error.trim() === "";
+}
+
+/*
+    helper: same functionality as isValid, but for toppings
+    redundant to send both the input and index of the input, but saves from having to pass toppings each call
+    cheaper to pass an index and the dispatch functions instead
+*/
+function isValidTopping(topping, index, dispatchToppings, dispatchToppingErrors) {
+    const toppingTrimmed = topping.trim();
+    var error = checkInput(toppingTrimmed);
+    console.log("toppingTrimmed: " + toppingTrimmed);
+    console.log("error: " + error);
+    // TODO: figure out what arguments are needed for function
+    // ...
+    dispatchToppings({ type: "update", index: index, value: toppingTrimmed });
+    dispatchToppingErrors({ type: "update", index: index, value: error });
+    return error.trim() === "";
+}
+
+/* 
+    TODO: AddForm with dyanmic number of toppings
+*/
 function AddFormTest() {
     const [title, setTitle] = useState("");
     const [titleError, setTitleError] = useState(" ");
@@ -41,16 +90,8 @@ function AddFormTest() {
     const [sausageError, setSausageError] = useState(" ");
     const [sauce, setSauce] = useState("");
     const [sauceError, setSauceError] = useState(" ");
-    // const [toppingA, setToppingA] = useState("");
-    // const [toppingAError, setToppingAError] = useState(" ");
-    // const [toppingB, setToppingB] = useState("");
-    // const [toppingBError, setToppingBError] = useState(" ");
 
-    // const [state, setState] = useState([]);
-    // TODO: separate toppings and toppingErrors instead of using one "state" variable
-    // TODO: consider including all errors (title, sauce, sausage, toppings) in one "state" array
-    // const [toppings, setToppings] = useState([]);
-    // const [toppingErrors, setToppingErrors] = useState([]);
+    // useReducer for dynamic no. of toppings
     const [toppings, dispatchToppings] = useReducer((toppings, { type, index, value }) => {
         switch (type) {
             case "add": 
@@ -59,8 +100,7 @@ function AddFormTest() {
                 // TODO: untested - remove topping field given its index
                 return toppings.filter((_, id) => id !== index);
             case "update":
-                // TODO: update at given id
-                // same formula as before, but seems like the only choice for now
+                // for now, only choice for modifying array
                 let newToppings = [...toppings];
                 newToppings[index] = value;
                 return newToppings;
@@ -69,21 +109,18 @@ function AddFormTest() {
         }
     }, []);
 
-    const [toppingErrors, dispatchToppingErrors] = useReducer((errors, { type, index, value }) => {
+    const [toppingErrors, dispatchToppingErrors] = useReducer((toppingErrors, { type, index, value }) => {
         switch (type) {
             case "add": 
-                return [...errors, " "];
+                return [...toppingErrors, " "];
             case "remove":
-                return errors.filter((_, id) => id !== index);
+                return toppingErrors.filter((_, id) => id !== index);
             case "update":
-                console.log("index: " + index);
-                console.log("value: " + value);
-                // TODO: update at given id
                 let newErrors = [...toppingErrors];
                 newErrors[index] = value;
                 return newErrors;
             default:
-                return errors;
+                return toppingErrors;
         }
     }, []);
 
@@ -96,32 +133,29 @@ function AddFormTest() {
     function handleAdd() {
         // set added to false again to handle consecutive adds on same page (no reload)
         setAdded(false);
-        // var titleValid, sausageValid, sauceValid, toppingAValid, toppingBValid;
-         var titleValid, sausageValid, sauceValid, toppingsValid;
+        var titleValid, sausageValid, sauceValid, toppingsValid;
         titleValid = sausageValid = sauceValid = toppingsValid = false;
 
         titleValid = isValid(title, setTitle, setTitleError);
         sausageValid = isValid(sausage, setSausage, setSausageError);
         sauceValid = isValid(sauce, setSauce, setSauceError);
-        // toppingAValid = isValid(toppingA, setToppingA, setToppingAError);
-        // toppingBValid = isValid(toppingB, setToppingB, setToppingBError);
-        
-        // TODO: checking if values assigned correctly
-        console.log("TOPPINGS STATE: ");
-        console.log(toppings);
-        console.log("ERRORS STATE: ");
-        console.log(toppingErrors);
 
         // TODO: check isValid for all toppings - how to pass dispatchX function like a setX function...?
         // option 1: pass additional argument to isValid to distinguish between toppings and other variables
-        /*
+        // option 2: separate function isValidTopping
+        // option 3: make isValid more modular - only checks and doesn't set any errors, returns the error type/message instead
         toppingsValid = true;
         for (var i = 0; i < toppings.length; i++) {
-            if (!isValid(toppings[i], dispatchToppings(type: "update", )))
+            if (!isValidTopping(toppings[i].trim(), i, dispatchToppings, dispatchToppingErrors)) {
+                toppingsValid = false;
+                break;
+            }
         }
-        */
+        console.log("toppingsValid: " + toppingsValid);
+        // TODO: testing - don't add any new hotdogs for now
+        toppingsValid = false;
 
-        // if (titleValid && sausageValid && sauceValid && toppingAValid && toppingBValid) {
+        // check errors with local vars, since setError functions are asynchronous
         if (titleValid && sausageValid && sauceValid && toppingsValid) {
             setLoading(true);
             (async () => {
