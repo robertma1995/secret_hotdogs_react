@@ -155,18 +155,11 @@ function AddForm() {
     // adds a topping and error state variable
     function handleAddTopping() {
         // TODO: use topping length as the id for now
-        // new topping data structure (array of JSON objects):
+        // new topping data structure (map with topping length as id, instead of a vanilla array):
         /* 
             [
-                {
-                    id: 0
-                    value: "cheese"
-                },
-                {
-                    id: 1
-                    value: "tomato"
-                },
-                ...
+                "0": "cheese"
+                "1": "tomato"
             ]
         */
         const id = toppings.length;
