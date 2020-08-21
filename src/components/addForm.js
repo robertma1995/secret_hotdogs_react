@@ -42,16 +42,9 @@ function isValid(input, setInput, setInputError) {
 
 /*
     helper: same functionality as isValid, but for toppings
-    redundant to send both the input and index of the input, but saves from having to pass toppings each call
+    redundant to send both the topping and topping key, but saves from having to pass toppings each call
     cheaper to pass an index and the dispatch functions instead
 */
-// function isValidTopping(topping, index, dispatchToppings, dispatchToppingErrors) {
-//     const toppingTrimmed = topping.trim();
-//     var error = checkInput(toppingTrimmed);
-//     dispatchToppings({ type: "update", index: index, value: toppingTrimmed });
-//     dispatchToppingErrors({ type: "update", index: index, value: error });
-//     return error.trim() === "";
-// }
 function isValidTopping(topping, key, updateToppings, updateToppingErrors) {
     const trimmed = topping.trim();
     var error = checkInput(trimmed);
@@ -70,55 +63,11 @@ function AddForm() {
     const [sausageError, setSausageError] = useState(" ");
     const [sauce, setSauce] = useState("");
     const [sauceError, setSauceError] = useState(" ");
-    // separate topping/errors arrays, since not always updating error while updating topping, and vice-versa
-    /*  
-    const [toppings, dispatchToppings] = useReducer((toppings, { type, id, value }) => {
-        switch (type) {
-            case "add": 
-                // return [...toppings, ""];
-                // TODO: changing data structure
-                console.log("toppings length: " + toppings.length);
-                var newToppings = [...toppings];
-                newToppings[id] = "";
-                return newToppings;
-            case "remove":
-                // TODO: untested - remove topping field given its index
-                return toppings.filter((_, toppingId) => toppingId !== id);
-            case "update":
-                // for now, only choice for modifying state array
-                var newToppings = [...toppings];
-                newToppings[id] = value;
-                return newToppings;
-            default:
-                return toppings;
-        }
-    }, [new Map()]);
-    */
+    // separate topping/errors Maps, since not always updating error while updating topping, and vice-versa
     const [toppings, setToppings] = useState(new Map());
     function updateToppings(key, value) {
         setToppings(new Map(toppings.set(key, value)));
     }
-
-    /* 
-    const [toppingErrors, dispatchToppingErrors] = useReducer((toppingErrors, { type, id, value }) => {
-        switch (type) {
-            case "add": 
-                // return [...toppingErrors, " "];
-                // TODO: changing data structure
-                var newErrors = [...toppingErrors];
-                newErrors[id] = " ";
-                return newErrors;
-            case "remove":
-                return toppingErrors.filter((_, errorId) => errorId !== id);
-            case "update":
-                var newErrors = [...toppingErrors];
-                newErrors[id] = value;
-                return newErrors;
-            default:
-                return toppingErrors;
-        }
-    }, [new Map()]);
-    */
     const [toppingErrors, setToppingErrors] = useState(new Map());
     function updateToppingErrors(key, value) {
         setToppingErrors(new Map(toppingErrors.set(key, value)));
@@ -133,12 +82,6 @@ function AddForm() {
         var sauceValid = isValid(sauce, setSauce, setSauceError);
 
         var toppingsValid = true;
-        // for (var i = 0; i < toppings.length; i++) {
-        //     if (!isValidTopping(toppings[i].trim(), i, dispatchToppings, dispatchToppingErrors)) {
-        //         toppingsValid = false;
-        //     }
-        // }
-        // TODO: changing data structure
         console.log(toppings);
         console.log(toppingErrors);
         for (const key of toppings.keys()) {
@@ -148,10 +91,6 @@ function AddForm() {
             }
         }
         console.log("toppingsValid: " + toppingsValid);
-        
-        // TODO: change toppings/toppingErrors data structure - each topping/error has an id
-        // referencing via array index works fine if you're just adding, 
-        // but removing toppings becomes a pain (toppings will have "empty" elements)
 
         // TODO: testing - don't add any new hotdogs for now
         toppingsValid = false;
@@ -194,16 +133,7 @@ function AddForm() {
 
     // adds a topping and error state variable
     function handleAddTopping() {
-        // TODO: new topping data structure (map with actual id's, instead of a vanilla array):
-        /* 
-            [
-                "uuid-0": "cheese"
-                "uuid-1": "tomato"
-            ]
-        */
         const id = uuidv4();
-        // dispatchToppings({ type: "add", id: id });
-        // dispatchToppingErrors({ type: "add", id: id });
         updateToppings(id, "");
         updateToppingErrors(id, " ");
     }
@@ -267,21 +197,5 @@ function AddForm() {
         </Form>
     );
 } 
-
-/*  
-{toppings.map((id, topping) => (
-    // TODO: modify formField to account for this if possible
-    <TextField
-        fullWidth
-        type="text"
-        key={id}
-        label={"Topping " + id}
-        value={topping}
-        onChange={event => dispatchToppings({ type: "update", id: id, value: event.target.value })}
-        error={toppingErrors[id].trim() !== ""}
-        helperText={toppingErrors[id]}
-    />
-))}
-*/
 
 export default AddForm;
