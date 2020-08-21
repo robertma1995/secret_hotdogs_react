@@ -108,6 +108,11 @@ function AddForm() {
             }
         }
         console.log("toppingsValid: " + toppingsValid);
+        
+        // TODO: change toppings/toppingErrors data structure - each topping/error has an id
+        // referencing via array index works fine if you're just adding, 
+        // but removing toppings becomes a pain (toppings will have "empty" elements)
+
         // TODO: testing - don't add any new hotdogs for now
         toppingsValid = false;
 
@@ -149,6 +154,23 @@ function AddForm() {
 
     // adds a topping and error state variable
     function handleAddTopping() {
+        // TODO: use topping length as the id for now
+        // new topping data structure (array of JSON objects):
+        /* 
+            [
+                {
+                    id: 0
+                    value: "cheese"
+                },
+                {
+                    id: 1
+                    value: "tomato"
+                },
+                ...
+            ]
+        */
+        const id = toppings.length;
+        console.log("new topping id: " + id);
         dispatchToppings({ type: "add" });
         dispatchToppingErrors({ type: "add" });
     }
