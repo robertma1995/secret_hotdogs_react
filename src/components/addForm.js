@@ -183,36 +183,18 @@ function AddForm() {
                 error={sauceError}
             />
             {[...toppings.keys()].map(key => (
-                <React.Fragment key={key}>
-                    <FormField
-                        type="text"
-                        iconName="none"
-                        label={"Topping"}
-                        value={toppings.get(key)}
-                        setValue={updateToppings}
-                        error={toppingErrors.get(key)}
-                        topping
-                        toppingKey={key}
-                        toppingRemove={handleRemoveTopping}
-                    />
-                    {/* <TextField */}
-                    {/*     fullWidth */}
-                    {/*     type="text" */}
-                    {/*     label={"Topping " + key} */}
-                    {/*     value={toppings.get(key)} */}
-                    {/*     onChange={event => updateToppings(key, event.target.value)} */}
-                    {/*     error={toppingErrors.get(key).trim() !== ""} */}
-                    {/*     helperText={toppingErrors.get(key)} */}
-                    {/* /> */}
-                    {/* <Button */}
-                    {/*     variant="outlined"  */}
-                    {/*     color="primary" */}
-                    {/*     disableElevation */}
-                    {/*     onClick={() => handleRemoveTopping(key)} */}
-                    {/* > */}
-                    {/*     Remove */}
-                    {/* </Button> */}
-                </React.Fragment>
+                <FormField
+                    key={key}
+                    type="text"
+                    iconName="none"
+                    label={"Topping"}
+                    value={toppings.get(key)}
+                    setValue={updateToppings}
+                    error={toppingErrors.get(key)}
+                    topping
+                    toppingKey={key}
+                    toppingRemove={handleRemoveTopping}
+                />
             ))}
             <Button 
                 variant="contained" 
