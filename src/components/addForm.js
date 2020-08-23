@@ -182,12 +182,12 @@ function AddForm() {
                 setValue={setSauce}
                 error={sauceError}
             />
-            {[...toppings.keys()].map(key => (
+            {[...toppings.keys()].map((key, i) => (
                 <FormField
                     key={key}
                     type="text"
-                    iconName="none"
-                    label={"Topping"}
+                    iconName={i == 0 ? "hotdogTopping" : "none"}
+                    label="Topping"
                     value={toppings.get(key)}
                     setValue={updateToppings}
                     error={toppingErrors.get(key)}

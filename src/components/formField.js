@@ -38,25 +38,29 @@ function FormField(props) {
             <Box mr={0.5}>
                 {icons[iconName]}
             </Box>
-            <Box flexGrow={1} p={1}>
-                <TextField
-                    label={label}
-                    type={type}
-                    value={value}
-                    onChange={(event) => handleChange(event.target.value)}
-                    error={error.trim() !== ""}
-                    helperText={error}
-                    fullWidth
-                />
+            <Box flexGrow={1} p={1} display="flex" flexDirection="row">
+                <Box flexGrow={1}>
+                    <TextField
+                        label={label}
+                        type={type}
+                        value={value}
+                        onChange={(event) => handleChange(event.target.value)}
+                        error={error.trim() !== ""}
+                        helperText={error}
+                        fullWidth
+                    />
+                </Box>
                 { topping &&
-                    <Button
-                        variant="outlined" 
-                        color="primary"
-                        disableElevation
-                        onClick={() => toppingRemove(toppingKey)}
-                    >
-                        Remove
-                    </Button>
+                    <Box>
+                        <Button
+                            variant="outlined" 
+                            color="primary"
+                            disableElevation
+                            onClick={() => toppingRemove(toppingKey)}
+                        >
+                            Remove
+                        </Button>
+                    </Box>
                 }
             </Box>
         </Box>
