@@ -63,6 +63,7 @@ function AddForm() {
     const [sausageError, setSausageError] = useState(" ");
     const [sauce, setSauce] = useState("");
     const [sauceError, setSauceError] = useState(" ");
+
     // separate topping/errors Maps, since not always updating error while updating topping (i.e. textfield -> onchange)
     const [toppings, setToppings] = useState(new Map());
     function updateToppings(key, value) {
@@ -182,24 +183,35 @@ function AddForm() {
                 error={sauceError}
             />
             {[...toppings.keys()].map(key => (
-                <React.Fragment key={key}>  
-                    <TextField
-                        fullWidth
+                <React.Fragment key={key}>
+                    <FormField
                         type="text"
-                        label={"Topping " + key}
+                        iconName="none"
+                        label={"Topping"}
                         value={toppings.get(key)}
-                        onChange={event => updateToppings(key, event.target.value)}
-                        error={toppingErrors.get(key).trim() !== ""}
-                        helperText={toppingErrors.get(key)}
+                        setValue={updateToppings}
+                        error={toppingErrors.get(key)}
+                        topping
+                        toppingKey={key}
+                        toppingRemove={handleRemoveTopping}
                     />
-                    <Button
-                        variant="outlined" 
-                        color="primary"
-                        disableElevation
-                        onClick={() => handleRemoveTopping(key)}
-                    >
-                        Remove
-                    </Button>
+                    {/* <TextField */}
+                    {/*     fullWidth */}
+                    {/*     type="text" */}
+                    {/*     label={"Topping " + key} */}
+                    {/*     value={toppings.get(key)} */}
+                    {/*     onChange={event => updateToppings(key, event.target.value)} */}
+                    {/*     error={toppingErrors.get(key).trim() !== ""} */}
+                    {/*     helperText={toppingErrors.get(key)} */}
+                    {/* /> */}
+                    {/* <Button */}
+                    {/*     variant="outlined"  */}
+                    {/*     color="primary" */}
+                    {/*     disableElevation */}
+                    {/*     onClick={() => handleRemoveTopping(key)} */}
+                    {/* > */}
+                    {/*     Remove */}
+                    {/* </Button> */}
                 </React.Fragment>
             ))}
             <Button 
