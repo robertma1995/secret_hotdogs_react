@@ -63,14 +63,24 @@ function AddForm() {
     const [sausageError, setSausageError] = useState(" ");
     const [sauce, setSauce] = useState("");
     const [sauceError, setSauceError] = useState(" ");
-    // separate topping/errors Maps, since not always updating error while updating topping, and vice-versa
+    // separate topping/errors Maps, since not always updating error while updating topping (i.e. textfield -> onchange)
     const [toppings, setToppings] = useState(new Map());
     function updateToppings(key, value) {
         setToppings(new Map(toppings.set(key, value)));
     }
+    function removeTopping(key) {
+        var t = new Map(toppings);
+        t.delete(key);
+        setToppings(t);
+    }
     const [toppingErrors, setToppingErrors] = useState(new Map());
     function updateToppingErrors(key, value) {
         setToppingErrors(new Map(toppingErrors.set(key, value)));
+    }
+    function removeToppingError(key) {
+        var e = new Map(toppingErrors);
+        e.delete(key);
+        setToppingErrors(e);
     }
 
     function handleAdd() {
@@ -131,11 +141,18 @@ function AddForm() {
         }
     }
 
-    // adds a topping and error state variable
+    // adds a topping and error state variables
     function handleAddTopping() {
         const id = uuidv4();
         updateToppings(id, "");
         updateToppingErrors(id, " ");
+    }
+
+    // removes given topping and error state variables
+    function handleRemoveTopping(id) {
+        console.log(id);
+        removeTopping(id);
+        removeToppingError(id);
     }
 
     return (
@@ -165,16 +182,25 @@ function AddForm() {
                 error={sauceError}
             />
             {[...toppings.keys()].map(key => (
-                <TextField
-                    fullWidth
-                    type="text"
-                    key={key}
-                    label={"Topping " + key}
-                    value={toppings.get(key)}
-                    onChange={event => updateToppings(key, event.target.value)}
-                    error={toppingErrors.get(key).trim() !== ""}
-                    helperText={toppingErrors.get(key)}
-                />
+                <React.Fragment key={key}>  
+                    <TextField
+                        fullWidth
+                        type="text"
+                        label={"Topping " + key}
+                        value={toppings.get(key)}
+                        onChange={event => updateToppings(key, event.target.value)}
+                        error={toppingErrors.get(key).trim() !== ""}
+                        helperText={toppingErrors.get(key)}
+                    />
+                    <Button
+                        variant="outlined" 
+                        color="primary"
+                        disableElevation
+                        onClick={() => handleRemoveTopping(key)}
+                    >
+                        Remove
+                    </Button>
+                </React.Fragment>
             ))}
             <Button 
                 variant="contained" 
