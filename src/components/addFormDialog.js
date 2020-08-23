@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, DialogContent, DialogContentText, DialogTitle, Fab } from '@material-ui/core';
+import { Box, IconButton, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
 // my components
 import AddForm from './addForm';
 
@@ -11,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
         position: 'fixed',
         bottom: theme.spacing(4),
         right: theme.spacing(4),
-    }
+    },
 }));
 
 // Dialog wrapper for AddForm used on home page (HomeHotdogGrid)
@@ -44,7 +46,16 @@ function AddFormDialog() {
                 open={open}
                 onClose={() => handleClose()}
             >
-                <DialogTitle> Post a new hotdog </DialogTitle>
+                <Box display="flex" flexDirection="row">
+                    <Box flexGrow={1}>
+                        <DialogTitle> Post a new hotdog </DialogTitle>
+                    </Box>
+                    <Box>
+                        <IconButton onClick={() => handleClose()}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                </Box>
                 <DialogContent>
                     <DialogContentText>
                         Type in the details of your new hotdog.

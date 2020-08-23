@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box, TextField } from '@material-ui/core';
-import { Button } from '@material-ui/core';
+import { Box, IconButton, TextField } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EmailIcon from '@material-ui/icons/Email';
 import LockIcon from '@material-ui/icons/Lock';
@@ -8,6 +7,7 @@ import RestaurantIcon from '@material-ui/icons/Restaurant';
 import OutdoorGrillIcon from '@material-ui/icons/OutdoorGrill';
 import WavesIcon from '@material-ui/icons/Waves';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import RemoveIcon from '@material-ui/icons/Remove';
 
 // "none" = white "invisible" icon with ShoppingCart as a placeholder
 const icons = {
@@ -51,15 +51,10 @@ function FormField(props) {
                     />
                 </Box>
                 { topping &&
-                    <Box>
-                        <Button
-                            variant="outlined" 
-                            color="primary"
-                            disableElevation
-                            onClick={() => toppingRemove(toppingKey)}
-                        >
-                            Remove
-                        </Button>
+                    <Box display="flex" flexDirection="column" justifyContent="center">
+                        <IconButton onClick={() => toppingRemove(toppingKey)}>
+                            <RemoveIcon />
+                        </IconButton>
                     </Box>
                 }
             </Box>

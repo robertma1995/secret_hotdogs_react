@@ -82,6 +82,15 @@ const theme = {
             root: {
                 marginBottom: 0
             }
+        },
+        // remove ripple around iconbuttons, default color on hover same as primary
+        MuiIconButton: {
+            root: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: '#cbb09c'
+                }
+            }
         }
     }
 }
