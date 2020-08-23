@@ -27,8 +27,8 @@ const theme = {
         ].join(','),
     },
     overrides: {
-        // white button text - Button "color" only changes background color
         MuiButton: {
+            // white button text - contained Button "color" material ui attribute only changes background color
             containedPrimary: {
                 color: '#ffffff'
             },

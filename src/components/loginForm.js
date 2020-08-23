@@ -4,7 +4,8 @@ import isEmail from 'validator/lib/isEmail';
 // my components
 import Form from './form';
 import FormField from './formField';
-import FormButton from './formButton';
+import FormButtonWrapper from './formButtonWrapper';
+import ProgressButton from './progressButton';
 import FormFooter from './formFooter';
 import RouterLink from './routerLink';
 // routing
@@ -88,11 +89,13 @@ function LoginForm(props) {
                 setValue={setPassword}
                 error={passwordError}
             />
-            <FormButton
-                text="Login"
-                loading={loading}
-                handleClick={handleLogin}
-            />
+            <FormButtonWrapper>
+                <ProgressButton 
+                    text="Login" 
+                    loading={loading} 
+                    handleClick={handleLogin}
+                />
+            </FormButtonWrapper>
             <FormFooter>
                 Don't have an account? <RouterLink color="primary" underline="hover" to={routes.REGISTER}> Sign Up </RouterLink>
             </FormFooter>

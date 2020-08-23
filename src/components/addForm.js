@@ -1,12 +1,11 @@
 import React, { useContext, useReducer, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-// TODO: add separate "formX" component for add topping button if necessary
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 // my components
 import Form from './form';
 import FormField from './formField';
-import FormButton from './formButton';
+import FormButtonWrapper from './formButtonWrapper';
+import ProgressButton from './progressButton';
+import AddToppingButton from './addToppingButton';
 import SuccessSnackbar from './successSnackbar';
 // context
 import { UserContext } from '../userContext';
@@ -196,19 +195,16 @@ function AddForm() {
                     toppingRemove={handleRemoveTopping}
                 />
             ))}
-            <Button 
-                variant="contained" 
-                color="primary" 
-                disableElevation
-                onClick={() => handleAddTopping()}
-            >
-                Add topping
-            </Button>
-            <FormButton
-                text="Submit"
-                loading={loading}
-                handleClick={handleAdd}
-            />
+            <FormButtonWrapper>
+                <AddToppingButton handleClick={handleAddTopping}/>
+            </FormButtonWrapper>
+            <FormButtonWrapper>
+                <ProgressButton 
+                    text="Submit" 
+                    loading={loading} 
+                    handleClick={handleAdd}
+                />
+            </FormButtonWrapper>
             <SuccessSnackbar
                 open={added}
                 setOpen={setAdded}

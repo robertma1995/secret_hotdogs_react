@@ -4,7 +4,8 @@ import isEmail from 'validator/lib/isEmail';
 // my components
 import Form from './form';
 import FormField from './formField';
-import FormButton from './formButton';
+import FormButtonWrapper from './formButtonWrapper';
+import ProgressButton from './progressButton';
 import SuccessSnackbar from './successSnackbar';
 // routing
 import * as routes from '../utils/routes';
@@ -129,11 +130,13 @@ function RegisterForm(props) {
                 setValue={setPasswordConfirm}
                 error={passwordConfirmError}
             />
-            <FormButton
-                text="Register"
-                loading={loading}
-                handleClick={handleRegister}
-            />
+            <FormButtonWrapper>
+                <ProgressButton 
+                    text="Register" 
+                    loading={loading} 
+                    handleClick={handleRegister}
+                />
+            </FormButtonWrapper>
             <SuccessSnackbar
                 open={registered}
                 setOpen={setRegistered}
