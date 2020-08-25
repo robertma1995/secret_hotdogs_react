@@ -106,7 +106,6 @@ function AddForm() {
         if (titleValid && sausageValid && sauceValid && toppingsValid) {
             setLoading(true);
             (async () => {
-                // TODO: change backend stuff
                 // convert map to array - no need for topping id in backend
                 var toppingsArray = [];
                 for (const topping of toppings.values()) {
@@ -119,8 +118,6 @@ function AddForm() {
                     ingredients: {
                         sausage: sausage,
                         sauce: sauce,
-                        // toppingA: toppingA.trim(),
-                        // toppingB: toppingB.trim(),
                         toppings: toppingsArray
                     }
                 }
@@ -135,8 +132,6 @@ function AddForm() {
                     setTitle("");
                     setSausage("");
                     setSauce("");
-                    // setToppingA("");
-                    // setToppingB("");
                     setToppings(new Map());
                     setAdded(true);
                 }
