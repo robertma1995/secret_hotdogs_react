@@ -25,7 +25,7 @@ function AddToppingButton(props) {
             startIcon={<AddShoppingCartIcon />}
             onClick={() => handleClick()}
         >
-            Add topping
+            Add Topping
         </Button>
     );
 }

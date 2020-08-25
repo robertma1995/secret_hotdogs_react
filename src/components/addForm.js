@@ -19,7 +19,7 @@ import * as DB from '../database/wrapper';
 function checkInput(inputTrimmed) {
     var error = " ";
     const emptyError = "Please fill out this field";
-    const invalidError = "Invalid input - special characters not allowed";
+    const invalidError = "Special characters not allowed";
     if (!inputTrimmed) {
         error = emptyError;
     } else if (!inputTrimmed.match(/^[A-Za-z0-9]+$/g)) {
@@ -102,24 +102,26 @@ function AddForm() {
         }
         console.log("toppingsValid: " + toppingsValid);
 
-        // TODO: testing - don't add any new hotdogs for now
-        toppingsValid = false;
-
         // check errors with local vars, since setError functions are asynchronous
         if (titleValid && sausageValid && sauceValid && toppingsValid) {
             setLoading(true);
             (async () => {
-                // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
-                // TODO: after state variable stuff figured out, change backend stuff
+                // TODO: change backend stuff
+                // convert map to array - no need for topping id in backend
+                var toppingsArray = [];
+                for (const topping of toppings.values()) {
+                    toppingsArray.push(topping);
+                }
                 const hotdog = {
                     creatorId: userId,
                     creatorName: userName,
-                    title: title.trim(),
+                    title: title,
                     ingredients: {
-                        sausage: sausage.trim(),
-                        sauce: sauce.trim(),
+                        sausage: sausage,
+                        sauce: sauce,
                         // toppingA: toppingA.trim(),
                         // toppingB: toppingB.trim(),
+                        toppings: toppingsArray
                     }
                 }
                 const addStatus = await DB.addHotdog(hotdog);
@@ -135,6 +137,7 @@ function AddForm() {
                     setSauce("");
                     // setToppingA("");
                     // setToppingB("");
+                    setToppings(new Map());
                     setAdded(true);
                 }
             })();

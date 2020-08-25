@@ -10,6 +10,29 @@ import OutdoorGrillIcon from '@material-ui/icons/OutdoorGrill';
 import WavesIcon from '@material-ui/icons/Waves';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
+/*  
+    determine ListItem properties depending on topping index
+*/
+function Topping(props) {
+    const { index, last, value } = props;
+    if (index === 0) {
+        return (
+            <ListItem>
+                <ListItemIcon>
+                    <ShoppingCartIcon/>
+                </ListItemIcon>
+                <ListItemText primary={value}/>
+            </ListItem>
+        );
+    } else {
+        return (
+            <ListItem divider={index === last}>
+                <ListItemText inset primary={value}/>
+            </ListItem>
+        );
+    }
+}
+
 function HotdogCard(props) {
     const { id, title, ingredients, creatorName, ts } = props;
 
@@ -47,15 +70,9 @@ function HotdogCard(props) {
                         </ListItemIcon>
                         <ListItemText primary={ingredients["sauce"]}/>
                     </ListItem>
-                    <ListItem>
-                        <ListItemIcon>
-                            <ShoppingCartIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary={ingredients["toppingA"]}/>
-                    </ListItem>
-                    <ListItem divider>
-                        <ListItemText inset primary={ingredients["toppingB"]}/>
-                    </ListItem>
+                    { ingredients["toppings"].map((topping, i) => (
+                        <Topping key={i} index={i} last={ingredients["toppings"].length - 1} value={topping}/>
+                    ))}
                 </List>
             </CardContent>
             <CardActions>
