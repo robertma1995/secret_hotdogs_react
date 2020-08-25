@@ -17,7 +17,7 @@ function Topping(props) {
     const { index, last, value } = props;
     if (index === 0) {
         return (
-            <ListItem>
+            <ListItem divider={index === last}>
                 <ListItemIcon>
                     <ShoppingCartIcon/>
                 </ListItemIcon>
@@ -27,7 +27,7 @@ function Topping(props) {
     } else {
         return (
             <ListItem divider={index === last}>
-                <ListItemText inset primary={value}/>
+                <ListItemText inset primary={value !== "" ? value : <br/>}/>
             </ListItem>
         );
     }
@@ -35,23 +35,47 @@ function Topping(props) {
 
 function HotdogCard(props) {
     const { id, title, ingredients, creatorName, ts } = props;
+    // take top 2 toppings
+    const maxToppings = 2;
+    const toppings = ingredients["toppings"];
+    const toppingsDisplay = [...ingredients["toppings"].slice(0, maxToppings)]
+    
+    // TODO: option 1 - divider at end of actual toppings 
+    // var last = toppings.length - 1;
 
-    // format timestamp seconds to readable date
+    // push placeholder strings depending on toppings length
+    if (toppings.length > toppingsDisplay.length) {
+        toppingsDisplay.push("...");
+
+        // TODO: option 1 - divider at end of actual toppings 
+        // last = toppingsDisplay.length-1;
+    
+    } else {
+        if (toppings.length === 0) {
+            toppingsDisplay.push("No toppings!");
+        }
+        const numEmpty = maxToppings+1 - toppingsDisplay.length;
+        for (var i = 0; i < numEmpty ; i++) {
+            toppingsDisplay.push("");
+        }
+    }
+
+    // TODO: option 2 - divider at end of toppings on display (3 listItem's) 
+    var last = toppingsDisplay.length-1;
+    
+    // format timestamp seconds into readable date
     var date = new Date(1970, 0, 1);
     date.setTime(ts * 1000);
     const subheader = date.getDate() + " " + (date.toLocaleString('default', {month: 'long'})) + ", " + date.getFullYear();
 
-    // letter avatar based on creator's name
-    const avatar = (
-        <Avatar>
-            {creatorName.charAt(0).toUpperCase()}
-        </Avatar>
-    ); 
-
     return (
         <Card>
             <CardHeader
-                avatar={avatar}
+                avatar={
+                    <Avatar>
+                        {creatorName.charAt(0).toUpperCase()}
+                    </Avatar>
+                }
                 title={title + " by " + creatorName}
                 subheader={subheader}
             />
@@ -70,8 +94,13 @@ function HotdogCard(props) {
                         </ListItemIcon>
                         <ListItemText primary={ingredients["sauce"]}/>
                     </ListItem>
-                    { ingredients["toppings"].map((topping, i) => (
-                        <Topping key={i} index={i} last={ingredients["toppings"].length - 1} value={topping}/>
+                    { toppingsDisplay.map((topping, i) => (
+                        <Topping 
+                            key={i}
+                            index={i}
+                            last={last}
+                            value={topping}
+                        />
                     ))}
                 </List>
             </CardContent>

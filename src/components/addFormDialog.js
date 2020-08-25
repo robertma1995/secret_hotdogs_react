@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 // Dialog wrapper for AddForm used on home page (HomeHotdogGrid)
 // clicking on fab opens the dialog
 function AddFormDialog() {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
 
     function handleOpen() {
         setOpen(true);
