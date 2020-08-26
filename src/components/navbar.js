@@ -53,7 +53,7 @@ function NavBar(props) {
                     <Box>
                         { userId && 
                             <Button
-                                color="primary"
+                                color="secondary"
                                 variant="text" 
                                 disableElevation
                                 onClick={() => handleLogout()}
@@ -65,7 +65,7 @@ function NavBar(props) {
                             <Button 
                                 component={Link}
                                 to={routes.LOGIN}
-                                color="primary"
+                                color="secondary"
                                 variant="text" 
                                 disableElevation
                             > 

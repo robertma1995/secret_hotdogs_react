@@ -32,12 +32,22 @@ const theme = {
             containedPrimary: {
                 color: '#ffffff'
             },
+            // change color from lighter text.primary to primary.main, remove text transformation
             textPrimary: {
-                color: '#cbb09c',
-                // '&:hover': {
-                //     backgroundColor: '#fafafa'
-                // }
+                color: 'rgba(0, 0, 0, 0.54)',
+                textTransform: 'none',
+                '&:hover': {
+                    color: '#cbb09c',
+                    backgroundColor: 'transparent'
+                }
             },
+            // change color from secondary to primary on hover, and remove the button outline effect
+            textSecondary: {
+                '&:hover': {
+                    color: '#cbb09c',
+                    backgroundColor: 'transparent'
+                }
+            }
         },
         // font size for a TextField label
         MuiInputLabel: {

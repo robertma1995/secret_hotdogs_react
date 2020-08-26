@@ -1,5 +1,5 @@
 import React from 'react';
-import { 
+import {
     Avatar, 
     IconButton, 
     Card, CardHeader, CardMedia, CardContent, CardActions, 
@@ -9,6 +9,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import OutdoorGrillIcon from '@material-ui/icons/OutdoorGrill';
 import WavesIcon from '@material-ui/icons/Waves';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import HotdogDialog from './hotdogDialog';
 
 /*  
     determine ListItem properties depending on topping index
@@ -105,9 +106,11 @@ function HotdogCard(props) {
                 </List>
             </CardContent>
             <CardActions>
-                <IconButton>
+                <IconButton aria-label="like">
                     <FavoriteIcon/>
                 </IconButton>
+                {/* TODO: consider using only one dialog on home that takes in hotdog id as input */}
+                <HotdogDialog hotdog={props}/>
             </CardActions>
         </Card>
     );
