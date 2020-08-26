@@ -110,7 +110,7 @@ function HotdogCard(props) {
                     <FavoriteIcon/>
                 </IconButton>
                 {/* TODO: consider using only one dialog on home that takes in hotdog id as input */}
-                <HotdogDialog hotdog={props}/>
+                <HotdogDialog title={title} ingredients={ingredients} creatorName={creatorName} subheader={subheader}/>
             </CardActions>
         </Card>
     );
