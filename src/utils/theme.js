@@ -75,11 +75,17 @@ const theme = {
                 paddingTop: '100%',
             }
         },
+        // disable padding between bottom of image and ingredients list
+        MuiCardContent: {
+            root: {
+                paddingTop: 'unset'
+            }
+        },
         // capitalize ListItemText (hotdog card ingredients list)
         MuiListItem: {
             root: {
                 textTransform: 'capitalize'
-            }
+            }, 
         },
         // appbar color same as text.primary
         MuiAppBar: {

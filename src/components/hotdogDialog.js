@@ -36,7 +36,9 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: '16px',
     },
     description: {
-        color: 'rgba(0, 0, 0, 0.70)'
+        color: 'rgba(0, 0, 0, 0.70)',
+        paddingLeft: '16px',
+        paddingRight: '16px',  
     }
 }));
 
@@ -96,6 +98,7 @@ function HotdogDialog(props) {
                 onClose={() => handleClose()}
             >
                 <DialogContent className={classes.dialog}>
+                    {/* TODO: two columns - one column = hotdogCard without header, second column = cardheader + comments list */}
                     <Grid 
                         container 
                         justify="space-between" 
@@ -118,12 +121,11 @@ function HotdogDialog(props) {
                             </Box>
                         </Grid>
                         <Grid item xs={4} className={classes.height}>
-                            {/* TODO: vertial grid, first section = cardheader, second section = description, third section = ingredients */}
                             <Paper className={classes.height}>
                                 <Grid 
                                     container 
                                     direction="column" 
-                                    justify="flex-start"
+                                    justify="space-between"
                                     className={classes.grid}
                                 >
                                     <Grid item style={{ minWidth: '100%' }}>
@@ -136,9 +138,10 @@ function HotdogDialog(props) {
                                             title={title + " by " + creatorName}
                                             subheader={subheader}
                                         />
-                                    </Grid>
-                                    <Grid item className={classes.gridItem}>
-                                        <Typography variant="body2" className={classes.description}>
+                                        <Typography 
+                                            variant="body2" 
+                                            className={classes.description}
+                                        >
                                             {description}
                                         </Typography>
                                     </Grid>
