@@ -58,6 +58,9 @@ function AddForm() {
     const [added, setAdded] = useState(false);
     const [title, setTitle] = useState("");
     const [titleError, setTitleError] = useState(" ");
+    const [description, setDescription] = useState("");
+    // TODO: for now, no rules on description input
+    const [descriptionError, setDescriptionError] = useState(" ");
     const [sausage, setSausage] = useState("");
     const [sausageError, setSausageError] = useState(" ");
     const [sauce, setSauce] = useState("");
@@ -114,6 +117,7 @@ function AddForm() {
                 const hotdog = {
                     creatorId: userId,
                     creatorName: userName,
+                    description: description,
                     title: title,
                     ingredients: {
                         sausage: sausage,
@@ -130,6 +134,7 @@ function AddForm() {
                     console.log("addForm.js: something went wrong :(");
                 } else {
                     setTitle("");
+                    setDescription("");
                     setSausage("");
                     setSauce("");
                     setToppings(new Map());
@@ -162,6 +167,15 @@ function AddForm() {
                 value={title}
                 setValue={setTitle}
                 error={titleError}
+            />
+            <FormField
+                type="text"
+                iconName="hotdogDescription"
+                label="Description"
+                value={description}
+                setValue={setDescription}
+                error={descriptionError}
+                multiline
             />
             <FormField
                 type="text"

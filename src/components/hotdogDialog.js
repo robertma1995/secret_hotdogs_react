@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { 
-    Avatar,
-    Button, 
-    Grid,
+    Avatar, Box, Button, Grid, Paper, Typography,
     Card, CardHeader, CardContent,
     Dialog, DialogContent, DialogContentText, DialogTitle, 
     List, ListItem, ListItemIcon, ListItemText, ListSubheader,
@@ -15,18 +13,30 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     dialog: {
-        paddingTop: '5px!important',
+        paddingTop: '12px!important',
         padding: '5px',
         height: '700px'
     },
-    image: {
-        // height: 500,
-        // width: 500,
-        maxHeight: "100%",
-        maxWidth: "100%",
+    // main grid + column styling
+    grid: {
+        height: '100%',
+        width: '100%'
     },
-    card: {
-        height: "100%"
+    height: {
+        height: '100%',
+    },
+    // column 1 = "image", column 2 = 3 * "gridItem", 
+    image: {
+        maxHeight: '100%',
+        maxWidth: '100%',
+    },
+    gridItem: {
+        minWidth: '100%',
+        paddingLeft: '16px',
+        paddingRight: '16px',
+    },
+    description: {
+        color: 'rgba(0, 0, 0, 0.70)'
     }
 }));
 
@@ -57,7 +67,7 @@ function Topping(props) {
     TODO: consider using only one dialog on home that takes in hotdog id as input
 */
 function HotdogDialog(props) {
-    const { title, ingredients, creatorName, subheader } = props;
+    const { creatorName, description, ingredients, title, subheader } = props;
     const toppings = ingredients["toppings"];
     const classes = useStyles();
     const [open, setOpen] = useState(true);
@@ -72,7 +82,11 @@ function HotdogDialog(props) {
 
     return (
         <>
-            <Button variant="text" color="primary" onClick={() => handleOpen()}>
+            <Button 
+                variant="text" 
+                color="primary" 
+                onClick={() => handleOpen()}
+            >
                 View details
             </Button>
             <Dialog 
@@ -82,55 +96,93 @@ function HotdogDialog(props) {
                 onClose={() => handleClose()}
             >
                 <DialogContent className={classes.dialog}>
-                    <Grid container justify="center" alignItems="center" style={{ height: '100%', width: '100%' }}>
-                        <Grid item xs={4}>
-                            <img 
-                                alt="hotdog" 
-                                src="https://www.svgrepo.com/show/133687/hot-dog.svg" 
-                                className={classes.image}
-                            />
-                        </Grid>
-                        <Grid item xs={4}>
-                            {/* TODO: vertial grid, first section = cardheader, second section = description */}
-                            <Card square className={classes.card}>
-                                <CardHeader
-                                    avatar={
-                                        <Avatar>
-                                            {creatorName.charAt(0).toUpperCase()}
-                                        </Avatar>
-                                    }
-                                    title={title + " by " + creatorName}
-                                    subheader={subheader}
+                    <Grid 
+                        container 
+                        justify="space-between" 
+                        alignItems="center"
+                        className={classes.grid}
+                        spacing={1}
+                    >
+                        <Grid item xs={4} className={classes.height}>
+                            <Box 
+                                display="flex" 
+                                flexDirection="column" 
+                                justifyContent="center" 
+                                height="100%"
+                            >
+                                <img 
+                                    alt="hotdog" 
+                                    src="https://www.svgrepo.com/show/133687/hot-dog.svg" 
+                                    className={classes.image}
                                 />
-                                <CardContent>
-                                    <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}>
-                                        <ListItem divider>
-                                            <ListItemIcon>
-                                                <OutdoorGrillIcon/>
-                                            </ListItemIcon>
-                                            <ListItemText primary={ingredients["sausage"]}/>
-                                        </ListItem>
-                                        <ListItem divider>
-                                            <ListItemIcon>
-                                                <WavesIcon/>
-                                            </ListItemIcon>
-                                            <ListItemText primary={ingredients["sauce"]}/>
-                                        </ListItem>
-                                        { toppings.map((topping, i) => (
-                                            <Topping 
-                                                key={i}
-                                                index={i}
-                                                last={toppings.length-1}
-                                                value={topping}
-                                            />
-                                        ))}
-                                    </List>
-                                </CardContent>
-                            </Card>
+                            </Box>
                         </Grid>
-                        <Grid item xs={4}>
-                            {/* comments go here - placeholder for now */}
-                            <p> HELLO </p>
+                        <Grid item xs={4} className={classes.height}>
+                            {/* TODO: vertial grid, first section = cardheader, second section = description, third section = ingredients */}
+                            <Paper className={classes.height}>
+                                <Grid 
+                                    container 
+                                    direction="column" 
+                                    justify="flex-start"
+                                    className={classes.grid}
+                                >
+                                    <Grid item style={{ minWidth: '100%' }}>
+                                        <CardHeader
+                                            avatar={
+                                                <Avatar>
+                                                    {creatorName.charAt(0).toUpperCase()}
+                                                </Avatar>
+                                            }
+                                            title={title + " by " + creatorName}
+                                            subheader={subheader}
+                                        />
+                                    </Grid>
+                                    <Grid item className={classes.gridItem}>
+                                        <Typography variant="body2" className={classes.description}>
+                                            {description}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item className={classes.gridItem}>
+                                        <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}>
+                                            <ListItem divider>
+                                                <ListItemIcon>
+                                                    <OutdoorGrillIcon/>
+                                                </ListItemIcon>
+                                                <ListItemText primary={ingredients["sausage"]}/>
+                                            </ListItem>
+                                            <ListItem divider>
+                                                <ListItemIcon>
+                                                    <WavesIcon/>
+                                                </ListItemIcon>
+                                                <ListItemText primary={ingredients["sauce"]}/>
+                                            </ListItem>
+                                            { toppings.map((topping, i) => (
+                                                <Topping 
+                                                    key={i}
+                                                    index={i}
+                                                    last={toppings.length-1}
+                                                    value={topping}
+                                                />
+                                            ))}
+                                        </List>
+                                    </Grid>
+                                </Grid>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={4} className={classes.height}>
+                            <Paper className={classes.height}>
+                                {/* TODO: comments go here - placeholder for now */}
+                                <Grid 
+                                    container 
+                                    direction="column" 
+                                    justify="flex-start"
+                                    className={classes.grid}
+                                >
+                                    <Grid item className={classes.gridItem}>
+                                        <p> HELLO </p>
+                                    </Grid>
+                                </Grid>
+                            </Paper>
                         </Grid>
                     </Grid>
                 </DialogContent>

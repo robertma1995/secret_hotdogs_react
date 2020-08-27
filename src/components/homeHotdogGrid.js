@@ -117,9 +117,10 @@ function HomeHotdogGrid() {
                             }
                             <HotdogCard
                                 id={hotdog.id}
-                                title={hotdog.title}
-                                ingredients={hotdog.ingredients}
                                 creatorName={hotdog.creatorName}
+                                description={hotdog.description}
+                                ingredients={hotdog.ingredients}
+                                title={hotdog.title}
                                 ts={hotdog.ts}
                             />
                         </Grid>

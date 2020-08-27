@@ -35,23 +35,24 @@ function Topping(props) {
 }
 
 function HotdogCard(props) {
-    const { id, title, ingredients, creatorName, ts } = props;
-    // take top 2 toppings
-    const maxToppings = 2;
+    const { id, creatorName, description, ingredients, title, ts } = props;
+    // take top 3 toppings
+    const maxToppings = 3;
     const toppings = ingredients["toppings"];
     const toppingsDisplay = [...ingredients["toppings"].slice(0, maxToppings)]
     
     // TODO: option 1 - divider at end of actual toppings 
     // var last = toppings.length - 1;
 
-    // push placeholder strings depending on toppings length
+    // replace third topping with "..." if 4 or more toppings
+    // push blank toppings if less than 3 toppings (visual purposes only), 
+    // display all 3 if exactly 3 toppings
     if (toppings.length > toppingsDisplay.length) {
-        toppingsDisplay.push("...");
+        toppingsDisplay[2] = "...";
 
         // TODO: option 1 - divider at end of actual toppings 
         // last = toppingsDisplay.length-1;
-    
-    } else {
+    } else if (toppings.length < toppingsDisplay.length) {
         if (toppings.length === 0) {
             toppingsDisplay.push("No toppings!");
         }
@@ -110,7 +111,13 @@ function HotdogCard(props) {
                     <FavoriteIcon/>
                 </IconButton>
                 {/* TODO: consider using only one dialog on home that takes in hotdog id as input */}
-                <HotdogDialog title={title} ingredients={ingredients} creatorName={creatorName} subheader={subheader}/>
+                <HotdogDialog 
+                    creatorName={creatorName}
+                    description={description}
+                    ingredients={ingredients}
+                    title={title}
+                    subheader={subheader}
+                />
             </CardActions>
         </Card>
     );
