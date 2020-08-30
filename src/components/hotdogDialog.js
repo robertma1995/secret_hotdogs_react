@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
     Avatar, Box, Button, Grid, Paper, Typography,
-    Card, CardHeader, CardContent,
+    Card, CardHeader, CardContent, CardMedia,
     Dialog, DialogContent, DialogContentText, DialogTitle, 
     List, ListItem, ListItemIcon, ListItemText, ListSubheader,
 } from '@material-ui/core';
@@ -10,6 +10,7 @@ import OutdoorGrillIcon from '@material-ui/icons/OutdoorGrill';
 import WavesIcon from '@material-ui/icons/Waves';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { makeStyles } from '@material-ui/core/styles';
+import HotdogIngredientsList from './hotdogIngredientsList';
 
 const useStyles = makeStyles((theme) => ({
     dialog: {
@@ -25,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
     height: {
         height: '100%',
     },
-    // column 1 = "image", column 2 = 3 * "gridItem", 
     image: {
         maxHeight: '100%',
         maxWidth: '100%',
@@ -42,35 +42,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-/*
-    TODO: for now, make center column look exactly like hotdogCard
-*/
-function Topping(props) {
-    const { index, last, value } = props;
-    if (index === 0) {
-        return (
-            <ListItem divider={index === last}>
-                <ListItemIcon>
-                    <ShoppingCartIcon/>
-                </ListItemIcon>
-                <ListItemText primary={value}/>
-            </ListItem>
-        );
-    } else {
-        return (
-            <ListItem divider={index === last}>
-                <ListItemText inset primary={value !== "" ? value : <br/>}/>
-            </ListItem>
-        );
-    }
-}
-
 /* 
     TODO: consider using only one dialog on home that takes in hotdog id as input
 */
 function HotdogDialog(props) {
     const { creatorName, description, ingredients, title, subheader } = props;
-    const toppings = ingredients["toppings"];
     const classes = useStyles();
     const [open, setOpen] = useState(true);
 
@@ -101,34 +77,37 @@ function HotdogDialog(props) {
                     {/* TODO: two columns - one column = hotdogCard without header, second column = cardheader + comments list */}
                     <Grid 
                         container 
-                        justify="space-between" 
+                        justify="center" 
                         alignItems="center"
                         className={classes.grid}
                         spacing={1}
                     >
-                        <Grid item xs={4} className={classes.height}>
-                            <Box 
+                        <Grid item xs={5} className={classes.height}>
+                            <Box
                                 display="flex" 
                                 flexDirection="column" 
-                                justifyContent="center" 
                                 height="100%"
                             >
-                                <img 
-                                    alt="hotdog" 
-                                    src="https://www.svgrepo.com/show/133687/hot-dog.svg" 
-                                    className={classes.image}
-                                />
+                                <Card elevation={0}>
+                                    <CardMedia image="https://www.svgrepo.com/show/133687/hot-dog.svg"/>
+                                    <CardContent>
+                                        <HotdogIngredientsList 
+                                            sausage={ingredients["sausage"]}
+                                            sauce={ingredients["sauce"]}
+                                            toppings={ingredients["toppings"]}
+                                        />
+                                    </CardContent>
+                                </Card>
                             </Box>
                         </Grid>
-                        <Grid item xs={4} className={classes.height}>
+                        <Grid item xs={7} className={classes.height}>
                             <Paper className={classes.height}>
                                 <Grid 
                                     container 
                                     direction="column" 
-                                    justify="space-between"
                                     className={classes.grid}
                                 >
-                                    <Grid item style={{ minWidth: '100%' }}>
+                                    <Grid item>
                                         <CardHeader
                                             avatar={
                                                 <Avatar>
@@ -146,43 +125,7 @@ function HotdogDialog(props) {
                                         </Typography>
                                     </Grid>
                                     <Grid item className={classes.gridItem}>
-                                        <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}>
-                                            <ListItem divider>
-                                                <ListItemIcon>
-                                                    <OutdoorGrillIcon/>
-                                                </ListItemIcon>
-                                                <ListItemText primary={ingredients["sausage"]}/>
-                                            </ListItem>
-                                            <ListItem divider>
-                                                <ListItemIcon>
-                                                    <WavesIcon/>
-                                                </ListItemIcon>
-                                                <ListItemText primary={ingredients["sauce"]}/>
-                                            </ListItem>
-                                            { toppings.map((topping, i) => (
-                                                <Topping 
-                                                    key={i}
-                                                    index={i}
-                                                    last={toppings.length-1}
-                                                    value={topping}
-                                                />
-                                            ))}
-                                        </List>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={4} className={classes.height}>
-                            <Paper className={classes.height}>
-                                {/* TODO: comments go here - placeholder for now */}
-                                <Grid 
-                                    container 
-                                    direction="column" 
-                                    justify="flex-start"
-                                    className={classes.grid}
-                                >
-                                    <Grid item className={classes.gridItem}>
-                                        <p> HELLO </p>
+                                        <p> COMMENTS GO HERE </p>
                                     </Grid>
                                 </Grid>
                             </Paper>

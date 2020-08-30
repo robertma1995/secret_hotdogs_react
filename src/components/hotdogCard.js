@@ -5,10 +5,7 @@ import {
     Card, CardHeader, CardMedia, CardContent, CardActions, 
     List, ListItem, ListItemIcon, ListItemText, ListSubheader
 } from '@material-ui/core';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import OutdoorGrillIcon from '@material-ui/icons/OutdoorGrill';
-import WavesIcon from '@material-ui/icons/Waves';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import icons from '../utils/icons';
 import HotdogDialog from './hotdogDialog';
 
 /*  
@@ -20,7 +17,7 @@ function Topping(props) {
         return (
             <ListItem divider={index === last}>
                 <ListItemIcon>
-                    <ShoppingCartIcon/>
+                    {icons["hotdogTopping"]}
                 </ListItemIcon>
                 <ListItemText primary={value}/>
             </ListItem>
@@ -86,13 +83,13 @@ function HotdogCard(props) {
                 <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}>
                     <ListItem divider>
                         <ListItemIcon>
-                            <OutdoorGrillIcon/>
+                            {icons["hotdogSausage"]}
                         </ListItemIcon>
                         <ListItemText primary={ingredients["sausage"]}/>
                     </ListItem>
                     <ListItem divider>
                         <ListItemIcon>
-                            <WavesIcon/>
+                            {icons["hotdogSauce"]}
                         </ListItemIcon>
                         <ListItemText primary={ingredients["sauce"]}/>
                     </ListItem>
@@ -108,7 +105,7 @@ function HotdogCard(props) {
             </CardContent>
             <CardActions>
                 <IconButton aria-label="like">
-                    <FavoriteIcon/>
+                    {icons["like"]}
                 </IconButton>
                 {/* TODO: consider using only one dialog on home that takes in hotdog id as input */}
                 <HotdogDialog 

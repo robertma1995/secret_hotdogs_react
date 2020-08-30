@@ -1,27 +1,6 @@
 import React from 'react';
 import { Box, IconButton, TextField } from '@material-ui/core';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import EmailIcon from '@material-ui/icons/Email';
-import LockIcon from '@material-ui/icons/Lock';
-import RestaurantIcon from '@material-ui/icons/Restaurant';
-import EditIcon from '@material-ui/icons/Edit';
-import OutdoorGrillIcon from '@material-ui/icons/OutdoorGrill';
-import WavesIcon from '@material-ui/icons/Waves';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import RemoveIcon from '@material-ui/icons/Remove';
-
-// "none" = white "invisible" icon with ShoppingCart as a placeholder
-const icons = {
-    user: <AccountCircleIcon />,
-    email: <EmailIcon />,
-    password: <LockIcon />,
-    hotdogTitle: <RestaurantIcon />,
-    hotdogDescription: <EditIcon />,
-    hotdogSausage: <OutdoorGrillIcon />,
-    hotdogSauce: <WavesIcon />,
-    hotdogTopping: <ShoppingCartIcon />,
-    none: <ShoppingCartIcon color="secondary" />,
-}
+import icons from '../utils/icons';
 
 /* 
     Text field with icon - to be wrapped in a Form
@@ -56,7 +35,7 @@ function FormField(props) {
                 { topping &&
                     <Box display="flex" flexDirection="column" justifyContent="center">
                         <IconButton onClick={() => toppingRemove(toppingKey)}>
-                            <RemoveIcon />
+                            {icons["minus"]}
                         </IconButton>
                     </Box>
                 }
