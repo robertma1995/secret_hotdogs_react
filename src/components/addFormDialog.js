@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Dialog, DialogContent, DialogContentText, DialogTitle, Fab } from '@material-ui/core';
-import { Box, IconButton, Typography } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import CloseIcon from '@material-ui/icons/Close';
+import { 
+    Box, IconButton,
+    Dialog, DialogContent, DialogContentText, DialogTitle, Fab
+} from '@material-ui/core';
+import icons from '../utils/icons';
 // my components
 import AddForm from './addForm';
 
@@ -38,7 +39,7 @@ function AddFormDialog() {
                 color="primary"
                 onClick={() => handleOpen()}
             >
-                <AddIcon color="secondary"/>
+                {icons["plus"]}
             </Fab>
             <Dialog 
                 fullWidth
@@ -52,7 +53,7 @@ function AddFormDialog() {
                     </Box>
                     <Box>
                         <IconButton onClick={() => handleClose()}>
-                            <CloseIcon />
+                            {icons["close"]}
                         </IconButton>
                     </Box>
                 </Box>

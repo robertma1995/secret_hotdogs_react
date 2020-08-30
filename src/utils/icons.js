@@ -9,6 +9,8 @@ import WavesIcon from '@material-ui/icons/Waves';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import RemoveIcon from '@material-ui/icons/Remove';
+import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
 
 // "none" = white "invisible" icon with ShoppingCart as a placeholder
 const icons = {
@@ -23,6 +25,8 @@ const icons = {
     none: <ShoppingCartIcon color="secondary" />,
     like: <FavoriteIcon />,
     minus: <RemoveIcon />,
+    plus: <AddIcon color="secondary"/>,
+    close: <CloseIcon />,
 }
 
 export default icons;

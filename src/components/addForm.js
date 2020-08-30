@@ -1,4 +1,4 @@
-import React, { useContext, useReducer, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 // my components
 import Form from './form';
@@ -197,7 +197,7 @@ function AddForm() {
                 <FormField
                     key={key}
                     type="text"
-                    iconName={i == 0 ? "hotdogTopping" : "none"}
+                    iconName={i === 0 ? "hotdogTopping" : "none"}
                     label="Topping"
                     value={toppings.get(key)}
                     setValue={updateToppings}

@@ -32,6 +32,7 @@ function Topping(props) {
 }
 
 function HotdogCard(props) {
+    // TODO: keep id, since will need for liking later on
     const { id, creatorName, description, ingredients, title, ts } = props;
     // take top 3 toppings
     const maxToppings = 3;

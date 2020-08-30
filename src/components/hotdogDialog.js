@@ -2,13 +2,8 @@ import React, { useState } from 'react';
 import { 
     Avatar, Box, Button, Grid, Paper, Typography,
     Card, CardHeader, CardContent, CardMedia,
-    Dialog, DialogContent, DialogContentText, DialogTitle, 
-    List, ListItem, ListItemIcon, ListItemText, ListSubheader,
+    Dialog, DialogContent 
 } from '@material-ui/core';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import OutdoorGrillIcon from '@material-ui/icons/OutdoorGrill';
-import WavesIcon from '@material-ui/icons/Waves';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { makeStyles } from '@material-ui/core/styles';
 import HotdogIngredientsList from './hotdogIngredientsList';
 
