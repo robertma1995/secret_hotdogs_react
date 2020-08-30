@@ -5,13 +5,17 @@ import icons from '../utils/icons';
 /* 
     Text field with icon - to be wrapped in a Form
     To display errors correctly, set error as " " if there is no error
-    If FormField is used for a topping, then adds a remove topping button, and setValue function takes in a key
+    If formfield used for description, textfield becomes multiline
+    If FormField used for a topping, adds a remove topping button, and setValue function takes in a key
 */
 function FormField(props) {
-    const { type, iconName, label, value, setValue, error, multiline, topping, toppingKey, toppingRemove } = props;
+    const { 
+        type, iconName, label, value, setValue, error, multiline, 
+        topping, toppingKey, toppingRemove
+    } = props;
 
     function handleChange(val) {
-        topping ? setValue(toppingKey, val) : setValue(val)
+        topping ? setValue(toppingKey, val) : setValue(val);
     }
 
     return (
