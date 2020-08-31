@@ -7,10 +7,12 @@ import {
 } from '@material-ui/core';
 import icons from '../utils/icons';
 import HotdogDialog from './hotdogDialog';
+import HotdogIngredientsList from './hotdogIngredientsList';
 
 /*  
     determine ListItem properties depending on topping index
 */
+/*
 function Topping(props) {
     const { index, last, value } = props;
     if (index === 0) {
@@ -30,10 +32,12 @@ function Topping(props) {
         );
     }
 }
+*/
 
 function HotdogCard(props) {
     // TODO: keep id, since will need for liking later on
     const { id, creatorName, description, ingredients, title, ts } = props;
+    /* 
     // take top 3 toppings
     const maxToppings = 3;
     const toppings = ingredients["toppings"];
@@ -56,6 +60,9 @@ function HotdogCard(props) {
 
     // TODO: option 2 - divider at end of toppings on display (3 listItem's) 
     var last = toppingsDisplay.length-1;
+    */
+    const numToppingColumns = 1;
+    const numToppingRows = 3;
     
     // format timestamp seconds into readable date
     var date = new Date(1970, 0, 1);
@@ -75,28 +82,35 @@ function HotdogCard(props) {
             />
             <CardMedia image="https://www.svgrepo.com/show/133687/hot-dog.svg"/>
             <CardContent>
-                <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}>
-                    <ListItem divider>
-                        <ListItemIcon>
-                            {icons["hotdogSausage"]}
-                        </ListItemIcon>
-                        <ListItemText primary={ingredients["sausage"]}/>
-                    </ListItem>
-                    <ListItem divider>
-                        <ListItemIcon>
-                            {icons["hotdogSauce"]}
-                        </ListItemIcon>
-                        <ListItemText primary={ingredients["sauce"]}/>
-                    </ListItem>
-                    { toppingsDisplay.map((topping, i) => (
-                        <Topping 
-                            key={i}
-                            index={i}
-                            last={last}
-                            value={topping}
-                        />
-                    ))}
-                </List>
+                {/* <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}> */}
+                {/*     <ListItem divider> */}
+                {/*         <ListItemIcon> */}
+                {/*             {icons["hotdogSausage"]} */}
+                {/*         </ListItemIcon> */}
+                {/*         <ListItemText primary={ingredients["sausage"]}/> */}
+                {/*     </ListItem> */}
+                {/*     <ListItem divider> */}
+                {/*         <ListItemIcon> */}
+                {/*             {icons["hotdogSauce"]} */}
+                {/*         </ListItemIcon> */}
+                {/*         <ListItemText primary={ingredients["sauce"]}/> */}
+                {/*     </ListItem> */}
+                {/*     { toppingsDisplay.map((topping, i) => ( */}
+                {/*         <Topping  */}
+                {/*             key={i} */}
+                {/*             index={i} */}
+                {/*             last={last} */}
+                {/*             value={topping} */}
+                {/*         /> */}
+                {/*     ))} */}
+                {/* </List> */}
+                <HotdogIngredientsList 
+                    sausage={ingredients["sausage"]}
+                    sauce={ingredients["sauce"]}
+                    toppings={ingredients["toppings"]}
+                    numColumns={numToppingColumns}
+                    numRows={numToppingRows}
+                />
             </CardContent>
             <CardActions>
                 <IconButton aria-label="like">

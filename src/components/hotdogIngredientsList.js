@@ -35,23 +35,28 @@ function Topping(props) {
     TODO: for now, only used for hotdogDialog, but should try extend to hotdogCard (logic is only slightly different)
 */
 function HotdogIngredientsList(props) {
-    const { sausage, sauce, toppings } = props;
+    const { sausage, sauce, toppings, numColumns, numRows, dialog } = props;
     // TODO: addform should also have max 10 toppings
-    const maxToppings = 10;
-    var toppingsDisplay = [...toppings];
-    // if less than 10 ingredients, push missing spaces
-    if (toppings.length < maxToppings) {
-        if (toppings.length === 0) {
+    // const maxToppings = 10;
+    const numDisplay = numColumns * numRows;
+    var toppingsDisplay = [...toppings.slice(0, numDisplay)];
+    // if ingredients list is used in card instead of dialog,
+    // and the original toppings length is more than n, then replace (n-1)th element with "..."
+    // otherwise, push blank toppings as needed
+    if (!dialog && toppings.length > numDisplay) {
+        toppingsDisplay[numDisplay-1] = "...";
+    } else if (toppingsDisplay.length < numDisplay) {
+        if (toppingsDisplay.length === 0) {
             toppingsDisplay.push("No toppings!");
         }
-        const numEmpty = maxToppings - toppingsDisplay.length;
-        for (var i = 0; i < numEmpty ; i++) {
+        const numBlank = numDisplay - toppingsDisplay.length;
+        for (var i = 0; i < numBlank ; i++) {
             toppingsDisplay.push("");
         }
     }
 
     // make divider at the end of first and second column
-    var last = toppingsDisplay.length/2 - 1;
+    // var last = toppingsDisplay.length/2 - 1;
 
     return (
         <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}>
@@ -68,6 +73,25 @@ function HotdogIngredientsList(props) {
                 <ListItemText primary={sauce}/>
             </ListItem>
             <Grid container>
+                {[...Array(numColumns)].map((e, i) => (
+                    <Grid item key={i} xs={12/numColumns}>
+                        { toppingsDisplay.slice(i*numRows, (i+1)*numRows).map((topping, j) => (
+                            <Topping 
+                                key={j}
+                                index={j}
+                                last={numRows-1}
+                                value={topping}
+                                firstColumn={i === 0}
+                            />
+                        ))}
+                    </Grid>
+                ))}
+            </Grid>
+        </List>
+    ); 
+}
+
+/* 
                 <Grid item xs={6}>
                     { toppingsDisplay.slice(0, maxToppings/2).map((topping, i) => (
                         <Topping 
@@ -89,9 +113,6 @@ function HotdogIngredientsList(props) {
                         />
                     ))}
                 </Grid>
-            </Grid>
-        </List>
-    ); 
-}
+*/
 
 export default HotdogIngredientsList;
