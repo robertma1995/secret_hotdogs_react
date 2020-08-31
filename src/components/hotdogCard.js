@@ -37,8 +37,6 @@ function HotdogCard(props) {
     // take top 3 toppings
     const maxToppings = 3;
     const toppings = ingredients["toppings"];
-    console.log(toppings);
-    console.log(toppings.length);
     const toppingsDisplay = [...ingredients["toppings"].slice(0, maxToppings)]
     
     // replace third topping with "..." if 4 or more toppings
