@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { 
-    Avatar, Box, Button, Grid, Paper, Typography,
+    Avatar, Box, Button, Grid, IconButton, Paper, Typography,
     Card, CardHeader, CardContent, CardMedia,
     Dialog, DialogContent 
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import icons from '../utils/icons';
 import HotdogIngredientsList from './hotdogIngredientsList';
 
 const useStyles = makeStyles((theme) => ({
     dialog: {
-        paddingTop: '12px!important',
-        padding: '5px',
+        paddingTop: 'unset!important',
+        padding: 'unset',
         height: '700px'
     },
     // main grid + column styling
@@ -18,23 +19,35 @@ const useStyles = makeStyles((theme) => ({
         height: '100%',
         width: '100%'
     },
-    height: {
-        height: '100%',
+    // only want padding on left half of dialog
+    gridLeft: {
+        padding: '10px',
+        height: '100%'
+    },
+    gridRight: {
+        backgroundColor: '#f5f5f5',
+        height: '100%'
     },
     image: {
         maxHeight: '100%',
         maxWidth: '100%',
     },
-    gridItem: {
-        minWidth: '100%',
-        paddingLeft: '16px',
-        paddingRight: '16px',
+    // remove extra padding from bottom of mui's CardContent
+    cardContent: {
+        '&:last-child': {
+            paddingBottom: 'unset'
+        },
     },
+    // description + comment section same padding as mui's CardHeader
     description: {
         color: 'rgba(0, 0, 0, 0.70)',
         paddingLeft: '16px',
         paddingRight: '16px',  
-    }
+    },
+    comments: {
+        paddingLeft: '16px',
+        paddingRight: '16px',
+    },
 }));
 
 /* 
@@ -71,59 +84,49 @@ function HotdogDialog(props) {
                 onClose={() => handleClose()}
             >
                 <DialogContent className={classes.dialog}>
-                    <Grid 
-                        container 
-                        justify="center" 
-                        alignItems="center"
-                        className={classes.grid}
-                        spacing={1}
-                    >
-                        <Grid item xs={5} className={classes.height}>
-                            <Box
-                                display="flex" 
-                                flexDirection="column" 
-                                height="100%"
-                            >
-                                <Card elevation={0}>
-                                    <CardMedia image="https://www.svgrepo.com/show/133687/hot-dog.svg"/>
-                                    <CardContent>
-                                        <HotdogIngredientsList 
-                                            sausage={ingredients["sausage"]}
-                                            sauce={ingredients["sauce"]}
-                                            toppings={ingredients["toppings"]}
-                                            numColumns={numToppingColumns}
-                                            numRows={numToppingRows}
-                                            dialog
-                                        />
-                                    </CardContent>
-                                </Card>
-                            </Box>
+                    <Grid container alignItems="center" className={classes.grid}>
+                        <Grid item xs={5} className={classes.gridLeft}>
+                            <Card elevation={0}>
+                                <CardMedia image="https://www.svgrepo.com/show/133687/hot-dog.svg"/>
+                                <CardContent className={classes.cardContent}>
+                                    <HotdogIngredientsList 
+                                        sausage={ingredients["sausage"]}
+                                        sauce={ingredients["sauce"]}
+                                        toppings={ingredients["toppings"]}
+                                        numColumns={numToppingColumns}
+                                        numRows={numToppingRows}
+                                        dialog
+                                    />
+                                </CardContent>
+                            </Card>
                         </Grid>
-                        <Grid item xs={7} className={classes.height}>
-                            <Paper className={classes.height}>
-                                <Grid 
-                                    container 
-                                    direction="column" 
-                                    className={classes.grid}
-                                >
+                        <Grid item xs={7} className={classes.gridRight}>
+                            <Paper square elevation={0} className={classes.gridRight}>
+                                <Grid container direction="column" className={classes.grid}>
                                     <Grid item>
-                                        <CardHeader
-                                            avatar={
-                                                <Avatar>
-                                                    {creatorName.charAt(0).toUpperCase()}
-                                                </Avatar>
-                                            }
-                                            title={title + " by " + creatorName}
-                                            subheader={subheader}
-                                        />
-                                        <Typography 
-                                            variant="body2" 
-                                            className={classes.description}
-                                        >
+                                        <Box display="flex" flexDirection="row" width="100%">
+                                            <Box flexGrow={1}>
+                                                <CardHeader
+                                                    avatar={
+                                                        <Avatar>
+                                                            {creatorName.charAt(0).toUpperCase()}
+                                                        </Avatar>
+                                                    }
+                                                    title={title + " by " + creatorName}
+                                                    subheader={subheader}
+                                                />
+                                            </Box>
+                                            <Box>
+                                                <IconButton aria-label="close" onClick={() => handleClose()}>
+                                                    {icons["close"]}
+                                                </IconButton>
+                                            </Box>
+                                        </Box>
+                                        <Typography variant="body2" className={classes.description}>
                                             {description}
                                         </Typography>
                                     </Grid>
-                                    <Grid item className={classes.gridItem}>
+                                    <Grid item className={classes.comments}>
                                         <p> COMMENTS GO HERE </p>
                                     </Grid>
                                 </Grid>

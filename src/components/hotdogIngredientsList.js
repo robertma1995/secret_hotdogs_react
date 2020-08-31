@@ -36,10 +36,10 @@ function Topping(props) {
 */
 function HotdogIngredientsList(props) {
     const { sausage, sauce, toppings, numColumns, numRows, dialog } = props;
-    // TODO: addform should also have max 10 toppings
-    // const maxToppings = 10;
+    // TODO: addform should also have max toppings (10 for now)
     const numDisplay = numColumns * numRows;
     var toppingsDisplay = [...toppings.slice(0, numDisplay)];
+
     // if ingredients list is used in card instead of dialog,
     // and the original toppings length is more than n, then replace (n-1)th element with "..."
     // otherwise, push blank toppings as needed
@@ -54,9 +54,6 @@ function HotdogIngredientsList(props) {
             toppingsDisplay.push("");
         }
     }
-
-    // make divider at the end of first and second column
-    // var last = toppingsDisplay.length/2 - 1;
 
     return (
         <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}>
