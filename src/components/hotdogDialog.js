@@ -42,11 +42,11 @@ const useStyles = makeStyles((theme) => ({
     description: {
         color: 'rgba(0, 0, 0, 0.70)',
         paddingLeft: '16px',
-        paddingRight: '16px',  
+        paddingRight: '30px',
     },
     comments: {
         paddingLeft: '16px',
-        paddingRight: '16px',
+        paddingRight: '30px',
     },
 }));
 
