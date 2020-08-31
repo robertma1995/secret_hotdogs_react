@@ -31,12 +31,11 @@ function Topping(props) {
 }
 
 /* 
-    hotdog ingredients list split into 2 columns
-    TODO: for now, only used for hotdogDialog, but should try extend to hotdogCard (logic is only slightly different)
+    splits hotdog toppings into a table-like structure
 */
 function HotdogIngredientsList(props) {
     const { sausage, sauce, toppings, numColumns, numRows, dialog } = props;
-    // TODO: addform should also have max toppings (10 for now)
+    // TODO: calculate numColumns and numRows dynamically based on numDisplay (max rows will still be 5)
     const numDisplay = numColumns * numRows;
     var toppingsDisplay = [...toppings.slice(0, numDisplay)];
 
@@ -87,29 +86,5 @@ function HotdogIngredientsList(props) {
         </List>
     ); 
 }
-
-/* 
-                <Grid item xs={6}>
-                    { toppingsDisplay.slice(0, maxToppings/2).map((topping, i) => (
-                        <Topping 
-                            key={i}
-                            index={i}
-                            last={last}
-                            value={topping}
-                            firstColumn
-                        />
-                    ))}
-                </Grid>
-                <Grid item xs={6}>
-                    { toppingsDisplay.slice(maxToppings/2, toppingsDisplay.length).map((topping, i) => (
-                        <Topping 
-                            key={i}
-                            index={i}
-                            last={last}
-                            value={topping}
-                        />
-                    ))}
-                </Grid>
-*/
 
 export default HotdogIngredientsList;

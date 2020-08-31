@@ -28,11 +28,11 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#f5f5f5',
         height: '100%'
     },
+    // remove extra padding from bottom of mui's CardContent
     image: {
         maxHeight: '100%',
         maxWidth: '100%',
     },
-    // remove extra padding from bottom of mui's CardContent
     cardContent: {
         '&:last-child': {
             paddingBottom: 'unset'
