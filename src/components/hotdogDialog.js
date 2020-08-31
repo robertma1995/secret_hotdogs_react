@@ -71,7 +71,6 @@ function HotdogDialog(props) {
                 onClose={() => handleClose()}
             >
                 <DialogContent className={classes.dialog}>
-                    {/* TODO: two columns - one column = hotdogCard without header, second column = cardheader + comments list */}
                     <Grid 
                         container 
                         justify="center" 
