@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 function HotdogDialog(props) {
     const { creatorName, description, ingredients, title, subheader } = props;
     const classes = useStyles();
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
 
     function handleOpen() {
         setOpen(true);

@@ -37,24 +37,20 @@ function HotdogCard(props) {
     // take top 3 toppings
     const maxToppings = 3;
     const toppings = ingredients["toppings"];
+    console.log(toppings);
+    console.log(toppings.length);
     const toppingsDisplay = [...ingredients["toppings"].slice(0, maxToppings)]
     
-    // TODO: option 1 - divider at end of actual toppings 
-    // var last = toppings.length - 1;
-
     // replace third topping with "..." if 4 or more toppings
     // push blank toppings if less than 3 toppings (visual purposes only), 
     // display all 3 if exactly 3 toppings
-    if (toppings.length > toppingsDisplay.length) {
+    if (toppings.length > maxToppings) {
         toppingsDisplay[2] = "...";
-
-        // TODO: option 1 - divider at end of actual toppings 
-        // last = toppingsDisplay.length-1;
-    } else if (toppings.length < toppingsDisplay.length) {
+    } else if (toppings.length < maxToppings) {
         if (toppings.length === 0) {
             toppingsDisplay.push("No toppings!");
         }
-        const numEmpty = maxToppings+1 - toppingsDisplay.length;
+        const numEmpty = maxToppings - toppingsDisplay.length;
         for (var i = 0; i < numEmpty ; i++) {
             toppingsDisplay.push("");
         }
