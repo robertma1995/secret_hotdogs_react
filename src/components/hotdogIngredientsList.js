@@ -6,17 +6,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import icons from '../utils/icons';
 
-/*
-const useStyles = makeStyles((theme, styleProps) => ({
-    // TODO: different width depending on num columns 
-    overflow: styleProps => ({
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-    }),
-}));
-*/
-
 const useStyles = makeStyles((theme) => ({
+    // overflow for list items - no need to specify width
     overflow: {
         textOverflow: 'ellipsis',
         overflow: 'hidden'
@@ -29,17 +20,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /* 
-    adds icons or dividers to ListItem depending on index and column
+    list item with overflow, adds icon/inset depending on column
 */
 function Topping(props) {
+    const classes = useStyles();
     const { index, value, firstColumn} = props;
     const iconName = firstColumn ? "hotdogTopping" : "none";
-
-    // TODO: different width depending on num columns
-    // const styleProps = { width: width }
-    // const classes = useStyles(styleProps);
-    const classes = useStyles();
-
     return (
         <ListItem>
             {index === 0 &&
