@@ -65,13 +65,18 @@ function Topping(props) {
 */
 function HotdogIngredientsList(props) {
     const classes = useStyles();
-    const { sausage, sauce, toppings, numDisplay, dialog } = props;
+    const { sausage, sauce, toppings, dialog } = props;
     // TODO: change of plan - no more numDisplay - just calculate numRows and numColumns based on toppings length
     // - divider can be added to the outside grid, so no need to determine what items need/don't need a divider
     // - still need blank spaces in the toppingsDisplay to keep everything looking consistent
-    const maxRows = 5;
-    const numColumns = Math.ceil(numDisplay/maxRows);
-    const numRows = numDisplay < maxRows ? numDisplay : maxRows;
+    const maxRowsDialog = 5;
+    const maxRowsCard = 3;
+    const maxColumnsCard = 1;
+    const numRows = dialog ? maxRowsDialog : maxRowsCard;
+    const numColumns = dialog ? Math.max(1, Math.ceil(toppings.length/numRows)) : maxColumnsCard;
+
+    // display only maxRowsCard number of rows if dialog, otherwise display all toppings
+    const numDisplay = dialog ? toppings.length : maxRowsCard;
     var toppingsDisplay = [...toppings.slice(0, numDisplay)];
 
     // if ingredients list is used in card instead of dialog,
@@ -79,7 +84,7 @@ function HotdogIngredientsList(props) {
     // otherwise, push blank toppings as needed
     if (!dialog && toppings.length > numDisplay) {
         toppingsDisplay[numDisplay-1] = "...";
-    } else if (toppingsDisplay.length < numDisplay) {
+    } else if (toppingsDisplay.length < numRows*numColumns) {
         if (toppingsDisplay.length === 0) {
             toppingsDisplay.push("No toppings!");
         }
