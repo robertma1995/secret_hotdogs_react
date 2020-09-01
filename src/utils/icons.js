@@ -22,7 +22,7 @@ const icons = {
     hotdogSausage: <OutdoorGrillIcon />,
     hotdogSauce: <WavesIcon />,
     hotdogTopping: <ShoppingCartIcon />,
-    none: <ShoppingCartIcon color="secondary" />,
+    none: <ShoppingCartIcon style={{ color: 'transparent' }} />,
     like: <FavoriteIcon />,
     minus: <RemoveIcon />,
     plus: <AddIcon color="secondary"/>,
