@@ -11,8 +11,7 @@ import HotdogIngredientsList from './hotdogIngredientsList';
 function HotdogCard(props) {
     // TODO: keep id, since will need for liking later on
     const { id, creatorName, description, ingredients, title, ts } = props;
-    const numToppingColumns = 1;
-    const numToppingRows = 3;
+    const numDisplay = 3;
     
     // format timestamp seconds into readable date
     var date = new Date(1970, 0, 1);
@@ -36,8 +35,7 @@ function HotdogCard(props) {
                     sausage={ingredients["sausage"]}
                     sauce={ingredients["sauce"]}
                     toppings={ingredients["toppings"]}
-                    numColumns={numToppingColumns}
-                    numRows={numToppingRows}
+                    numDisplay={numDisplay}
                 />
             </CardContent>
             <CardActions>

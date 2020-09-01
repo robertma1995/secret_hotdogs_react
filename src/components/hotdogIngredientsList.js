@@ -1,30 +1,58 @@
 import React from 'react';
 import { 
-    Grid,
+    Box, Grid, Typography,
     List, ListItem, ListItemIcon, ListItemText, ListSubheader,
 } from '@material-ui/core';
 import icons from '../utils/icons';
 
 /* 
-    same as hotdogCard, but accounts for column
+    adds icons or dividers to ListItem depending on index and column
 */
 function Topping(props) {
     const { index, last, value, firstColumn } = props;
     const iconName = firstColumn ? "hotdogTopping" : "none";
-
     if (index === 0) {
         return (
             <ListItem divider={index === last}>
                 <ListItemIcon>
                     {icons[iconName]}
                 </ListItemIcon>
-                <ListItemText primary={value !== "" ? value : <br/>}/>
+                <ListItemText 
+                    disableTypography 
+                    primary={
+                        <Typography
+                            variant="body2" 
+                            style={{
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                width: '170px'
+                            }}
+                        >
+                            {value !== "" ? value : <br/>}
+                        </Typography>
+                    } 
+                />
             </ListItem>
         );
     } else {
         return (
             <ListItem divider={index === last}>
-                <ListItemText inset primary={value !== "" ? value : <br/>}/>
+                <ListItemText 
+                    inset
+                    disableTypography 
+                    primary={
+                        <Typography
+                            variant="body2" 
+                            style={{
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                width: '170px'
+                            }}
+                        >
+                            {value !== "" ? value : <br/>}
+                        </Typography>
+                    } 
+                />
             </ListItem>
         );
     }
@@ -34,9 +62,12 @@ function Topping(props) {
     splits hotdog toppings into a table-like structure
 */
 function HotdogIngredientsList(props) {
-    const { sausage, sauce, toppings, numColumns, numRows, dialog } = props;
+    const { sausage, sauce, toppings, numDisplay, dialog } = props;
     // TODO: calculate numColumns and numRows dynamically based on numDisplay (max rows will still be 5)
-    const numDisplay = numColumns * numRows;
+    // TODO: max columns 
+    const maxRows = 5;
+    const numColumns = Math.ceil(numDisplay/maxRows);
+    const numRows = numDisplay < maxRows ? numDisplay : maxRows;
     var toppingsDisplay = [...toppings.slice(0, numDisplay)];
 
     // if ingredients list is used in card instead of dialog,
@@ -48,7 +79,7 @@ function HotdogIngredientsList(props) {
         if (toppingsDisplay.length === 0) {
             toppingsDisplay.push("No toppings!");
         }
-        const numBlank = numDisplay - toppingsDisplay.length;
+        const numBlank = numColumns*numRows - toppingsDisplay.length;
         for (var i = 0; i < numBlank ; i++) {
             toppingsDisplay.push("");
         }

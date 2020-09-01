@@ -55,8 +55,7 @@ const useStyles = makeStyles((theme) => ({
 */
 function HotdogDialog(props) {
     const { creatorName, description, ingredients, title, subheader } = props;
-    const numToppingColumns = 2;
-    const numToppingRows = 5;
+    const numDisplay = 10;
     const [open, setOpen] = useState(false);
     const classes = useStyles();
 
@@ -93,8 +92,7 @@ function HotdogDialog(props) {
                                         sausage={ingredients["sausage"]}
                                         sauce={ingredients["sauce"]}
                                         toppings={ingredients["toppings"]}
-                                        numColumns={numToppingColumns}
-                                        numRows={numToppingRows}
+                                        numDisplay={numDisplay}
                                         dialog
                                     />
                                 </CardContent>
