@@ -1,12 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import Button from '@material-ui/core/Button';
 // my components
 import Form from './form';
 import FormField from './formField';
 import FormButtonWrapper from './formButtonWrapper';
 import ProgressButton from './progressButton';
-import AddToppingButton from './addToppingButton';
 import SuccessSnackbar from './successSnackbar';
+import icons from '../utils/icons';
 // context
 import { UserContext } from '../userContext';
 // database
@@ -65,6 +66,8 @@ function AddForm() {
     const [sausageError, setSausageError] = useState(" ");
     const [sauce, setSauce] = useState("");
     const [sauceError, setSauceError] = useState(" ");
+    // TODO: if need maxToppings in another component, create new "constants" file under utils
+    const maxToppings = 15;
 
     // separate topping/errors Maps, since not always updating error while updating topping (i.e. textfield -> onchange)
     const [toppings, setToppings] = useState(new Map());
@@ -208,7 +211,28 @@ function AddForm() {
                 />
             ))}
             <FormButtonWrapper>
-                <AddToppingButton handleClick={handleAddTopping}/>
+                { toppings.size < maxToppings &&
+                    <Button
+                        variant="text"
+                        color="primary"
+                        disableElevation
+                        startIcon={icons["addTopping"]}
+                        onClick={() => handleAddTopping()}
+                    >
+                        Add Topping
+                    </Button>
+                }
+                { toppings.size === maxToppings &&
+                    <Button
+                        disabled
+                        variant="text"
+                        color="primary"
+                        disableElevation
+                        startIcon={icons["addToppingDisabled"]}
+                    >
+                        Max. Toppings reached ({maxToppings})
+                    </Button>
+                }
             </FormButtonWrapper>
             <FormButtonWrapper>
                 <ProgressButton 

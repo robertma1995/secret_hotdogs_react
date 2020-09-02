@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-    Box, Grid, Typography,
+    Grid, Typography,
     List, ListItem, ListItemIcon, ListItemText, ListSubheader,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -84,13 +84,13 @@ function HotdogIngredientsList(props) {
                 <ListItemIcon>
                     {icons["hotdogSausage"]}
                 </ListItemIcon>
-                <ListItemText primary={sausage}/>
+                <ListItemText primary={sausage} className={classes.overflow} />
             </ListItem>
             <ListItem divider>
                 <ListItemIcon>
                     {icons["hotdogSauce"]}
                 </ListItemIcon>
-                <ListItemText primary={sauce}/>
+                <ListItemText primary={sauce} className={classes.overflow} />
             </ListItem>
             <Grid container className={classes.bottomDivider}>
                 {[...Array(numColumns)].map((e, i) => (

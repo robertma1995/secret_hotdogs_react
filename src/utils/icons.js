@@ -11,6 +11,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import RemoveShoppingCartIcon from '@material-ui/icons/RemoveShoppingCart';
 
 // "none" = white "invisible" icon with ShoppingCart as a placeholder
 const icons = {
@@ -27,6 +29,8 @@ const icons = {
     minus: <RemoveIcon />,
     plus: <AddIcon color="secondary"/>,
     close: <CloseIcon />,
+    addTopping: <AddShoppingCartIcon />,
+    addToppingDisabled: <RemoveShoppingCartIcon />,
 }
 
 export default icons;
