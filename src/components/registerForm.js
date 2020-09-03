@@ -7,6 +7,7 @@ import FormField from './formField';
 import FormButtonWrapper from './formButtonWrapper';
 import ProgressButton from './progressButton';
 import SuccessSnackbar from './successSnackbar';
+import LoginFormDialog from './loginFormDialog';
 // routing
 import * as routes from '../utils/routes';
 // database
@@ -141,8 +142,7 @@ function RegisterForm(props) {
                 open={registered}
                 setOpen={setRegistered}
                 message="Registration successful"
-                action="LOGIN"
-                actionRoute={routes.LOGIN}
+                action={<LoginFormDialog />}
             />
         </Form>
     );

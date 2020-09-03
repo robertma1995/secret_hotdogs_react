@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
 // my components
 import RouterLink from './routerLink';
+import LoginFormDialog from './loginFormDialog';
 // routing
 import { Link } from 'react-router-dom';
 // context
@@ -27,6 +28,7 @@ function NavBar(props) {
                 <Box display="flex" alignItems="center" width={1}>
                     <Box flexGrow={1}>
                         <Typography variant="h6">
+                            {/* TODO: only use RouterLink once - no need for separate file */}
                             <RouterLink color="primary" underline="none" to={routes.HOME}>
                                 Secret Ninja Hotdogs
                             </RouterLink>
@@ -62,15 +64,7 @@ function NavBar(props) {
                             </Button>
                         }
                         { !userId && 
-                            <Button 
-                                component={Link}
-                                to={routes.LOGIN}
-                                color="secondary"
-                                variant="text" 
-                                disableElevation
-                            > 
-                                Login
-                            </Button>
+                            <LoginFormDialog />
                         }
                     </Box>
                 </Box>

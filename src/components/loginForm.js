@@ -96,6 +96,7 @@ function LoginForm(props) {
                     handleClick={handleLogin}
                 />
             </FormButtonWrapper>
+            {/* TODO: also close LoginFormDialog if click on sign up link */}
             <FormFooter>
                 Don't have an account? <RouterLink color="primary" underline="hover" to={routes.REGISTER}> Sign Up </RouterLink>
             </FormFooter>
