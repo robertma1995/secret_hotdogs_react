@@ -13,6 +13,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import RemoveShoppingCartIcon from '@material-ui/icons/RemoveShoppingCart';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 // "none" = white "invisible" icon with ShoppingCart as a placeholder
 const icons = {
@@ -29,6 +30,7 @@ const icons = {
     minus: <RemoveIcon />,
     plus: <AddIcon color="secondary"/>,
     close: <CloseIcon />,
+    tick: <CheckCircleOutlineIcon />,
     addTopping: <AddShoppingCartIcon />,
     addToppingDisabled: <RemoveShoppingCartIcon />,
 }

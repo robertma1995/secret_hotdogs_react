@@ -142,7 +142,7 @@ function RegisterForm(props) {
                 open={registered}
                 setOpen={setRegistered}
                 message="Registration successful"
-                action={<LoginFormDialog />}
+                action={<LoginFormDialog snackbar />}
             />
         </Form>
     );

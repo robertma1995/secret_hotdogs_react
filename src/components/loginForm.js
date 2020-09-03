@@ -73,7 +73,7 @@ function LoginForm(props) {
     }
 
     return (
-        <Form>
+        <Form noTopPadding>
             <FormField
                 type="text"
                 iconName="email"

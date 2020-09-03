@@ -1,10 +1,20 @@
 import React from 'react';
 // material ui
 import { Box, Button, IconButton, Snackbar, Typography }  from '@material-ui/core';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import CloseIcon from '@material-ui/icons/Close';
+import icons from '../utils/icons';
+import { makeStyles } from '@material-ui/core/styles';
 // routing
 import { Link } from 'react-router-dom';
+
+const useStyles = makeStyles((theme) => ({
+    // override iconbutton styles in theme.js
+    button: {
+        color: 'white',
+        '&:hover': {
+            color: '#b9f6ca',
+        }
+    }
+}));
 
 /*
     message with an icon
@@ -14,7 +24,7 @@ function Message(props) {
     return (
         <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
             <Box mr={2}>
-                <CheckCircleOutlineIcon/>
+                {icons["tick"]}
             </Box>
             <Box>
                 <Typography variant="subtitle2" display="inline">
@@ -29,12 +39,13 @@ function Message(props) {
     close button (default) + action button (if defined)
 */
 function Action(props) {
+    const classes = useStyles();
     const { actionButton, handleClose } = props;
     return (
         <>
             {actionButton}
-            <IconButton size="small" aria-label="close" onClick={handleClose}>
-                <CloseIcon color="secondary" fontSize="small"/>
+            <IconButton size="small" onClick={handleClose} className={classes.button}>
+                {icons["close"]}
             </IconButton>
         </>
     );    
@@ -53,7 +64,7 @@ function SuccessSnackbar(props) {
         setOpen(false);
     }
 
-    const autoHideDuration = 10000;
+    const autoHideDuration = 1000000000;
     return (
         <Snackbar 
             open={open}
