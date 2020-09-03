@@ -43,7 +43,7 @@ function LoginFormDialog() {
                 onClose={() => handleClose()}
             >
                 <DialogContent className={classes.dialog}>
-                    <LoginForm />
+                    <LoginForm closeDialog={handleClose}/>
                 </DialogContent>
             </Dialog>
         </>

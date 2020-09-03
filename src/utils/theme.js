@@ -27,6 +27,12 @@ const theme = {
         ].join(','),
     },
     overrides: {
+        // appbar color same as text.primary
+        MuiAppBar: {
+            colorPrimary: {
+                backgroundColor: '#212121',
+            }
+        },
         MuiButton: {
             // white button text - contained Button "color" material ui attribute only changes background color
             containedPrimary: {
@@ -49,19 +55,6 @@ const theme = {
                 }
             }
         },
-        // font size for a TextField label
-        MuiInputLabel: {
-            root: {
-                fontSize: 14
-            }
-        },
-        // background color for a Snackbar
-        MuiSnackbarContent: {
-            root: {
-                backgroundColor: '#00e676'
-                // backgroundColor: '#00c853'
-            }
-        },
         // hotdog grid item size
         MuiCard: {
             root: {
@@ -81,16 +74,10 @@ const theme = {
                 paddingTop: 'unset'
             }
         },
-        // capitalize ListItemText (hotdog card ingredients list)
-        MuiListItem: {
-            root: {
-                textTransform: 'capitalize'
-            }, 
-        },
-        // appbar color same as text.primary
-        MuiAppBar: {
-            colorPrimary: {
-                backgroundColor: '#212121',
+        // custom maxwidth (smaller than default) for a dialog with maxWidth="xs"
+        MuiDialog: {
+            paperWidthXs: {
+                maxWidth: '350px'
             }
         },
         // remove margin from dialogcontenttext
@@ -107,7 +94,26 @@ const theme = {
                     color: '#cbb09c'
                 }
             }
-        }
+        },
+        // font size for a TextField label
+        MuiInputLabel: {
+            root: {
+                fontSize: 14
+            }
+        },
+        // capitalize ListItemText (hotdog card ingredients list)
+        MuiListItem: {
+            root: {
+                textTransform: 'capitalize'
+            }, 
+        },
+        // background color for a Snackbar
+        MuiSnackbarContent: {
+            root: {
+                backgroundColor: '#00e676'
+                // backgroundColor: '#00c853'
+            }
+        },
     }
 }
 

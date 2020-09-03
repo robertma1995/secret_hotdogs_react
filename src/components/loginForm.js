@@ -18,6 +18,7 @@ import * as DB from '../database/wrapper';
 
 function LoginForm(props) {
  	// context + state variables (default error " " prevents form from looking ugly)
+    const { closeDialog } = props;
     const { setCurrentUserId, setCurrentUserName } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(" ");
@@ -96,9 +97,16 @@ function LoginForm(props) {
                     handleClick={handleLogin}
                 />
             </FormButtonWrapper>
-            {/* TODO: also close LoginFormDialog if click on sign up link */}
             <FormFooter>
-                Don't have an account? <RouterLink color="primary" underline="hover" to={routes.REGISTER}> Sign Up </RouterLink>
+                Don't have an account? &nbsp;
+                <RouterLink 
+                    color="primary" 
+                    underline="hover" 
+                    onClick={closeDialog}
+                    to={routes.REGISTER}
+                > 
+                    Sign Up 
+                </RouterLink>
             </FormFooter>
         </Form>
     );
