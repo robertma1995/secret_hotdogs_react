@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 */
 function LoginFormDialog(props) {
     const { snackbar } = props;
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const classes = useStyles();
 
     function handleOpen() {

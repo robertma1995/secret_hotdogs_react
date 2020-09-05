@@ -8,10 +8,29 @@ import FormButtonWrapper from './formButtonWrapper';
 import ProgressButton from './progressButton';
 import SuccessSnackbar from './successSnackbar';
 import LoginFormDialog from './loginFormDialog';
-// routing
+// utils
 import * as routes from '../utils/routes';
 // database
 import * as DB from '../database/wrapper';
+
+/* 
+    checks trimmed input, returning the appropriate error message
+    for now, each field has to be one word (no spaces between words)
+*/
+/*
+function checkInput(inputTrimmed) {
+    var error = " ";
+    const emptyError = "Please fill out this field";
+    const invalidError = "Special characters not allowed";
+    const emailError = "Invalid email";
+    if (!inputTrimmed) {
+        error = emptyError;
+    } else if (!inputTrimmed.match(/^[A-Za-z0-9]+$/g)) {
+        error = invalidError;
+    }
+    return error;
+}
+*/
 
 function RegisterForm(props) {
  	// state variables

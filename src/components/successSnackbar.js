@@ -1,10 +1,8 @@
 import React from 'react';
 // material ui
-import { Box, Button, IconButton, Snackbar, Typography }  from '@material-ui/core';
+import { Box, IconButton, Snackbar, Typography }  from '@material-ui/core';
 import icons from '../utils/icons';
 import { makeStyles } from '@material-ui/core/styles';
-// routing
-import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     // override iconbutton styles in theme.js

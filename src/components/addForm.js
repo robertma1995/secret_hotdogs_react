@@ -7,7 +7,9 @@ import FormField from './formField';
 import FormButtonWrapper from './formButtonWrapper';
 import ProgressButton from './progressButton';
 import SuccessSnackbar from './successSnackbar';
+// utils
 import icons from '../utils/icons';
+import errors from '../utils/errors';
 // context
 import { UserContext } from '../userContext';
 // database
