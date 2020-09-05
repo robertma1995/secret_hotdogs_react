@@ -16,7 +16,7 @@ import { UserContext } from '../userContext';
 import * as DB from '../database/wrapper';
 
 /* 
-    checks trimmed input, returning the appropriate error message
+    helper: checks trimmed input, returning the appropriate error message
     for now, each field can't have spaces or special characters
 */
 function checkInput(inputTrimmed) {

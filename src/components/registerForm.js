@@ -14,7 +14,7 @@ import errors from '../utils/errors';
 import * as DB from '../database/wrapper';
 
 /* 
-    checks trimmed input, returning the appropriate error message
+    helper: checks trimmed input, returning the appropriate error message
     for now, each field can't have spaces or special characters
     type determines checking method, password arg is only used for passwordConfirm checking
 */
@@ -44,7 +44,7 @@ function checkInput(type, inputTrimmed, password) {
 }
 
 /*
-    checks validity of input based on returned error, trims input, and sets input error
+    helper: checks validity of input based on returned error, trims input, and sets input error
 */
 function isValid(type, input, setInput, setInputError, password) {
     const trimmed = input.trim();
@@ -66,7 +66,6 @@ function RegisterForm(props) {
     const [passwordConfirmError, setPasswordConfirmError] = useState(" ");
     const [loading, setLoading] = useState(false);
     const [registered, setRegistered] = useState(false);
-
 
     function handleRegister() {
         // set registered to false again to handle consecutive adds on same page (no reload)

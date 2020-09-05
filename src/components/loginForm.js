@@ -8,13 +8,38 @@ import FormButtonWrapper from './formButtonWrapper';
 import ProgressButton from './progressButton';
 import FormFooter from './formFooter';
 import RouterLink from './routerLink';
-// routing
+// routing + utils
 import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
+import errors from '../utils/errors';
 // context
 import { UserContext } from '../userContext';
 // database
 import * as DB from '../database/wrapper';
+
+/* 
+    helper: checks trimmed input, returning the appropriate error message
+    only handles email - password error handling done during form submission
+*/
+function checkInput(type, inputTrimmed) {
+    if (!inputTrimmed) {
+        return errors["empty"];
+    }
+    var error = " ";
+    if (type === "email" && !isEmail(inputTrimmed)) error = errors["email"]
+    return error;
+}
+
+/*
+    helper: checks validity of input based on returned error, trims input, and sets input error
+*/
+function isValid(type, input, setInput, setInputError) {
+    const trimmed = input.trim();
+    const error = checkInput(type, trimmed);
+    setInput(trimmed);
+    setInputError(error);
+    return error.trim() === "";
+}
 
 function LoginForm(props) {
  	// context + state variables (default error " " prevents form from looking ugly)
@@ -25,32 +50,10 @@ function LoginForm(props) {
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState(" ");
     const [loading, setLoading] = useState(false);
-    const emptyError = "Please fill out this field";
 
     function handleLogin() {
-        // setError functions are asynchronous, so use local vars instead for login check
-        var emailValid = false;
-        var passwordValid = false;
-
-        // remove trailing whitespace from email before checking validity
-        const emailTrimmed = email.trim();
-        if (!emailTrimmed) {
-            setEmailError(emptyError);
-        } else if (!isEmail(emailTrimmed)) {
-            setEmailError("Invalid email");
-        } else {
-            setEmailError(" ");
-            emailValid = true;
-        }
-        setEmail(emailTrimmed);
-
-        if (!password) {
-            setPasswordError(emptyError);
-        } else {
-            setPasswordError(" ");
-            passwordValid = true;
-        }
-
+        const emailValid = isValid("email", email, setEmail, setEmailError);
+        const passwordValid = isValid("password", password, setPassword, setPasswordError);
         if (emailValid && passwordValid) {
             setLoading(true);
             // if login succeeds, set context user id and redirect to home page
@@ -59,8 +62,8 @@ function LoginForm(props) {
                 const loginUserId = await DB.login(email.trim(), password);
                 setLoading(false);
                 if (!loginUserId) {
-                    setEmailError("Incorrect email or password");
-                    setPasswordError("Incorrect email or password");
+                    setEmailError(errors["login"]);
+                    setPasswordError(errors["login"]);
                 } else {
                     // get user details (users currently only have a name)
                     const loginUser = await DB.getUser(loginUserId);
