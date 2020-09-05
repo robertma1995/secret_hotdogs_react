@@ -17,16 +17,14 @@ import * as DB from '../database/wrapper';
 
 /* 
     checks trimmed input, returning the appropriate error message
-    for now, each field has to be one word (no spaces between words)
+    for now, each field can't have spaces or special characters
 */
 function checkInput(inputTrimmed) {
     var error = " ";
-    const emptyError = "Please fill out this field";
-    const invalidError = "Special characters not allowed";
     if (!inputTrimmed) {
-        error = emptyError;
+        error = errors["empty"];
     } else if (!inputTrimmed.match(/^[A-Za-z0-9]+$/g)) {
-        error = invalidError;
+        error = errors["special"];
     }
     return error;
 }
@@ -36,7 +34,7 @@ function checkInput(inputTrimmed) {
 */
 function isValid(input, setInput, setInputError) {
     const trimmed = input.trim();
-    var error = checkInput(trimmed);
+    const error = checkInput(trimmed);
     setInput(trimmed);
     setInputError(error);
     return error.trim() === "";
@@ -49,7 +47,7 @@ function isValid(input, setInput, setInputError) {
 */
 function isValidTopping(topping, key, updateToppings, updateToppingErrors) {
     const trimmed = topping.trim();
-    var error = checkInput(trimmed);
+    const error = checkInput(trimmed);
     updateToppings(key, trimmed);
     updateToppingErrors(key, error);
     return error.trim() === "";
@@ -95,9 +93,9 @@ function AddForm() {
         // set added to false again to handle consecutive adds on same page (no reload)
         setAdded(false);
 
-        var titleValid = isValid(title, setTitle, setTitleError);
-        var sausageValid = isValid(sausage, setSausage, setSausageError);
-        var sauceValid = isValid(sauce, setSauce, setSauceError);
+        const titleValid = isValid(title, setTitle, setTitleError);
+        const sausageValid = isValid(sausage, setSausage, setSausageError);
+        const sauceValid = isValid(sauce, setSauce, setSauceError);
 
         var toppingsValid = true;
         console.log(toppings);

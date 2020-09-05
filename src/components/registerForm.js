@@ -10,27 +10,48 @@ import SuccessSnackbar from './successSnackbar';
 import LoginFormDialog from './loginFormDialog';
 // utils
 import * as routes from '../utils/routes';
+import errors from '../utils/errors';
 // database
 import * as DB from '../database/wrapper';
 
 /* 
     checks trimmed input, returning the appropriate error message
-    for now, each field has to be one word (no spaces between words)
+    for now, each field can't have spaces or special characters
+    type determines checking method, password arg is only used for passwordConfirm checking
 */
-/*
-function checkInput(inputTrimmed) {
+function checkInput(type, inputTrimmed, password) {
+    if (!inputTrimmed && type !== "passwordConfirm") {
+        return errors["empty"];
+    } 
     var error = " ";
-    const emptyError = "Please fill out this field";
-    const invalidError = "Special characters not allowed";
-    const emailError = "Invalid email";
-    if (!inputTrimmed) {
-        error = emptyError;
-    } else if (!inputTrimmed.match(/^[A-Za-z0-9]+$/g)) {
-        error = invalidError;
+    switch (type) {
+        case "name": 
+            if (!inputTrimmed.match(/^[A-Za-z0-9]+$/g)) error = errors["special"];
+            break;
+        case "email": 
+            if (!isEmail(inputTrimmed)) error = errors["email"];
+            break;
+        case "password":
+            const length = 6;
+            if (inputTrimmed.length < length) error = errors["password"](length);
+            break;
+        case "passwordConfirm":
+            if (inputTrimmed !== password) error = errors["passwordConfirm"];
+            break;
     }
     return error;
 }
+
+/*
+    checks validity of input based on returned error, trims input, and sets input error
 */
+function isValid(type, input, setInput, setInputError, password) {
+    const trimmed = input.trim();
+    const error = type === "passwordConfirm" ? checkInput(type, trimmed, password) : checkInput(type, trimmed);
+    setInput(trimmed);
+    setInputError(error);
+    return error.trim() === "";
+}
 
 function RegisterForm(props) {
  	// state variables
@@ -44,12 +65,13 @@ function RegisterForm(props) {
     const [passwordConfirmError, setPasswordConfirmError] = useState(" ");
     const [loading, setLoading] = useState(false);
     const [registered, setRegistered] = useState(false);
-    const emptyError = "Please fill out this field";
+
 
     function handleRegister() {
         // set added to false again to handle consecutive adds on same page (no reload)
         setRegistered(false);
         // setError functions are asynchronous, so use local vars instead for final check
+        /*
         var nameValid = false;
         var emailValid = false;
         var passwordValid = false;
@@ -80,7 +102,7 @@ function RegisterForm(props) {
         if (!password) {
             setPasswordError(emptyError);
         } else if (password.length < passwordLength) {
-            setPasswordError("Password must be at least " + passwordLength + " characters long")
+            setPasswordError(errors["password"](passwordLength))
         } else {
             setPasswordError(" ");
             passwordValid = true;
@@ -92,6 +114,11 @@ function RegisterForm(props) {
             setPasswordConfirmError(" ");
             passwordConfirmValid = true;
         }
+        */
+        const nameValid = isValid("name", name, setName, setNameError);
+        const emailValid = isValid("email", email, setEmail, setEmailError);
+        const passwordValid = isValid("password", password, setPassword, setPasswordError);
+        const passwordConfirmValid = isValid("passwordConfirm", passwordConfirm, setPasswordConfirm, setPasswordConfirmError, password);
 
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
             setLoading(true);

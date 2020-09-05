@@ -77,7 +77,7 @@ const theme = {
         // custom maxwidth (smaller than default) for a dialog with maxWidth="xs"
         MuiDialog: {
             paperWidthXs: {
-                maxWidth: '350px'
+                maxWidth: '400px'
             }
         },
         // remove margin from dialogcontenttext
