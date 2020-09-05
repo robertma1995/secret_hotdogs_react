@@ -9,7 +9,6 @@ import ProgressButton from './progressButton';
 import SuccessSnackbar from './successSnackbar';
 import LoginFormDialog from './loginFormDialog';
 // utils
-import * as routes from '../utils/routes';
 import errors from '../utils/errors';
 // database
 import * as DB from '../database/wrapper';
@@ -37,6 +36,8 @@ function checkInput(type, inputTrimmed, password) {
             break;
         case "passwordConfirm":
             if (inputTrimmed !== password) error = errors["passwordConfirm"];
+            break;
+        default: 
             break;
     }
     return error;
@@ -68,53 +69,8 @@ function RegisterForm(props) {
 
 
     function handleRegister() {
-        // set added to false again to handle consecutive adds on same page (no reload)
+        // set registered to false again to handle consecutive adds on same page (no reload)
         setRegistered(false);
-        // setError functions are asynchronous, so use local vars instead for final check
-        /*
-        var nameValid = false;
-        var emailValid = false;
-        var passwordValid = false;
-        var passwordConfirmValid = false;
-
-        // remove trailing whitespace before checking inputs
-        const nameTrimmed = name.trim();
-        if (!nameTrimmed) {
-            setNameError(emptyError);
-        } else {
-            setNameError(" ");
-            nameValid = true;
-        }
-        setName(nameTrimmed);
-
-        const emailTrimmed = email.trim();
-        if (!emailTrimmed) {
-            setEmailError(emptyError);
-        } else if (!isEmail(emailTrimmed)) {
-            setEmailError("Invalid email");
-        } else {
-            setEmailError(" ");
-            emailValid = true;
-        }
-        setEmail(emailTrimmed);
-
-        const passwordLength = 6;
-        if (!password) {
-            setPasswordError(emptyError);
-        } else if (password.length < passwordLength) {
-            setPasswordError(errors["password"](passwordLength))
-        } else {
-            setPasswordError(" ");
-            passwordValid = true;
-        }
-
-        if (passwordConfirm !== password) {
-            setPasswordConfirmError("Please make sure your passwords match");
-        } else {
-            setPasswordConfirmError(" ");
-            passwordConfirmValid = true;
-        }
-        */
         const nameValid = isValid("name", name, setName, setNameError);
         const emailValid = isValid("email", email, setEmail, setEmailError);
         const passwordValid = isValid("password", password, setPassword, setPasswordError);
@@ -123,15 +79,14 @@ function RegisterForm(props) {
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
             setLoading(true);
             (async () => {
-                // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
                 // TEMP: stop new registrations since public hosting now
                 // var registerStatus = false;
-                var registerStatus = await DB.register(name.trim(), email.trim(), password);
+                var registerStatus = await DB.register(name, email, password);
                 setLoading(false);
                 // if register succeeds, reset all fields and give user option to go to login 
                 if (!registerStatus) {
                     // setEmailError("Email already in use, please type in a different email");
-                    setEmailError("Invalid email");
+                    setEmailError(errors["email"]);
                 } else {
                     setName("");
                     setEmail("");
