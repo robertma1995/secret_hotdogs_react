@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 // material ui
 import { AppBar, Box, Button, Toolbar, Typography, } from '@material-ui/core';
 // routing
@@ -11,9 +11,24 @@ import LoginFormDialog from './loginFormDialog';
 import { Link } from 'react-router-dom';
 // context
 import { UserContext } from '../userContext';
+// database
+import * as DB from '../database/wrapper';
 
 function NavBar(props) { 
+    // TODO: remove userName placeholder after user profile images finished
     const { userId, setCurrentUserId, userName, setCurrentUserName } = useContext(UserContext);
+    const [avatarUrl, setAvatarUrl] = useState("");
+    
+    // TODO: if userId is set, then get profile image from backend
+    // TODO: maybe wrap this is a useEffect instead
+    if (userId) {
+        console.log("USER ID SET: " + userId);
+        (async () => {
+            const url = await DB.getUserProfileImage(userId);
+            console.log("profile image url: " + url);
+            setAvatarUrl(url);
+        })();
+    }
     
     // unset context vars and redirect to login page
     function handleLogout() {
@@ -36,9 +51,7 @@ function NavBar(props) {
                     </Box>
                     <Box p={1}>
                         { userId && 
-                            <Typography variant="subtitle1" color="secondary">
-                                Welcome, {userName}!
-                            </Typography>
+                            <img src={avatarUrl} />
                         }
                         { !userId && 
                             <Button 

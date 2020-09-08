@@ -64,8 +64,14 @@ function RegisterForm(props) {
     const [passwordError, setPasswordError] = useState(" ");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [passwordConfirmError, setPasswordConfirmError] = useState(" ");
+    const [profileImage, setProfileImage] = useState("");
     const [loading, setLoading] = useState(false);
     const [registered, setRegistered] = useState(false);
+
+    function uploadFile(file) {
+        console.log("UPLOADED FILE");
+        setProfileImage(file);
+    }
 
     function handleRegister() {
         // set registered to false again to handle consecutive adds on same page (no reload)
@@ -75,23 +81,28 @@ function RegisterForm(props) {
         const passwordValid = isValid("password", password, setPassword, setPasswordError);
         const passwordConfirmValid = isValid("passwordConfirm", passwordConfirm, setPasswordConfirm, setPasswordConfirmError, password);
 
+        // TODO: image upload - use firebase storage (see docs)
+        // current plan: one folder for users, one folder for hotdogs, 
+
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
             setLoading(true);
             (async () => {
                 // TEMP: stop new registrations since public hosting now
                 // var registerStatus = false;
-                var registerStatus = await DB.register(name, email, password);
+                var registerStatus = await DB.register(name, email, password, profileImage);
                 setLoading(false);
                 // if register succeeds, reset all fields and give user option to go to login 
                 if (!registerStatus) {
                     // setEmailError("Email already in use, please type in a different email");
                     setEmailError(errors["email"]);
                 } else {
+                    // TODO: also clear the image input field
                     setName("");
                     setEmail("");
                     setPassword("");
                     setPasswordConfirm("");
-                    setRegistered(true);                        
+                    setProfileImage("");
+                    setRegistered(true);
                 }
             })();
         }
@@ -130,6 +141,10 @@ function RegisterForm(props) {
                 value={passwordConfirm}
                 setValue={setPasswordConfirm}
                 error={passwordConfirmError}
+            />
+            <input 
+                type="file"
+                onChange={(event) => uploadFile(event.target.files[0])}
             />
             <FormButtonWrapper>
                 <ProgressButton 
