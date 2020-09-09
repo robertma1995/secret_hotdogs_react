@@ -53,6 +53,7 @@ const get = async (id) => {
 
 /*  
     get user profile image url given firebase auth id 
+    TODO: consider combining this with get user function
 */
 const getProfileImage = async (id) => {
     return new Promise((resolve, reject) => {

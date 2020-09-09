@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 // material ui
-import { AppBar, Box, Button, Toolbar, Typography, } from '@material-ui/core';
+import { AppBar, Avatar, Box, Button, Toolbar, Typography, } from '@material-ui/core';
 // routing
 import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
@@ -19,7 +19,6 @@ function NavBar(props) {
     const { userId, setCurrentUserId, userName, setCurrentUserName } = useContext(UserContext);
     const [avatarUrl, setAvatarUrl] = useState("");
     
-    // TODO: if userId is set, then get profile image from backend
     // TODO: maybe wrap this is a useEffect instead
     if (userId) {
         console.log("USER ID SET: " + userId);
@@ -51,7 +50,7 @@ function NavBar(props) {
                     </Box>
                     <Box p={1}>
                         { userId && 
-                            <img src={avatarUrl} />
+                            <Avatar src={avatarUrl} />
                         }
                         { !userId && 
                             <Button 

@@ -1,17 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Avatar, 
     IconButton, 
     Card, CardHeader, CardMedia, CardContent, CardActions, 
 } from '@material-ui/core';
+// my components
 import icons from '../utils/icons';
 import HotdogDialog from './hotdogDialog';
 import HotdogIngredientsList from './hotdogIngredientsList';
+// database
+import * as DB from '../database/wrapper';
 
 function HotdogCard(props) {
     // TODO: keep id, since will need for liking later on
-    const { id, creatorName, description, ingredients, title, ts } = props;
+    const { id, creatorId, creatorName, description, ingredients, title, ts } = props;
+    const [avatarUrl, setAvatarUrl] = useState("");
     
+    // get creator's avatar
+    (async () => {
+        const url = await DB.getUserProfileImage(creatorId);
+        setAvatarUrl(url);
+    })();
+
     // format timestamp seconds into readable date
     var date = new Date(1970, 0, 1);
     date.setTime(ts * 1000);
@@ -20,11 +30,7 @@ function HotdogCard(props) {
     return (
         <Card>
             <CardHeader
-                avatar={
-                    <Avatar>
-                        {creatorName.charAt(0).toUpperCase()}
-                    </Avatar>
-                }
+                avatar={<Avatar src={avatarUrl} />}
                 title={title + " by " + creatorName}
                 subheader={subheader}
             />
