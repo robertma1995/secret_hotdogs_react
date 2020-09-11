@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react';
 // material ui
-import { AppBar, Avatar, Box, Button, Toolbar, Typography, } from '@material-ui/core';
-// routing
-import { withRouter } from 'react-router-dom';
-import * as routes from '../utils/routes';
+import { AppBar, Box, Button, Toolbar, Typography, } from '@material-ui/core';
 // my components
 import RouterLink from './routerLink';
 import LoginFormDialog from './loginFormDialog';
+import NavbarAvatar from './navbarAvatar';
 // routing
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
 // database
@@ -20,11 +20,11 @@ function NavBar(props) {
     const [avatarUrl, setAvatarUrl] = useState("");
     
     // TODO: maybe wrap this is a useEffect instead
+    // TODO: add profile image url to context to prevent empty avatar on reload
+    // TODO: avatar clickable menu + logout
     if (userId) {
-        console.log("USER ID SET: " + userId);
         (async () => {
             const url = await DB.getUserProfileImage(userId);
-            console.log("profile image url: " + url);
             setAvatarUrl(url);
         })();
     }
@@ -42,7 +42,6 @@ function NavBar(props) {
                 <Box display="flex" alignItems="center" width={1}>
                     <Box flexGrow={1}>
                         <Typography variant="h6">
-                            {/* TODO: only use RouterLink once - no need for separate file */}
                             <RouterLink color="primary" underline="none" to={routes.HOME}>
                                 Secret Ninja Hotdogs
                             </RouterLink>
@@ -50,7 +49,11 @@ function NavBar(props) {
                     </Box>
                     <Box p={1}>
                         { userId && 
-                            <Avatar src={avatarUrl} />
+                            <NavbarAvatar 
+                                imageUrl={avatarUrl}
+                                userName={userName}
+                                handleLogout={handleLogout} 
+                            />
                         }
                         { !userId && 
                             <Button 

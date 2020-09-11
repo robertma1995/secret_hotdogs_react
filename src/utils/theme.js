@@ -107,6 +107,12 @@ const theme = {
                 textTransform: 'capitalize'
             }, 
         },
+        // avatar menu minimum width
+        MuiPopover: {
+            paper: {
+                minWidth: 100
+            }
+        },
         // background color for a Snackbar
         MuiSnackbarContent: {
             root: {
