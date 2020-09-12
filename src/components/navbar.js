@@ -16,19 +16,9 @@ import * as DB from '../database/wrapper';
 
 function NavBar(props) { 
     // TODO: remove userName placeholder after user profile images finished
-    const { userId, setCurrentUserId, userName, setCurrentUserName } = useContext(UserContext);
+    const { userId, setCurrentUserId, userName, setCurrentUserName, userProfileImageUrl } = useContext(UserContext);
     const [avatarUrl, setAvatarUrl] = useState("");
-    
-    // TODO: maybe wrap this is a useEffect instead
-    // TODO: add profile image url to context to prevent empty avatar on reload
-    // TODO: avatar clickable menu + logout
-    if (userId) {
-        (async () => {
-            const url = await DB.getUserProfileImage(userId);
-            setAvatarUrl(url);
-        })();
-    }
-    
+        
     // unset context vars and redirect to login page
     function handleLogout() {
         setCurrentUserId(null);
@@ -47,39 +37,28 @@ function NavBar(props) {
                             </RouterLink>
                         </Typography>
                     </Box>
-                    <Box p={1}>
+                    <Box>
                         { userId && 
                             <NavbarAvatar 
-                                imageUrl={avatarUrl}
+                                imageUrl={userProfileImageUrl}
                                 userName={userName}
                                 handleLogout={handleLogout} 
                             />
                         }
                         { !userId && 
-                            <Button 
-                                component={Link}
-                                to={routes.REGISTER}
-                                color="secondary" 
-                                variant="text" 
-                                disableElevation
-                            > 
-                                Sign Up
-                            </Button>
-                        }
-                    </Box>
-                    <Box>
-                        { userId && 
-                            <Button
-                                color="secondary"
-                                variant="text" 
-                                disableElevation
-                                onClick={() => handleLogout()}
-                            >
-                                Logout 
-                            </Button>
-                        }
-                        { !userId && 
-                            <LoginFormDialog />
+                            <>
+                                <Button 
+                                    component={Link}
+                                    to={routes.REGISTER}
+                                    color="secondary" 
+                                    variant="text" 
+                                    disableElevation
+                                    style={{ paddingRight: '20px' }}
+                                > 
+                                    Sign Up
+                                </Button>
+                                <LoginFormDialog />
+                            </>
                         }
                     </Box>
                 </Box>

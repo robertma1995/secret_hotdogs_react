@@ -110,7 +110,7 @@ const theme = {
         // avatar menu minimum width
         MuiPopover: {
             paper: {
-                minWidth: 100
+                minWidth: 150
             }
         },
         // background color for a Snackbar

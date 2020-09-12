@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Avatar, Badge, Box, Button, IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
+import { Avatar, Badge, Box, Button, IconButton, Typography, Menu } from '@material-ui/core';
 import icons from '../utils/icons';
 
 const useStyles = makeStyles((theme) => ({
@@ -13,6 +13,10 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             opacity: 1
         }
+    },
+    overflow: {
+        textOverflow: 'ellipsis',
+        overflow: 'hidden'
     },
     menuAvatar: {
         width: theme.spacing(10),
@@ -29,8 +33,18 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: '#f6f2ef',
         }
     },
+    // line dividing header and rest of menu - copy-pasted from mui's ListItem divider
     menuHeader: {
         padding: '5px',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+        backgroundClip: 'padding-box',
+    },
+    menuHeaderItem: {
+        paddingTop: '3px',
+        paddingBottom: '3px',
+    },
+    menuButton: {
+        fontSize: '0.85rem'
     }
 }));
 
@@ -61,25 +75,16 @@ function NavbarAvatar(props) {
                 onClose={() => handleClose()}
                 anchorEl={anchorEl}
                 className={classes.menu}
-                keepMounted
                 getContentAnchorEl={null}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right'
-                }}
+                keepMounted
+                anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                transformOrigin={{vertical: 'top', horizontal: 'right'}}
             >
                 <Box display="flex" flexDirection="column" alignItems="center" className={classes.menuHeader}>
-                    <Box>
+                    <Box className={classes.menuHeaderItem}>
                         <Badge 
                             overlap="circle"
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right'
-                            }}
+                            anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                             badgeContent={
                                 <IconButton className={classes.menuAvatarBadge}>
                                     {icons["camera"]}
@@ -89,13 +94,27 @@ function NavbarAvatar(props) {
                             <Avatar src={imageUrl} className={classes.menuAvatar} />
                         </Badge>
                     </Box>
-                    <Box>
-                        <Typography variant="caption"> {userName} </Typography>
+                    <Box className={classes.menuHeaderItem}>
+                        <Typography variant="body2" className={classes.overflow}> 
+                            {userName} 
+                        </Typography>
                     </Box>
                 </Box>
-                <MenuItem onClick={() => handleClose()}>
-                    Logout
-                </MenuItem>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                    <Box width="100%">
+                        <Button
+                            variant="text"
+                            color="primary"
+                            disableElevation
+                            fullWidth
+                            startIcon={icons["logout"]}
+                            onClick={() => handleLogout()}
+                            className={classes.menuButton}
+                        >
+                            Sign Out
+                        </Button>
+                    </Box>
+                </Box>
             </Menu>
         </>
     );

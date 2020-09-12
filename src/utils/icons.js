@@ -15,6 +15,7 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import RemoveShoppingCartIcon from '@material-ui/icons/RemoveShoppingCart';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 // "none" = white "invisible" icon with ShoppingCart as a placeholder
 const icons = {
@@ -34,7 +35,8 @@ const icons = {
     tick: <CheckCircleOutlineIcon />,
     addTopping: <AddShoppingCartIcon />,
     addToppingDisabled: <RemoveShoppingCartIcon />,
-    camera: <PhotoCameraOutlinedIcon fontSize="small" />
+    camera: <PhotoCameraOutlinedIcon fontSize="small" />,
+    logout: <ExitToAppIcon fontSize="small" />
 }
 
 export default icons;

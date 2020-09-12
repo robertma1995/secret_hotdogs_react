@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import * as DB from './database/wrapper';
 // User context - currently only holds the id of the currently logged in user
 // id is set to null if not logged in
 
@@ -15,6 +15,7 @@ const UserContext = React.createContext();
 function UserContextProvider(props) {
     const [userId, setUserId] = useState(null);
     const [userName, setUserName] = useState(null);
+    const [userProfileImageUrl, setUserProfileImageUrl] = useState("");
 
     function setCurrentUserId(id) {
         setUserId(userId => id);
@@ -28,8 +29,10 @@ function UserContextProvider(props) {
     useEffect(() => {
         const id = sessionStorage.getItem('userId');
         const name = sessionStorage.getItem('userName');
+        const url = sessionStorage.getItem('userProfileImageUrl');
         setUserId(id);
         setUserName(name);
+        setUserProfileImageUrl(url);
     }, []);
 
     // save context to session whenever variable changes, remove if set to null
@@ -38,6 +41,11 @@ function UserContextProvider(props) {
             sessionStorage.removeItem('userId');
         } else {
             sessionStorage.setItem('userId', userId);
+            (async () => {
+                const url = await DB.getUserProfileImage(userId);
+                setUserProfileImageUrl(url);
+                sessionStorage.setItem('userProfileImageUrl', url);
+            })();
         }
     }, [userId]);
 
@@ -50,7 +58,13 @@ function UserContextProvider(props) {
     }, [userName]);
 
     return (
-        <UserContext.Provider value={{ userId, setCurrentUserId, userName, setCurrentUserName }}>
+        <UserContext.Provider 
+            value={{ 
+                userId, setCurrentUserId, 
+                userName, setCurrentUserName, 
+                userProfileImageUrl
+            }}
+        >
             {props.children}
         </UserContext.Provider>
     );
