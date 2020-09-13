@@ -13,14 +13,15 @@ import * as DB from '../database/wrapper';
 
 function HotdogCard(props) {
     // TODO: keep id, since will need for liking later on
-    const { id, creatorId, creatorName, description, ingredients, title, ts } = props;
-    const [avatarUrl, setAvatarUrl] = useState("");
+    const { id, creatorId, creatorName, creatorProfileImageUrl, description, ingredients, title, ts } = props;
+    console.log(props);
+    // const [avatarUrl, setAvatarUrl] = useState("");
     
     // get creator's avatar
-    (async () => {
-        const url = await DB.getUserProfileImage(creatorId);
-        setAvatarUrl(url);
-    })();
+    // (async () => {
+    //     const url = await DB.getUserProfileImage(creatorId);
+    //     setAvatarUrl(url);
+    // })();
 
     // format timestamp seconds into readable date
     var date = new Date(1970, 0, 1);
@@ -30,7 +31,7 @@ function HotdogCard(props) {
     return (
         <Card>
             <CardHeader
-                avatar={<Avatar src={avatarUrl} />}
+                avatar={<Avatar src={creatorProfileImageUrl} />}
                 title={title + " by " + creatorName}
                 subheader={subheader}
             />

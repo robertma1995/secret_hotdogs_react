@@ -98,15 +98,12 @@ function AddForm() {
         const sauceValid = isValid(sauce, setSauce, setSauceError);
 
         var toppingsValid = true;
-        console.log(toppings);
-        console.log(toppingErrors);
         for (const key of toppings.keys()) {
             var topping = toppings.get(key);
             if (!isValidTopping(topping, key, updateToppings, updateToppingErrors)) {
                 toppingsValid = false;
             }
         }
-        console.log("toppingsValid: " + toppingsValid);
 
         // check errors with local vars, since setError functions are asynchronous
         if (titleValid && sausageValid && sauceValid && toppingsValid) {
