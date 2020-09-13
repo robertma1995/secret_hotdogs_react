@@ -11,6 +11,7 @@ import { UserContext } from '../userContext';
 import * as DB from '../database/wrapper';
 
 /*
+*/
 async function getImages(c) {
     var changes = [...c];
     await Promise.all(changes.map(async (formattedRow) => {
@@ -19,7 +20,6 @@ async function getImages(c) {
     }));
     return changes;
 }
-*/
 
 function HomeHotdogGrid() {
     // hotdogs: all hotdogs created by current user
@@ -41,6 +41,8 @@ function HomeHotdogGrid() {
                 var changes = [];
                 var changeType = "";
                 
+                /*
+                */
                 snapshot.docChanges().forEach(change => {
                     var formattedRow = change.doc.data();
                     formattedRow["id"] = change.doc.id;
@@ -84,7 +86,7 @@ function HomeHotdogGrid() {
 
                 // get all creator profile images (returns when all promises resolved)
                 // TODO: PREVENTS EMPTY AVATAR, BUT SLOW - first, prevent re-rendering of old hotdog cards when a new one is added/removed
-                /* 
+                
                 getImages(changes)
                 .then(res => {
                     console.log(res);
@@ -106,12 +108,12 @@ function HomeHotdogGrid() {
                     // prepend new hotdog(s), or filter out deleted hotdog based on id
                     setLoading(false);
                 });
-                */
+               
                
                 // console.log("CHANGES:");
                 // console.log(changes);
                 // sort on the first render - only one hotdog added/removed at a time for successive renders
-                
+                /* 
                 if (changes.length > 1) {
                     changes.sort((a, b) => {
                         return b.ts - a.ts;
@@ -129,8 +131,7 @@ function HomeHotdogGrid() {
                 }
                 // prepend new hotdog(s), or filter out deleted hotdog based on id
                 setLoading(false);
-               
-                
+                */
             });
         })();
     }, [userId]);
@@ -165,23 +166,46 @@ function HomeHotdogGrid() {
                     <CircularProgress color="primary" size={100}/>
                 </Box>
             }
-            { !loading && hotdogs.length === 0 &&
-                <Box
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="center"
-                    alignItems="center"
-                    height="100%"
-                    width="100%"
-                >
-                    <Typography variant="h6" color="primary">
-                        No hotdogs yet! Click on the bottom right <AddCircleIcon/> to post your first hotdog
-                    </Typography>
-                </Box>
-            }
-            { !loading && hotdogs.length !== 0 &&
-                // for every third hotdog scrolled past, fetch the next 3
-                // only fetch more if waypoint index is greater than the current length of hd
+            {/* { !loading && hotdogs.length === 0 && */}
+            {/*     <Box */}
+            {/*         display="flex" */}
+            {/*         flexDirection="column" */}
+            {/*         justifyContent="center" */}
+            {/*         alignItems="center" */}
+            {/*         height="100%" */}
+            {/*         width="100%" */}
+            {/*     > */}
+            {/*         <Typography variant="h6" color="primary"> */}
+            {/*             No hotdogs yet! Click on the bottom right <AddCircleIcon/> to post your first hotdog */}
+            {/*         </Typography> */}
+            {/*     </Box> */}
+            {/* } */}
+            {/* { !loading && hotdogs.length !== 0 && */}
+            {/*     // for every third hotdog scrolled past, fetch the next 3 */}
+            {/*     // only fetch more if waypoint index is greater than the current length of hd */}
+            {/*     <Grid container spacing={3}> */}
+            {/*         { hd.map((hotdog, i) => ( */}
+            {/*             <Grid item key={hotdog.id} xs={4}> */}
+            {/*                 { (i+1) % 3 === 0 &&  */}
+            {/*                   (i+1) >= hd.length &&  */}
+            {/*                   hd.length < hotdogs.length && */}
+            {/*                     <Waypoint onEnter={() => fetchMore(i+1)}/> */}
+            {/*                 } */}
+            {/*                 <HotdogCard */}
+            {/*                     id={hotdog.id} */}
+            {/*                     creatorId={hotdog.creatorId} */}
+            {/*                     creatorName={hotdog.creatorName} */}
+            {/*                     creatorProfileImageUrl={hotdog.creatorProfileImageUrl} */}
+            {/*                     description={hotdog.description} */}
+            {/*                     ingredients={hotdog.ingredients} */}
+            {/*                     title={hotdog.title} */}
+            {/*                     ts={hotdog.ts} */}
+            {/*                 /> */}
+            {/*             </Grid> */}
+            {/*         ))} */}
+            {/*     </Grid> */}
+            {/* } */}
+            { hotdogs.length !== 0 && 
                 <Grid container spacing={3}>
                     { hd.map((hotdog, i) => (
                         <Grid item key={hotdog.id} xs={4}>
@@ -191,7 +215,6 @@ function HomeHotdogGrid() {
                                 <Waypoint onEnter={() => fetchMore(i+1)}/>
                             }
                             <HotdogCard
-                                key={hotdog.id}
                                 id={hotdog.id}
                                 creatorId={hotdog.creatorId}
                                 creatorName={hotdog.creatorName}
