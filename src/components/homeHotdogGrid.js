@@ -29,6 +29,9 @@ function HomeHotdogGrid() {
     const [hotdogs, setHotdogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [hd, setHd] = useState([]);
+    // TODO: changing load behaviour
+    const [type, setType] = useState("added");
+    const [length, setLength] = useState(0);
 
     // display hotdogs created by current user (reverse chronology)
     useEffect(() => {
@@ -38,6 +41,9 @@ function HomeHotdogGrid() {
             // set up snapshot listener
             query.onSnapshot(snapshot => {
                 setLoading(true);
+                // TODO: changing load behaviour
+                setLength(Math.min(3, snapshot.docChanges().length));
+
                 // onSnapshot returns a QuerySnapshot, docChanges gets all items on initial snapshot
                 var changes = [];
                 var changeType = "";
@@ -47,12 +53,17 @@ function HomeHotdogGrid() {
                     formattedRow["ts"] = change.doc.data().ts.seconds;
                     changes.push(formattedRow);
                     changeType = change.type;
+                    // TODO: changing load behaviour
+                    if (change.type === "removed") setType(change.type);
                 }
+
 
                 // get all creator profile images (returns when all promises resolved)            
                 getProfileImages(changes)
                 .then(res => {
                     // console.log(res);
+                    // sort only on first render
+                    // prepend new hotdog(s), or filter out deleted hotdog based on id
                     if (res.length > 1) {
                         res.sort((a, b) => {
                             return b.ts - a.ts;
@@ -68,7 +79,6 @@ function HomeHotdogGrid() {
                             setHd(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== res[0].id));
                         }
                     }
-                    // prepend new hotdog(s), or filter out deleted hotdog based on id
                     setLoading(false);
                 });
             });
@@ -92,8 +102,7 @@ function HomeHotdogGrid() {
 
     return (
         <Box height="100%" width="100%">
-            { loading && 
-                // loading circle in center of section under page title
+            { hotdogs.length === 0 &&
                 <Box
                     display="flex"
                     flexDirection="column"
@@ -102,32 +111,61 @@ function HomeHotdogGrid() {
                     height="100%"
                     width="100%"
                 >
-                    <CircularProgress color="primary" size={100}/>
+                    { loading && 
+                        <CircularProgress color="primary" size={100}/>
+                    }
+                    { !loading && 
+                        <Typography variant="h6" color="primary">
+                            No hotdogs yet! Click on the bottom right <AddCircleIcon /> to post your first hotdog
+                        </Typography>
+                    }
                 </Box>
             }
-            { hotdogs.length !== 0 && 
-                <Grid container spacing={3}>
-                    { hd.map((hotdog, i) => (
-                        <Grid item key={hotdog.id} xs={4}>
-                            { (i+1) % 3 === 0 && 
-                              (i+1) >= hd.length && 
-                              hd.length < hotdogs.length &&
-                                <Waypoint onEnter={() => fetchMore(i+1)}/>
-                            }
-                            <HotdogCard
-                                id={hotdog.id}
-                                creatorId={hotdog.creatorId}
-                                creatorName={hotdog.creatorName}
-                                creatorProfileImageUrl={hotdog.creatorProfileImageUrl}
-                                description={hotdog.description}
-                                ingredients={hotdog.ingredients}
-                                title={hotdog.title}
-                                ts={hotdog.ts}
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
-            }
+            <Grid container spacing={3} style={{ height: "100%" }}>
+                {/* adds a spinner loader for each hotdog before the creator avatars are retrieved */}
+                { loading && type === "added" && [...Array(length)].map((e, i) => (
+                    <Grid item key={i} xs={4}>
+                        <Box
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="center"
+                            alignItems="center"
+                            height="100%"
+                            width="100%"
+                        >
+                            <CircularProgress color="primary" size={100}/>
+                        </Box>
+                    </Grid>
+                ))}
+                {/* 
+                    NOTE: adding !loading below will allow spinner to show on removal of hotdog, 
+                    but old cards will be (uselessly) re-rendered,
+                    hence still need the type === "added" condition in above section
+                */}
+                { hd.length !== 0 && hd.map((hotdog, i) => (
+                    <Grid item key={hotdog.id} xs={4}>
+                        {/* 
+                            TODO: the above spinner loader breaks the waypoints - loads everything at once, 
+                            so need to improve fetching method (react-visualizer maybe)
+                        */}
+                        { (i+1) % 3 === 0 && 
+                          (i+1) >= hd.length && 
+                          hd.length < hotdogs.length &&
+                            <Waypoint onEnter={() => fetchMore(i+1)}/>
+                        }
+                        <HotdogCard
+                            id={hotdog.id}
+                            creatorId={hotdog.creatorId}
+                            creatorName={hotdog.creatorName}
+                            creatorProfileImageUrl={hotdog.creatorProfileImageUrl}
+                            description={hotdog.description}
+                            ingredients={hotdog.ingredients}
+                            title={hotdog.title}
+                            ts={hotdog.ts}
+                        />
+                    </Grid>
+                ))}
+            </Grid>
             <AddFormDialog/>
         </Box>
     );
