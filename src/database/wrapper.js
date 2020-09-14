@@ -16,10 +16,10 @@ const login = async (email, password) => {
 const register = async (name, email, password, profileImage) => {
     try {
         let userId = await users.register(name, email, password, profileImage);
-        console.log("database: User with id " + userId + " successfully created");
+        // console.log("database: User with id " + userId + " successfully created");
         return true;
     } catch(e) {
-        console.log("database: " + e);
+        // console.log("database: " + e);
         return false;
     }
 }
@@ -39,7 +39,7 @@ const getUserProfileImage = async (id) => {
         let url = await users.getProfileImage(id);
         return url;
     } catch(e) {
-        console.log("database: " + e);
+        // console.log("database: " + e);
         return false;
     }
 }

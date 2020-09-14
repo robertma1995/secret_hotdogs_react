@@ -12,7 +12,7 @@ const all = async () => {
                 // add document id
                 var formattedRow = row.data();
                 formattedRow["id"] = row.id;
-                formattedRow.ts = row.data().ts.seconds;
+                formattedRow["ts"] = row.data().ts.seconds;
                 hotdogs.push(formattedRow);
             });
             resolve(hotdogs);
@@ -31,7 +31,7 @@ const getCreatedBy = async (id) => {
                 // add document id
                 var formattedRow = row.data();
                 formattedRow["id"] = row.id;
-                formattedRow.ts = row.data().ts.seconds;
+                formattedRow["ts"] = row.data().ts.seconds;
                 hotdogs.push(formattedRow);
             });
             resolve(hotdogs);
