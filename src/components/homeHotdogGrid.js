@@ -102,26 +102,24 @@ function HomeHotdogGrid() {
 
     return (
         <Box height="100%" width="100%">
-            { hotdogs.length === 0 &&
-                <Box
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="center"
-                    alignItems="center"
-                    height="100%"
-                    width="100%"
-                >
-                    { loading && 
-                        <CircularProgress color="primary" size={100}/>
-                    }
-                    { !loading && 
-                        <Typography variant="h6" color="primary">
-                            No hotdogs yet! Click on the bottom right <AddCircleIcon /> to post your first hotdog
-                        </Typography>
-                    }
-                </Box>
-            }
-            <Grid container spacing={3} style={{ height: "100%" }}>
+            <Grid container spacing={3} style={{ height: '100%' }}>
+                {/* loading finished, but no hotdogs yet */}
+                { !loading && hd.length === 0 &&
+                    <Grid item xs={12}>
+                        <Box
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="center"
+                            alignItems="center"
+                            height="100%"
+                            width="100%"
+                        >
+                            <Typography variant="h6" color="primary">
+                                No hotdogs yet! Click on the bottom right <AddCircleIcon /> to post your first hotdog
+                            </Typography>
+                        </Box>
+                    </Grid>
+                }
                 {/* adds a spinner loader for each hotdog before the creator avatars are retrieved */}
                 { loading && type === "added" && [...Array(length)].map((e, i) => (
                     <Grid item key={i} xs={4}>
@@ -138,7 +136,7 @@ function HomeHotdogGrid() {
                     </Grid>
                 ))}
                 {/* 
-                    NOTE: adding !loading below will allow spinner to show on removal of hotdog, 
+                    NOTE: adding !loading condition below will allow spinner to show on removal of hotdog, 
                     but old cards will be (uselessly) re-rendered,
                     hence still need the type === "added" condition in above section
                 */}
