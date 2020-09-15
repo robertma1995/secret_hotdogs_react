@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 // email validator
 import isEmail from 'validator/lib/isEmail';
+// TODO: image preview + cropper
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.min.css';
 // my components
 import Form from './form';
 import FormField from './formField';
@@ -12,6 +15,8 @@ import LoginFormDialog from './loginFormDialog';
 import errors from '../utils/errors';
 // database
 import * as DB from '../database/wrapper';
+
+import { Box } from '@material-ui/core';
 
 /* 
     helper: checks trimmed input, returning the appropriate error message
@@ -64,13 +69,24 @@ function RegisterForm(props) {
     const [passwordError, setPasswordError] = useState(" ");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [passwordConfirmError, setPasswordConfirmError] = useState(" ");
-    const [profileImage, setProfileImage] = useState("");
     const [loading, setLoading] = useState(false);
     const [registered, setRegistered] = useState(false);
+
+    // TODO: react-cropper --> image preview + cropping to prevent non-square images
+    const [profileImage, setProfileImage] = useState("");
+    const [image, setImage] = useState("");
+    const [cropper, setCropper] = useState();
 
     function uploadFile(file) {
         console.log("UPLOADED FILE");
         setProfileImage(file);
+        // TODO: separate image variable for now, since react-cropper doesn't take files directly
+        // TODO: fix error when upload button is clicked but no file selected
+        const reader = new FileReader();
+        reader.onload = () => {
+            setImage(reader.result);
+        }
+        reader.readAsDataURL(file);
     }
 
     function handleRegister() {
@@ -81,16 +97,35 @@ function RegisterForm(props) {
         const passwordValid = isValid("password", password, setPassword, setPasswordError);
         const passwordConfirmValid = isValid("passwordConfirm", passwordConfirm, setPasswordConfirm, setPasswordConfirmError, password);
 
-        // TODO: image upload - use firebase storage (see docs)
-        // current plan: one folder for users, one folder for hotdogs, 
-
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
             setLoading(true);
+            // TODO: testing cropped image upload as blob
+            cropper.getCroppedCanvas().toBlob(async (blob) => {
+                var registerStatus = await DB.register(name, email, password, blob);
+                setLoading(false);
+                
+                // if register succeeds, reset all fields and give user option to go to login 
+                if (!registerStatus) {
+                    // setEmailError("Email already in use, please type in a different email");
+                    setEmailError(errors["email"]);
+                } else {
+                    // TODO: also clear the image input field
+                    setName("");
+                    setEmail("");
+                    setPassword("");
+                    setPasswordConfirm("");
+                    setProfileImage("");
+                    setRegistered(true);
+                }
+            }, 'image/jpeg');
+
+            /*
             (async () => {
                 // TEMP: stop new registrations since public hosting now
                 // var registerStatus = false;
                 var registerStatus = await DB.register(name, email, password, profileImage);
                 setLoading(false);
+                
                 // if register succeeds, reset all fields and give user option to go to login 
                 if (!registerStatus) {
                     // setEmailError("Email already in use, please type in a different email");
@@ -105,6 +140,7 @@ function RegisterForm(props) {
                     setRegistered(true);
                 }
             })();
+            */
         }
     }
 
@@ -142,10 +178,56 @@ function RegisterForm(props) {
                 setValue={setPasswordConfirm}
                 error={passwordConfirmError}
             />
+
+            {/* TODO: react-cropper stuff */}
             <input 
                 type="file"
                 onChange={(event) => uploadFile(event.target.files[0])}
             />
+            <h1> CROPPER </h1>
+            <Cropper
+                style={{ 
+                    height: '400px', 
+                    width: '100%' 
+                }}
+                aspectRatio={1}
+                preview=".profileImagePreview"
+                src={image}
+                viewMode={1}
+                guides={true}
+                minCropBoxHeight={10}
+                minCropBoxWidth={10}
+                background={false}
+                responsive={true}
+                autoCropArea={1}
+                checkOrientation={false}
+                onInitialized={(instance) => setCropper(instance)}
+            />
+            <h1> PREVIEW </h1>
+            <div 
+                style={{ 
+                    // NOTE: minheight prevents the child image from changing parent container dimensions
+                    // maxHeight prevents preview from overflowing
+                    width: '100%',
+                    maxHeight: '200px',
+                    minHeight: '200px',
+                    float: 'right', 
+                }}
+            >       
+                <div
+                    className="profileImagePreview"
+                    style={{ 
+                        // height is needed otherwise no image is displayed
+                        // overflow hidden prevent overflowing + properly show cropped area
+                        width: '100%', 
+                        float: 'left',
+                        height: '200px', 
+                        overflow: 'hidden' 
+                    }}
+                />
+            </div>
+
+
             <FormButtonWrapper>
                 <ProgressButton 
                     text="Register" 

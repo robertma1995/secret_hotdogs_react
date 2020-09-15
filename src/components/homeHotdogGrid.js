@@ -57,7 +57,6 @@ function HomeHotdogGrid() {
                     if (change.type === "removed") setType(change.type);
                 }
 
-
                 // get all creator profile images (returns when all promises resolved)            
                 getProfileImages(changes)
                 .then(res => {
