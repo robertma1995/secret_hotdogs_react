@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+
+// TODO: remove when finished testing photo upload
+import { useEffect } from 'react';
+
 // email validator
 import isEmail from 'validator/lib/isEmail';
-// TODO: image preview + cropper
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.min.css';
 // my components
 import Form from './form';
 import FormField from './formField';
@@ -73,21 +74,10 @@ function RegisterForm(props) {
 
     // TODO: react-cropper --> image preview + cropping to prevent non-square images
     const [profileImage, setProfileImage] = useState("");
-    /* 
-    const [cropper, setCropper] = useState();
-    */
-
-    /* 
-    function uploadFile(file) {
-        console.log("UPLOADED FILE");
-        // TODO: fix error when upload button is clicked but no file selected
-        const reader = new FileReader();
-        reader.onload = () => {
-            setProfileImage(reader.result);
-        }
-        reader.readAsDataURL(file);
-    }
-    */
+    // TODO: remove when finished testing photo upload
+    useEffect(() => {
+        console.log(profileImage);
+    }, [profileImage])
 
     function handleRegister() {
         // set registered to false again to handle consecutive adds on same page (no reload)
@@ -120,26 +110,6 @@ function RegisterForm(props) {
                     setRegistered(true);
                 }
             })();
-            /*
-            cropper.getCroppedCanvas().toBlob(async (blob) => {
-                var registerStatus = await DB.register(name, email, password, blob);
-                setLoading(false);
-                
-                // if register succeeds, reset all fields and give user option to go to login 
-                if (!registerStatus) {
-                    // setEmailError("Email already in use, please type in a different email");
-                    setEmailError(errors["email"]);
-                } else {
-                    // TODO: also clear the image input field
-                    setName("");
-                    setEmail("");
-                    setPassword("");
-                    setPasswordConfirm("");
-                    setProfileImage("");
-                    setRegistered(true);
-                }
-            }, 'image/jpeg');
-            */
         }
     }
 
@@ -178,56 +148,12 @@ function RegisterForm(props) {
                 error={passwordConfirmError}
             />
             
-            <PhotoUploadDialog setImage={setProfileImage} />
-
-            {/* TODO: react-cropper stuff */}
-            {/* <input  */}
-            {/*     type="file" */}
-            {/*     onChange={(event) => uploadFile(event.target.files[0])} */}
-            {/* /> */}
-            {/* <h1> CROPPER </h1> */}
-            {/* <Cropper */}
-            {/*     style={{  */}
-            {/*         height: '400px',  */}
-            {/*         width: '100%'  */}
-            {/*     }} */}
-            {/*     aspectRatio={1} */}
-            {/*     preview=".profileImagePreview" */}
-            {/*     src={profileImage} */}
-            {/*     viewMode={1} */}
-            {/*     guides={true} */}
-            {/*     minCropBoxHeight={10} */}
-            {/*     minCropBoxWidth={10} */}
-            {/*     background={false} */}
-            {/*     responsive={true} */}
-            {/*     autoCropArea={1} */}
-            {/*     checkOrientation={false} */}
-            {/*     onInitialized={(instance) => setCropper(instance)} */}
-            {/* /> */}
-            {/* <h1> PREVIEW </h1> */}
-            {/* <div  */}
-            {/*     style={{  */}
-            {/*         // NOTE: minheight prevents the child image from changing parent container dimensions */}
-            {/*         // maxHeight prevents preview from overflowing */}
-            {/*         width: '100%', */}
-            {/*         maxHeight: '200px', */}
-            {/*         minHeight: '200px', */}
-            {/*         float: 'right',  */}
-            {/*     }} */}
-            {/* >        */}
-            {/*     <div */}
-            {/*         className="profileImagePreview" */}
-            {/*         style={{  */}
-            {/*             // height is needed otherwise no image is displayed */}
-            {/*             // overflow hidden prevent overflowing + properly show cropped area */}
-            {/*             width: '100%',  */}
-            {/*             float: 'left', */}
-            {/*             height: '200px',  */}
-            {/*             overflow: 'hidden'  */}
-            {/*         }} */}
-            {/*     /> */}
-            {/* </div> */}
-
+            {/* 
+                TODO: wrap upload photo button with Box
+                TODO: add avatar preview - default avatar is just with first letter of your name - 
+                also use this as a button to the trigger for photo upload dialog 
+            */}
+            <PhotoUploadDialog buttonText="Upload profile picture" setImage={setProfileImage} />
 
             <FormButtonWrapper>
                 <ProgressButton 
