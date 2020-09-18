@@ -34,6 +34,9 @@ const theme = {
             }
         },
         MuiButton: {
+            root: {
+                textTransform: 'none'
+            },
             // white button text - contained Button "color" material ui attribute only changes background color
             containedPrimary: {
                 color: '#ffffff'
@@ -41,7 +44,6 @@ const theme = {
             // change color from lighter text.primary to primary.main, remove text transformation
             textPrimary: {
                 color: 'rgba(0, 0, 0, 0.54)',
-                textTransform: 'none',
                 '&:hover': {
                     color: '#cbb09c',
                     backgroundColor: 'transparent'
@@ -78,6 +80,19 @@ const theme = {
         MuiDialog: {
             paperWidthXs: {
                 maxWidth: '400px'
+            }
+        },
+        // unset excessive padding in dialog content
+        MuiDialogContent: {
+            root: {
+                paddingTop: 'unset!important',
+                padding: 'unset!important'
+            }
+        },
+        // move dialog buttons to left instead of right (only used in photoUploadDialog for now)
+        MuiDialogActions: {
+            root: {
+                justifyContent: 'flex-start'
             }
         },
         // remove margin from dialogcontenttext

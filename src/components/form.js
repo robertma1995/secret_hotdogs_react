@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
 // Wrapper for all forms, optional no top padding (for loginform/loginformdialog)
 function Form(props) {
     const classes = useStyles();
-    const { noTopPadding } = props;
+    const { topPadding } = props;
 
     return (
         <Box 
@@ -19,7 +19,7 @@ function Form(props) {
             flexDirection="column"
             justifyContent="center"
             p={2}
-            className={noTopPadding ? classes.padding : undefined}
+            className={topPadding ? undefined : classes.padding}
         >
             {props.children}
         </Box>

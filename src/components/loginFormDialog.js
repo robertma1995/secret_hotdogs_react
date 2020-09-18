@@ -8,11 +8,6 @@ import LoginForm from './loginForm';
 import icons from '../utils/icons';
 
 const useStyles = makeStyles((theme) => ({
-    dialog: {
-        paddingTop: 'unset!important',
-        padding: 'unset',
-        // height: '700px'
-    },
     button: {
         '&:hover': {
             color: '#b9f6ca',
@@ -72,7 +67,7 @@ function LoginFormDialog(props) {
                         </IconButton>
                     </Box>
                 </Box>
-                <DialogContent className={classes.dialog}>
+                <DialogContent>
                     <LoginForm closeDialog={handleClose} />
                 </DialogContent>
             </Dialog>

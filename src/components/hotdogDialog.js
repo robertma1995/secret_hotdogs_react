@@ -9,9 +9,7 @@ import icons from '../utils/icons';
 import HotdogIngredientsList from './hotdogIngredientsList';
 
 const useStyles = makeStyles((theme) => ({
-    dialog: {
-        paddingTop: 'unset!important',
-        padding: 'unset',
+    dialogContent: {
         height: '700px'
     },
     // main grid + column styling
@@ -81,7 +79,7 @@ function HotdogDialog(props) {
                 open={open}
                 onClose={() => handleClose()}
             >
-                <DialogContent className={classes.dialog}>
+                <DialogContent className={classes.dialogContent}>
                     <Grid container alignItems="center" className={classes.grid}>
                         <Grid item xs={5} className={classes.gridLeft}>
                             <Card elevation={0}>

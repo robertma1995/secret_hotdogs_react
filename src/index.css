@@ -58,6 +58,10 @@ body, html {
 .cropper-line {
   background-color: transparent !important;
 }
+/* remove cross cursor when hovering over excess space in cropper container */
+.cropper-crop {
+  cursor: unset !important;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

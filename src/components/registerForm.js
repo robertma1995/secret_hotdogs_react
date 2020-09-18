@@ -153,7 +153,7 @@ function RegisterForm(props) {
                 TODO: add avatar preview - default avatar is just with first letter of your name - 
                 also use this as a button to the trigger for photo upload dialog 
             */}
-            <PhotoUploadDialog buttonText="Upload profile picture" setImage={setProfileImage} />
+            <PhotoUploadDialog type="profile" setPhoto={setProfileImage} />
 
             <FormButtonWrapper>
                 <ProgressButton 

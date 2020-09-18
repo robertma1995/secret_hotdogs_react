@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { 
-    Box, IconButton,
+    Box, IconButton, Typography,
     Dialog, DialogContent, DialogContentText, DialogTitle, Fab
 } from '@material-ui/core';
 import icons from '../utils/icons';
@@ -47,9 +47,16 @@ function AddFormDialog() {
                 open={open}
                 onClose={() => handleClose()}
             >
-                <Box display="flex" flexDirection="row">
+                <Box display="flex" flexDirection="row" alignItems="center">
                     <Box flexGrow={1}>
-                        <DialogTitle> Post a new hotdog </DialogTitle>
+                        <Typography 
+                            variant="h5" 
+                            align="center" 
+                            color="textSecondary"
+                            className={classes.title}
+                        > 
+                            Post a new hotdog
+                        </Typography>
                     </Box>
                     <Box>
                         <IconButton onClick={() => handleClose()}>
@@ -58,10 +65,7 @@ function AddFormDialog() {
                     </Box>
                 </Box>
                 <DialogContent>
-                    <DialogContentText>
-                        Type in the details of your new hotdog.
-                    </DialogContentText>
-                    <AddForm/>
+                    <AddForm />
                 </DialogContent>
             </Dialog>
         </div>
