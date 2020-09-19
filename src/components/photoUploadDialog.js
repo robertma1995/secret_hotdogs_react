@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     dialogContent: {
         height: '500px',
         borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+        borderTop: '1px solid rgba(0, 0, 0, 0.12)',
     },
     title: {
         paddingLeft: '12px'
@@ -23,15 +24,18 @@ const useStyles = makeStyles((theme) => ({
     dropzone: {
         height: '100%',
         width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     cropper: {
         height: '80%', 
         width: '80%',
         maxHeight: '80%',
         maxWidth: '80%',
-    }
+    },
 }));
-
 
 /*
     Dialog that allows a photo to be uploaded and cropped,
@@ -56,15 +60,6 @@ function PhotoUploadDialog(props) {
         accept: 'image/jpeg, image/png'
     });
 
-    /* 
-    function uploadFile(file) {
-        console.log("UPLOADED FILE");
-        // TODO: only read data if file is defined
-        const reader = new FileReader();
-        reader.onload = () => setCropperImage(reader.result);
-        reader.readAsDataURL(file);
-    }
-    */
     function onDrop(acceptedFiles) {
         const file = acceptedFiles[0];
         console.log("UPLOADED FILE");
@@ -135,32 +130,32 @@ function PhotoUploadDialog(props) {
                     { !cropperImage && 
                         <div {...getRootProps({className: classes.dropzone})}>
                             <input {...getInputProps()}/>
-                            <Box 
-                                display="flex" 
-                                flexDirection="row" 
-                                alignItems="center" 
-                                justifyContent="center"
-                                height="100%" 
-                                width="100%"
-                            >
-                                <Box>
-                                    { !isDragActive && 
-                                        <Typography color="textSecondary" variant="h4">
-                                            Drag a {type} photo here
-                                        </Typography> 
-                                    }
-                                    { isDragAccept && 
-                                        <Typography color="textSecondary" variant="h4">
-                                            File type accepted
-                                        </Typography> 
-                                    }
-                                    { isDragReject && 
-                                        <Typography color="textSecondary" variant="h4">
-                                            File type rejected
-                                        </Typography> 
-                                    }
-                                </Box>
-                            </Box>
+                            {/* <Box  */}
+                            {/*     display="flex"  */}
+                            {/*     flexDirection="row"  */}
+                            {/*     alignItems="center"  */}
+                            {/*     justifyContent="center" */}
+                            {/*     height="100%"  */}
+                            {/*     width="100%" */}
+                            {/* > */}
+                            {/*     <Box> */}
+                            { !isDragActive && 
+                                <Typography color="textSecondary" variant="h4">
+                                    Drag a {type} photo here
+                                </Typography> 
+                            }
+                            { isDragAccept && 
+                                <Typography color="textSecondary" variant="h4">
+                                    File type accepted
+                                </Typography> 
+                            }
+                            { isDragReject && 
+                                <Typography color="textSecondary" variant="h4">
+                                    File type rejected
+                                </Typography> 
+                            }
+                            {/*     </Box> */}
+                            {/* </Box> */}
                         </div>
                     }
                     { cropperImage && 
