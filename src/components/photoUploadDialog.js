@@ -4,6 +4,7 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.min.css';
 // TODO: image dropzone
 import { useDropzone } from 'react-dropzone';
+import Dropzone from 'react-dropzone';
 // material ui
 import { 
     Box, Button, IconButton, Typography,
@@ -24,10 +25,22 @@ const useStyles = makeStyles((theme) => ({
     dropzone: {
         height: '100%',
         width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+    },
+    accept: {
+        boxSizing: 'border-box',
+        borderWidth: 2,
+        borderStyle: 'solid',
+        transition: 'border .1s ease-in-out',
+        borderColor: '#00e676',
+        backgroundColor: '#e2fae8'
+    },
+    reject: {
+        boxSizing: 'border-box',
+        borderWidth: 2,
+        borderStyle: 'solid',
+        transition: 'border .1s ease-in-out',
+        borderColor: '#ef5350',
+        backgroundColor: '#ffebee',
     },
     cropper: {
         height: '80%', 
@@ -49,24 +62,28 @@ function PhotoUploadDialog(props) {
     const [cropperData, setCropperData] = useState();
     const [open, setOpen] = useState(true);
     const classes = useStyles();
-    const { 
-        getRootProps, 
-        getInputProps, 
-        isDragActive, 
-        isDragAccept, 
-        isDragReject 
-    } = useDropzone({
-        onDrop,
-        accept: 'image/jpeg, image/png'
-    });
-
-    function onDrop(acceptedFiles) {
+    
+    function onDrop(accepted, rejected) {
+        // TODO: still need to handle rejected files...?
+        /*
         const file = acceptedFiles[0];
         console.log("UPLOADED FILE");
         const reader = new FileReader();
         reader.onload = () => setCropperImage(reader.result);
         reader.readAsDataURL(file);
-    }
+        */
+        console.log("ACCEPTED FILES:");
+        console.log(accepted);
+        console.log("REJECTED FILES:");
+        console.log(rejected);
+        // NOTE: even though multiple={false}, 
+        // if you drag multiple files but one of them is an accepted type, and the others are rejected types
+        // still pushes that one file to accepted array,
+        // and pushes the other files to rejected array...
+        // wanted behaviour: if number of files exceeds 1, then reject all
+        // TODO: consider doing it like google - accept all files/types, accept multiple,
+        // but, output final error message - i.e. don't use isDragAccepted, accept prop, etc.
+    }   
 
     function handleSetPhoto() {
         console.log("SETTING IMAGE FOR PARENT");
@@ -116,47 +133,34 @@ function PhotoUploadDialog(props) {
                     </Box>
                 </Box>
                 <DialogContent className={classes.dialogContent}>
-                    {/* 
-                        TODO: react-dropzone instead of simple input 
-                        if cropperImage set (i.e. file uploaded), show cropper, otherwise show dropzone 
-                    */}
-                    {/* 
-                    <input 
-                        type="file"
-                        onChange={(event) => uploadFile(event.target.files[0])}
-                    />
-                    <h1> CROPPER </h1>
-                    */}
                     { !cropperImage && 
-                        <div {...getRootProps({className: classes.dropzone})}>
-                            <input {...getInputProps()}/>
-                            {/* <Box  */}
-                            {/*     display="flex"  */}
-                            {/*     flexDirection="row"  */}
-                            {/*     alignItems="center"  */}
-                            {/*     justifyContent="center" */}
-                            {/*     height="100%"  */}
-                            {/*     width="100%" */}
-                            {/* > */}
-                            {/*     <Box> */}
-                            { !isDragActive && 
-                                <Typography color="textSecondary" variant="h4">
-                                    Drag a {type} photo here
-                                </Typography> 
-                            }
-                            { isDragAccept && 
-                                <Typography color="textSecondary" variant="h4">
-                                    File type accepted
-                                </Typography> 
-                            }
-                            { isDragReject && 
-                                <Typography color="textSecondary" variant="h4">
-                                    File type rejected
-                                </Typography> 
-                            }
-                            {/*     </Box> */}
-                            {/* </Box> */}
-                        </div>
+                        <Dropzone 
+                            onDrop={(accepted, rejected) => onDrop(accepted, rejected)}
+                            accept='image/jpeg, image/png'
+                            multiple={false}
+                        >
+                            {({getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject}) => (
+                                <div {...getRootProps({className: classes.dropzone})}>
+                                    <input {...getInputProps()}/>
+                                    <Box 
+                                        display="flex" 
+                                        flexDirection="row" 
+                                        alignItems="center" 
+                                        justifyContent="center"
+                                        height="100%" 
+                                        width="100%"
+                                        className={isDragAccept ? classes.accept : (isDragReject ? classes.reject : undefined)}
+                                    >
+                                        <Typography color="textSecondary" variant="h4">
+                                            { !isDragActive && `Drag a ${type} photo here` }
+                                            { isDragAccept && "Drop photo to upload" }
+                                            { isDragReject && "Error - choose a JPG or PNG and try again" }
+                                            {/* { !fileAccepted && "Error - choose a JPG or PNG and try again"} */}
+                                        </Typography> 
+                                    </Box>
+                                </div>
+                            )}
+                        </Dropzone>
                     }
                     { cropperImage && 
                         <Box display="flex" height="100%" width="100%" justifyContent="center" alignItems="center">
