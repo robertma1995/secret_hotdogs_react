@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Avatar } from '@material-ui/core';
 
 // TODO: remove when finished testing photo upload
 import { useEffect } from 'react';
@@ -73,10 +74,19 @@ function RegisterForm(props) {
     const [registered, setRegistered] = useState(false);
 
     // TODO: react-cropper --> image preview + cropping to prevent non-square images
-    const [profileImage, setProfileImage] = useState("");
+    const [profileImage, setProfileImage] = useState(null);
+    const [avatarUrl, setAvatarUrl] = useState("");
     // TODO: remove when finished testing photo upload
     useEffect(() => {
-        console.log(profileImage);
+        if (profileImage === null) {
+            setAvatarUrl("");
+        } else if (profileImage) {
+            console.log("SETTING AVATAR URL");
+            // convert profileImage to avatarUrl so Avatar can use as src
+            let reader = new FileReader();
+            reader.readAsDataURL(profileImage);
+            reader.onload = () => setAvatarUrl(reader.result);
+        }
     }, [profileImage])
 
     function handleRegister() {
@@ -154,6 +164,7 @@ function RegisterForm(props) {
                 also use this as a button to the trigger for photo upload dialog 
             */}
             <PhotoUploadDialog type="profile" setPhoto={setProfileImage} />
+            <Avatar src={avatarUrl} style={{ height: '100px', width: '100px' }}/>
 
             <FormButtonWrapper>
                 <ProgressButton 

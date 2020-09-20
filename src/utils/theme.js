@@ -41,6 +41,11 @@ const theme = {
             containedPrimary: {
                 color: '#ffffff'
             },
+            // override white background + default black text color
+            containedSecondary: {
+                color: 'rgba(0, 0, 0, 0.54)',
+                backgroundColor: '#e0e0e0'
+            },
             // change color from lighter text.primary to primary.main, remove text transformation
             textPrimary: {
                 color: 'rgba(0, 0, 0, 0.54)',

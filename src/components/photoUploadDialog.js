@@ -1,19 +1,20 @@
 import React, { useCallback, useEffect, useState } from 'react';
-// TODO: image cropper
+// cropper
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.min.css';
-// TODO: image dropzone
+// dropzone
 import { useDropzone } from 'react-dropzone';
 import Dropzone from 'react-dropzone';
 // material ui
 import { 
-    Box, Button, IconButton, Typography,
+    Avatar, Box, Button, IconButton, Typography,
     Dialog, DialogActions, DialogContent 
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import icons from '../utils/icons';
 
 const useStyles = makeStyles((theme) => ({
+    // fix height of dropzone + cropper
     dialogContent: {
         height: '500px',
         borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
@@ -28,25 +29,17 @@ const useStyles = makeStyles((theme) => ({
     },
     accept: {
         boxSizing: 'border-box',
-        borderWidth: 2,
-        borderStyle: 'solid',
+        border: '2px solid #4d90fe',
         transition: 'border .1s ease-in-out',
-        borderColor: '#00e676',
-        backgroundColor: '#e2fae8'
-    },
-    reject: {
-        boxSizing: 'border-box',
-        borderWidth: 2,
-        borderStyle: 'solid',
-        transition: 'border .1s ease-in-out',
-        borderColor: '#ef5350',
-        backgroundColor: '#ffebee',
+        backgroundColor: '#eaf2fe'
     },
     cropper: {
-        height: '80%', 
-        width: '80%',
-        maxHeight: '80%',
-        maxWidth: '80%',
+        // height: '80%', 
+        // width: '80%',
+        // maxHeight: '80%',
+        // maxWidth: '80%',
+        maxHeight: '400px',
+        maxWidth: '600px'
     },
 }));
 
@@ -57,41 +50,66 @@ const useStyles = makeStyles((theme) => ({
 */
 function PhotoUploadDialog(props) {
     const { type, setPhoto } = props;
-    const [cropperImage, setCropperImage] = useState("");
+    const [uploadError, setUploadError] = useState("");
+    const [imageName, setImageName] = useState("");
+    const [cropperImage, setCropperImage] = useState(null);
     const [cropper, setCropper] = useState();
     const [cropperData, setCropperData] = useState();
     const [open, setOpen] = useState(true);
     const classes = useStyles();
+
+    // TODO: testing avatar preview on dialog
+    const [avatarUrl, setAvatarUrl] = useState("");
     
-    function onDrop(accepted, rejected) {
-        // TODO: still need to handle rejected files...?
-        /*
-        const file = acceptedFiles[0];
-        console.log("UPLOADED FILE");
-        const reader = new FileReader();
-        reader.onload = () => setCropperImage(reader.result);
-        reader.readAsDataURL(file);
-        */
-        console.log("ACCEPTED FILES:");
-        console.log(accepted);
-        console.log("REJECTED FILES:");
-        console.log(rejected);
-        // NOTE: even though multiple={false}, 
-        // if you drag multiple files but one of them is an accepted type, and the others are rejected types
-        // still pushes that one file to accepted array,
-        // and pushes the other files to rejected array...
-        // wanted behaviour: if number of files exceeds 1, then reject all
-        // TODO: consider doing it like google - accept all files/types, accept multiple,
-        // but, output final error message - i.e. don't use isDragAccepted, accept prop, etc.
+    // NOTE: even though multiple={false}, 
+    // if you drag multiple files but one of them is an accepted type, and the others are rejected types
+    // still pushes that one file to accepted array,
+    // and pushes the other files to rejected array...
+    // wanted behaviour: if number of files exceeds 1, then reject all
+    // TODO: consider doing it like google - accept all files/types, accept multiple,
+    // but, output final error message - i.e. don't use isDragAccepted, accept prop, etc.
+    function onDrop(files) {
+        console.log("DROPPED FILE(S)");
+        if (files.length > 1) {
+            setUploadError("Too many photos! Drag your desired profile photo only");
+        } else {
+            let file = files[0];
+            if (file.type === "image/jpeg" || file.type === "image/png") {
+                console.log("Correct file type!");
+                console.log(file);
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => setCropperImage(reader.result);
+                setImageName(file.name);
+                setUploadError("");
+            } else {
+                console.log("Incorrect file type - " + file.type);
+                setUploadError("Upload error - choose a JPG or PNG and try again");
+            }
+        }
     }   
 
     function handleSetPhoto() {
         console.log("SETTING IMAGE FOR PARENT");
-        // TODO: add undefined check for cropper.getCroppedCanvas()
-        // if transparent background, then fills in missing areas with white
         cropper.getCroppedCanvas({ fillColor: '#fff' }).toBlob((blob) => {
             setPhoto(blob);
+            // TODO: testing avatar preview on photo upload dialog as well
+            let reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onload = () => setAvatarUrl(reader.result);
         }, 'image/jpeg');
+
+        // save cropper data at time of setting picture
+        setCropperData(cropper.getData());
+    }
+
+    function handleResetPhoto() {
+        console.log("RESET PHOTO!");
+        setPhoto(null);
+        setCropperImage(null);
+        setCropperData(null);
+        // TODO: testing avatar preview on photo upload dialog as well
+        setAvatarUrl("");
     }
 
     function handleOpen() {
@@ -99,7 +117,6 @@ function PhotoUploadDialog(props) {
     }
 
     function handleClose() {
-        if (cropperImage) setCropperData(cropper.getData());
         setOpen(false);
     }
 
@@ -133,13 +150,9 @@ function PhotoUploadDialog(props) {
                     </Box>
                 </Box>
                 <DialogContent className={classes.dialogContent}>
-                    { !cropperImage && 
-                        <Dropzone 
-                            onDrop={(accepted, rejected) => onDrop(accepted, rejected)}
-                            accept='image/jpeg, image/png'
-                            multiple={false}
-                        >
-                            {({getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject}) => (
+                    { !cropperImage &&
+                        <Dropzone onDrop={(files) => onDrop(files)}>
+                            {({getRootProps, getInputProps, isDragActive, isDragAccept}) => (
                                 <div {...getRootProps({className: classes.dropzone})}>
                                     <input {...getInputProps()}/>
                                     <Box 
@@ -149,38 +162,58 @@ function PhotoUploadDialog(props) {
                                         justifyContent="center"
                                         height="100%" 
                                         width="100%"
-                                        className={isDragAccept ? classes.accept : (isDragReject ? classes.reject : undefined)}
+                                        className={isDragAccept ? classes.accept : undefined}
                                     >
-                                        <Typography color="textSecondary" variant="h4">
-                                            { !isDragActive && `Drag a ${type} photo here` }
-                                            { isDragAccept && "Drop photo to upload" }
-                                            { isDragReject && "Error - choose a JPG or PNG and try again" }
-                                            {/* { !fileAccepted && "Error - choose a JPG or PNG and try again"} */}
+                                        <Typography align="center" color="textSecondary" variant="h4">
+                                            { !isDragActive && uploadError.trim() === "" && 
+                                                `Drag a new ${type} photo here` 
+                                            }
+                                            { isDragAccept && uploadError.trim() === "" && 
+                                                "Drop photo to upload" 
+                                            }
+                                            { uploadError.trim() !== "" && 
+                                                uploadError 
+                                            }
                                         </Typography> 
                                     </Box>
                                 </div>
                             )}
                         </Dropzone>
                     }
-                    { cropperImage && 
-                        <Box display="flex" height="100%" width="100%" justifyContent="center" alignItems="center">
-                            <Cropper
-                                className={classes.cropper}
-                                aspectRatio={1}
-                                src={cropperImage}
-                                data={cropperData}
-                                viewMode={1}
-                                center={false}
-                                minCropBoxHeight={80}
-                                minCropBoxWidth={80}
-                                background={false}
-                                responsive={true}
-                                autoCropArea={1}
-                                checkOrientation={false}
-                                zoomable={false}
-                                toggleDragModeOnDblclick={false}
-                                onInitialized={(instance) => setCropper(instance)}
-                            />
+                    { cropperImage &&
+                        <Box 
+                            display="flex"
+                            flexDirection="column"
+                            height="100%"
+                            width="100%"
+                            justifyContent="center"
+                            alignItems="center"
+                            style={{ overflow: 'hidden' }}
+                        >
+                            <Box style={{ paddingBottom: '15px' }}>
+                                {/* {imageName} */}
+                                <Typography variant="caption" align="center"> Your avatar </Typography>
+                                <Avatar src={avatarUrl} style={{ height: '100px', width: '100px' }}/>
+                            </Box>
+                            <Box>
+                                <Cropper
+                                    className={classes.cropper}
+                                    aspectRatio={1}
+                                    src={cropperImage}
+                                    data={cropperData}
+                                    viewMode={1}
+                                    center={false}
+                                    minCropBoxHeight={80}
+                                    minCropBoxWidth={80}
+                                    background={false}
+                                    responsive={true}
+                                    autoCropArea={1}
+                                    checkOrientation={false}
+                                    zoomable={false}
+                                    toggleDragModeOnDblclick={false}
+                                    onInitialized={(instance) => setCropper(instance)}
+                                />
+                            </Box>
                         </Box>
                     }
                 </DialogContent>
@@ -189,14 +222,28 @@ function PhotoUploadDialog(props) {
                         variant="contained" 
                         color="primary"
                         size="small"
+                        disableElevation
+                        disabled={!cropperImage}
                         onClick={() => handleSetPhoto()}
                     > 
-                        Set {type} photo
+                        Set {type === "profile" ? "avatar" : type} photo
                     </Button>
                     <Button 
-                        variant="text" 
+                        variant="contained" 
                         color="primary"
+                        size="small"
+                        disableElevation
+                        disabled={!cropperImage}
+                        onClick={() => handleResetPhoto()}
+                    > 
+                        Reset photo 
+                    </Button>
+                    <Button 
+                        variant="contained" 
+                        color="secondary"
+                        size="small"
                         disableRipple
+                        disableElevation
                         onClick={() => handleClose()}
                     > 
                         Cancel
