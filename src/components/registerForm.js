@@ -75,8 +75,9 @@ function RegisterForm(props) {
 
     // TODO: react-cropper --> image preview + cropping to prevent non-square images
     const [profileImage, setProfileImage] = useState(null);
-    const [avatarUrl, setAvatarUrl] = useState("");
+    const [profileImageUrl, setProfileImageUrl] = useState("");
     // TODO: remove when finished testing photo upload
+    /*
     useEffect(() => {
         if (profileImage === null) {
             setAvatarUrl("");
@@ -85,9 +86,10 @@ function RegisterForm(props) {
             // convert profileImage to avatarUrl so Avatar can use as src
             let reader = new FileReader();
             reader.readAsDataURL(profileImage);
-            reader.onload = () => setAvatarUrl(reader.result);
+            reader.onload = () => setProfileImageUrl(reader.result);
         }
     }, [profileImage])
+    */
 
     function handleRegister() {
         // set registered to false again to handle consecutive adds on same page (no reload)
@@ -163,8 +165,13 @@ function RegisterForm(props) {
                 TODO: add avatar preview - default avatar is just with first letter of your name - 
                 also use this as a button to the trigger for photo upload dialog 
             */}
-            <PhotoUploadDialog type="profile" setPhoto={setProfileImage} />
-            <Avatar src={avatarUrl} style={{ height: '100px', width: '100px' }}/>
+            <PhotoUploadDialog 
+                type="profile" 
+                setPhoto={setProfileImage} 
+                photoUrl={profileImageUrl}
+                setPhotoUrl={setProfileImageUrl}
+            />
+            <Avatar src={profileImageUrl} style={{ height: '100px', width: '100px' }}/>
 
             <FormButtonWrapper>
                 <ProgressButton 

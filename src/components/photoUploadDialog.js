@@ -45,11 +45,12 @@ const useStyles = makeStyles((theme) => ({
 
 /*
     Dialog that allows a photo to be uploaded and cropped,
-    Sets parent's image state variable as the cropped image upon pressing the "set" button
-    Saves crop box data in state so user can go back even if the dialog closes
+    Sets parent's photo state variable as the cropped image upon pressing the "set" button
+    Also converts photo into a dataURL so it can be displayed in the preview
+    Also saves crop box data in state so user can go back even if the dialog closes
 */
 function PhotoUploadDialog(props) {
-    const { type, setPhoto } = props;
+    const { type, setPhoto, photoUrl, setPhotoUrl } = props;
     const [uploadError, setUploadError] = useState("");
     const [imageName, setImageName] = useState("");
     const [cropperImage, setCropperImage] = useState(null);
@@ -58,16 +59,12 @@ function PhotoUploadDialog(props) {
     const [open, setOpen] = useState(true);
     const classes = useStyles();
 
-    // TODO: testing avatar preview on dialog
-    const [avatarUrl, setAvatarUrl] = useState("");
-    
-    // NOTE: even though multiple={false}, 
-    // if you drag multiple files but one of them is an accepted type, and the others are rejected types
-    // still pushes that one file to accepted array,
-    // and pushes the other files to rejected array...
-    // wanted behaviour: if number of files exceeds 1, then reject all
-    // TODO: consider doing it like google - accept all files/types, accept multiple,
-    // but, output final error message - i.e. don't use isDragAccepted, accept prop, etc.
+    /*
+        custom accepted file handler since react-dropzone "mutliple={false}" doesn't work consistently
+        react-dropzone behaviour: if multiple files, one is accepted type and others rejected, 
+        pushes accepted file to accepted array, and other files to rejected array
+        below onDrop handler behaviour: if number of files exceeds 1, then reject all
+    */
     function onDrop(files) {
         console.log("DROPPED FILE(S)");
         if (files.length > 1) {
@@ -89,6 +86,10 @@ function PhotoUploadDialog(props) {
         }
     }   
 
+    /* 
+        Sets photo blob for parent, where it will be uploaded via firebase call
+        Sets photo dataURL - parent and dialog both use this for preview
+    */
     function handleSetPhoto() {
         console.log("SETTING IMAGE FOR PARENT");
         cropper.getCroppedCanvas({ fillColor: '#fff' }).toBlob((blob) => {
@@ -96,26 +97,23 @@ function PhotoUploadDialog(props) {
             // TODO: testing avatar preview on photo upload dialog as well
             let reader = new FileReader();
             reader.readAsDataURL(blob);
-            reader.onload = () => setAvatarUrl(reader.result);
+            reader.onload = () => setPhotoUrl(reader.result);
         }, 'image/jpeg');
 
         // save cropper data at time of setting picture
         setCropperData(cropper.getData());
     }
 
-    function handleResetPhoto() {
-        console.log("RESET PHOTO!");
-        setPhoto(null);
+    function handleResetCropper() {
+        console.log("RESET CROPPER!");
         setCropperImage(null);
         setCropperData(null);
-        // TODO: testing avatar preview on photo upload dialog as well
-        setAvatarUrl("");
     }
 
     function handleOpen() {
         setOpen(true);
     }
-
+    
     function handleClose() {
         setOpen(false);
     }
@@ -159,10 +157,16 @@ function PhotoUploadDialog(props) {
                         alignItems="center"
                         style={{ overflow: 'hidden' }}
                     >
+                        {/* TODO: make preview area look nicer */}
                         <Box style={{ paddingBottom: '10px', borderBottom: '1px solid #e1e1e1' }}>
                             {/* {imageName} */}
-                            <Typography variant="caption" align="center"> Your avatar </Typography>
-                            <Avatar src={avatarUrl} style={{ height: '100px', width: '100px' }}/>
+                            <Typography variant="caption" align="center"> Preview </Typography>
+                            { type === "profile" && 
+                                <Avatar src={photoUrl} style={{ height: '100px', width: '100px' }} />
+                            }
+                            { type === "hotdog" && 
+                                <img src={photoUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} style={{ height: '100px', width: '100px' }} />
+                            }
                         </Box>
                         { !cropperImage && 
                             <Box height="100%" width="100%">
@@ -197,6 +201,10 @@ function PhotoUploadDialog(props) {
                             </Box>
                         }
                         { cropperImage && 
+                            /*  
+                                NOTE: making cropper's parent container dimensions 100% 
+                                will scale small images up, but won't re-center the image if window is resized
+                            */
                             <Box 
                                 display="flex"
                                 flexDirection="column"
@@ -312,7 +320,7 @@ function PhotoUploadDialog(props) {
                         size="small"
                         disableElevation
                         disabled={!cropperImage}
-                        onClick={() => handleResetPhoto()}
+                        onClick={() => handleResetCropper()}
                     > 
                         Reset photo 
                     </Button>
