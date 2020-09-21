@@ -34,12 +34,12 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#eaf2fe'
     },
     cropper: {
-        // height: '80%', 
-        // width: '80%',
+        height: '85%', 
+        width: '85%',
         // maxHeight: '80%',
         // maxWidth: '80%',
-        maxHeight: '400px',
-        maxWidth: '600px'
+        // maxHeight: '400px',
+        // maxWidth: '600px',
     },
 }));
 
@@ -150,6 +150,84 @@ function PhotoUploadDialog(props) {
                     </Box>
                 </Box>
                 <DialogContent className={classes.dialogContent}>
+                    <Box 
+                        display="flex"
+                        flexDirection="column"
+                        height="100%"
+                        width="100%"
+                        justifyContent="center"
+                        alignItems="center"
+                        style={{ overflow: 'hidden' }}
+                    >
+                        <Box style={{ paddingBottom: '10px', borderBottom: '1px solid #e1e1e1' }}>
+                            {/* {imageName} */}
+                            <Typography variant="caption" align="center"> Your avatar </Typography>
+                            <Avatar src={avatarUrl} style={{ height: '100px', width: '100px' }}/>
+                        </Box>
+                        { !cropperImage && 
+                            <Box height="100%" width="100%">
+                                <Dropzone onDrop={(files) => onDrop(files)}>
+                                    {({getRootProps, getInputProps, isDragActive, isDragAccept}) => (
+                                        <div {...getRootProps({className: classes.dropzone})}>
+                                            <input {...getInputProps()}/>
+                                            <Box 
+                                                display="flex" 
+                                                flexDirection="row" 
+                                                alignItems="center" 
+                                                justifyContent="center"
+                                                height="100%" 
+                                                width="100%"
+                                                className={isDragAccept ? classes.accept : undefined}
+                                            >
+                                                <Typography align="center" color="textSecondary" variant="h4">
+                                                    { !isDragActive && uploadError.trim() === "" && 
+                                                        `Drag a new ${type} photo here` 
+                                                    }
+                                                    { isDragAccept && uploadError.trim() === "" && 
+                                                        "Drop photo to upload" 
+                                                    }
+                                                    { uploadError.trim() !== "" && 
+                                                        uploadError 
+                                                    }
+                                                </Typography> 
+                                            </Box>
+                                        </div>
+                                    )}
+                                </Dropzone>
+                            </Box>
+                        }
+                        { cropperImage && 
+                            <Box 
+                                display="flex"
+                                flexDirection="column"
+                                height="100%"
+                                width="100%"
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Box>
+                                    <Cropper
+                                        aspectRatio={1}
+                                        src={cropperImage}
+                                        data={cropperData}
+                                        viewMode={1}
+                                        center={false}
+                                        minCropBoxHeight={80}
+                                        minCropBoxWidth={80}
+                                        background={false}
+                                        responsive={false}
+                                        autoCropArea={1}
+                                        checkOrientation={false}
+                                        zoomable={false}
+                                        toggleDragModeOnDblclick={false}
+                                        onInitialized={(instance) => setCropper(instance)}
+                                        className={classes.cropper}
+                                    />
+                                </Box>
+                            </Box>
+                        }
+                    </Box>
+{/* 
                     { !cropperImage &&
                         <Dropzone onDrop={(files) => onDrop(files)}>
                             {({getRootProps, getInputProps, isDragActive, isDragAccept}) => (
@@ -191,7 +269,6 @@ function PhotoUploadDialog(props) {
                             style={{ overflow: 'hidden' }}
                         >
                             <Box style={{ paddingBottom: '15px' }}>
-                                {/* {imageName} */}
                                 <Typography variant="caption" align="center"> Your avatar </Typography>
                                 <Avatar src={avatarUrl} style={{ height: '100px', width: '100px' }}/>
                             </Box>
@@ -216,6 +293,7 @@ function PhotoUploadDialog(props) {
                             </Box>
                         </Box>
                     }
+*/}
                 </DialogContent>
                 <DialogActions>
                     <Button 

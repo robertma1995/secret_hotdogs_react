@@ -81,10 +81,13 @@ const theme = {
                 paddingTop: 'unset'
             }
         },
-        // custom maxwidth (smaller than default) for a dialog with maxWidth="xs"
+        // smaller than default maxWidth for a dialog with maxWidth="xs"|"md"
         MuiDialog: {
             paperWidthXs: {
                 maxWidth: '400px'
+            },
+            paperWidthMd: {
+                maxWidth: '750px'
             }
         },
         // unset excessive padding in dialog content
