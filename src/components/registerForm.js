@@ -99,7 +99,9 @@ function RegisterForm(props) {
         const passwordValid = isValid("password", password, setPassword, setPasswordError);
         const passwordConfirmValid = isValid("passwordConfirm", passwordConfirm, setPasswordConfirm, setPasswordConfirmError, password);
 
-        // TODO: add validity check for photo upload
+        // TODO: add validity check for photo upload - if no profileImage set, then 
+        // set profileImage as the default material ui avatar
+        // or, set default value in useState();
 
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
             setLoading(true);

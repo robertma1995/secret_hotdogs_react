@@ -115,7 +115,10 @@ const theme = {
                 '&:hover': {
                     backgroundColor: 'transparent',
                     color: '#cbb09c'
-                }
+                },
+                // '&:last-child': {
+                //     color: 'red'
+                // }
             }
         },
         // font size for a TextField label

@@ -12,9 +12,10 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import icons from '../utils/icons';
+import CloseIcon from '@material-ui/icons/Close'
 
 const useStyles = makeStyles((theme) => ({
-    // fix height of dropzone + cropper
+    // fixed height of for preview + dropzone/cropper
     dialogContent: {
         height: '500px',
         borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
@@ -23,24 +24,68 @@ const useStyles = makeStyles((theme) => ({
     title: {
         paddingLeft: '12px'
     },
+    // prevent momentary scrollbar flash on drop due to weird cropper container spacing
+    container: {
+        overflow: 'hidden'
+    },
+    preview: {
+        paddingTop: '5px',
+        paddingBottom: '5px', 
+        borderBottom: '1px solid #cbb09c',
+    },
+    // position: 'relative' allows reset icon to be placed on top of the preview photo,
+    // also override ./utils/theme.js iconButton '&:hover' color
+    previewPhotoButton: {
+        padding: 'unset',
+        position: 'relative',
+        '&:hover': {
+            color: 'black',
+        },
+    },
+    // place reset icon on top of preview photo - copied from ./progressButton.js
+    previewResetIcon: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -18,
+        marginLeft: -18,
+    },
+    // TODO: merge opacity and previewPhoto class 
+    previewPhoto: {
+        height: '100px', 
+        width: '100px',
+    },
+    opacity: {
+        height: '100px',
+        width: '100px',
+        // TODO: test '-webkit-filter: brightness (80%)' with a lighter icon color and see if it looks better
+        opacity: 0.5   
+    },
     dropzone: {
         height: '100%',
         width: '100%',
     },
+    // highlight dropzone when dropping
     accept: {
         boxSizing: 'border-box',
         border: '2px solid #4d90fe',
         transition: 'border .1s ease-in-out',
         backgroundColor: '#eaf2fe'
     },
+    // fixed cropper image dimensions based on window dimensions at the time of drop
     cropper: {
-        height: '85%', 
-        width: '85%',
-        // maxHeight: '80%',
-        // maxWidth: '80%',
-        // maxHeight: '400px',
-        // maxWidth: '600px',
+        height: '82%', 
+        width: '82%',
     },
+    // image name + caption area above cropper
+    cropperImageHeader: {
+        maxWidth: '95%'
+    },
+    // prevent long image names (loses the file tag if overflow)
+    overflow: {
+        textOverflow: 'ellipsis',
+        overflow: 'hidden'
+    }
 }));
 
 /*
@@ -58,6 +103,10 @@ function PhotoUploadDialog(props) {
     const [cropperData, setCropperData] = useState();
     const [open, setOpen] = useState(true);
     const classes = useStyles();
+    const [loading, setLoading] = useState(true);
+
+    // TODO: consider moving hover button to separate component
+    const [hover, setHover] = useState(false);
 
     /*
         custom accepted file handler since react-dropzone "mutliple={false}" doesn't work consistently
@@ -70,6 +119,7 @@ function PhotoUploadDialog(props) {
         if (files.length > 1) {
             setUploadError("Too many photos! Drag your desired profile photo only");
         } else {
+            // setLoading(true);
             let file = files[0];
             if (file.type === "image/jpeg" || file.type === "image/png") {
                 console.log("Correct file type!");
@@ -83,6 +133,7 @@ function PhotoUploadDialog(props) {
                 console.log("Incorrect file type - " + file.type);
                 setUploadError("Upload error - choose a JPG or PNG and try again");
             }
+            setLoading(false);
         }
     }   
 
@@ -104,6 +155,15 @@ function PhotoUploadDialog(props) {
         setCropperData(cropper.getData());
     }
 
+    /* 
+        TODO: resets photo/avatar for parent to default
+    */
+    function handleResetPhoto() {
+        console.log("reset photo to default");
+        setPhoto(null);
+        setPhotoUrl("");
+    }
+
     function handleResetCropper() {
         console.log("RESET CROPPER!");
         setCropperImage(null);
@@ -113,9 +173,15 @@ function PhotoUploadDialog(props) {
     function handleOpen() {
         setOpen(true);
     }
-    
+
     function handleClose() {
         setOpen(false);
+    }
+
+    // TODO: consider moving hover button to separate component
+    function handleHover() {
+        // console.log("hovered over preview photo");
+        setHover(!hover);
     }
 
     return (
@@ -138,7 +204,7 @@ function PhotoUploadDialog(props) {
                 <Box display="flex" flexDirection="row" alignItems="center">
                     <Box flexGrow={1}>
                         <Typography variant="h6" color="textSecondary" className={classes.title}>
-                            Select {type} photo
+                            Select new {type} photo
                         </Typography>
                     </Box>
                     <Box>
@@ -157,16 +223,52 @@ function PhotoUploadDialog(props) {
                         alignItems="center"
                         style={{ overflow: 'hidden' }}
                     >
-                        {/* TODO: make preview area look nicer */}
-                        <Box style={{ paddingBottom: '10px', borderBottom: '1px solid #e1e1e1' }}>
-                            {/* {imageName} */}
-                            <Typography variant="caption" align="center"> Preview </Typography>
-                            { type === "profile" && 
-                                <Avatar src={photoUrl} style={{ height: '100px', width: '100px' }} />
-                            }
-                            { type === "hotdog" && 
-                                <img src={photoUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} style={{ height: '100px', width: '100px' }} />
-                            }
+                        <Box 
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="center"
+                            alignItems="center"
+                            className={classes.preview}
+                        >
+                            <Typography color="primary" variant="caption" style={{ paddingBottom: '5px' }}> 
+                                <b>Preview</b>
+                            </Typography>
+                            {/* <div  */}
+                            {/*     onMouseEnter={() => handleHover()} */}
+                            {/*     onMouseLeave={() => handleHover()}  */}
+                            {/*     className={classes.previewPhotoWrapper} */}
+                            {/* > */}
+                            {/*     <IconButton  */}
+                            {/*         onClick={() => handleResetPhoto()}  */}
+                            {/*         className={classes.previewPhotoButton} */}
+                            {/*     > */}
+                            {/*         { type === "profile" &&  */}
+                            {/*             <Avatar src={photoUrl} className={classes.previewPhoto} /> */}
+                            {/*         } */}
+                            {/*         { type === "hotdog" &&  */}
+                            {/*             <img src={photoUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} className={classes.previewPhoto} /> */}
+                            {/*         } */}
+                            {/*     </IconButton> */}
+                            {/*     { hover && <CloseIcon className={classes.previewResetIcon} />} */}
+                            {/* </div> */}
+                            <IconButton 
+                                onMouseEnter={() => handleHover()}
+                                onMouseLeave={() => handleHover()} 
+                                onClick={() => handleResetPhoto()} 
+                                className={classes.previewPhotoButton}
+                            >
+                                { type === "profile" && 
+                                    <Avatar 
+                                        src={photoUrl}
+                                        // TODO: merge previewPhoto and opacity class
+                                        className={hover ? classes.opacity : classes.previewPhoto} 
+                                    />
+                                }
+                                { type === "hotdog" && 
+                                    <img src={photoUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} className={classes.previewPhoto} />
+                                }
+                                { hover && <CloseIcon fontSize="large" className={classes.previewResetIcon} /> }
+                            </IconButton>
                         </Box>
                         { !cropperImage && 
                             <Box height="100%" width="100%">
@@ -200,7 +302,7 @@ function PhotoUploadDialog(props) {
                                 </Dropzone>
                             </Box>
                         }
-                        { cropperImage && 
+                        { cropperImage && !loading &&
                             /*  
                                 NOTE: making cropper's parent container dimensions 100% 
                                 will scale small images up, but won't re-center the image if window is resized
@@ -213,7 +315,22 @@ function PhotoUploadDialog(props) {
                                 justifyContent="center"
                                 alignItems="center"
                             >
-                                <Box>
+                                <Box 
+                                    display="flex"
+                                    flexDirection="column"
+                                    height="15%"
+                                    width="95%"
+                                    className={classes.cropperImageHeader}
+                                >
+                                    <Typography variant="caption" className={classes.overflow}> 
+                                        <b>{imageName}</b>
+                                    </Typography>
+                                    <Typography variant="caption"> 
+                                        To crop this image, drag the region below and then click 
+                                        "Set {type} photo"
+                                    </Typography>
+                                </Box>
+                                <Box flexGrow={1}>
                                     <Cropper
                                         aspectRatio={1}
                                         src={cropperImage}
@@ -235,73 +352,6 @@ function PhotoUploadDialog(props) {
                             </Box>
                         }
                     </Box>
-{/* 
-                    { !cropperImage &&
-                        <Dropzone onDrop={(files) => onDrop(files)}>
-                            {({getRootProps, getInputProps, isDragActive, isDragAccept}) => (
-                                <div {...getRootProps({className: classes.dropzone})}>
-                                    <input {...getInputProps()}/>
-                                    <Box 
-                                        display="flex" 
-                                        flexDirection="row" 
-                                        alignItems="center" 
-                                        justifyContent="center"
-                                        height="100%" 
-                                        width="100%"
-                                        className={isDragAccept ? classes.accept : undefined}
-                                    >
-                                        <Typography align="center" color="textSecondary" variant="h4">
-                                            { !isDragActive && uploadError.trim() === "" && 
-                                                `Drag a new ${type} photo here` 
-                                            }
-                                            { isDragAccept && uploadError.trim() === "" && 
-                                                "Drop photo to upload" 
-                                            }
-                                            { uploadError.trim() !== "" && 
-                                                uploadError 
-                                            }
-                                        </Typography> 
-                                    </Box>
-                                </div>
-                            )}
-                        </Dropzone>
-                    }
-                    { cropperImage &&
-                        <Box 
-                            display="flex"
-                            flexDirection="column"
-                            height="100%"
-                            width="100%"
-                            justifyContent="center"
-                            alignItems="center"
-                            style={{ overflow: 'hidden' }}
-                        >
-                            <Box style={{ paddingBottom: '15px' }}>
-                                <Typography variant="caption" align="center"> Your avatar </Typography>
-                                <Avatar src={avatarUrl} style={{ height: '100px', width: '100px' }}/>
-                            </Box>
-                            <Box>
-                                <Cropper
-                                    className={classes.cropper}
-                                    aspectRatio={1}
-                                    src={cropperImage}
-                                    data={cropperData}
-                                    viewMode={1}
-                                    center={false}
-                                    minCropBoxHeight={80}
-                                    minCropBoxWidth={80}
-                                    background={false}
-                                    responsive={true}
-                                    autoCropArea={1}
-                                    checkOrientation={false}
-                                    zoomable={false}
-                                    toggleDragModeOnDblclick={false}
-                                    onInitialized={(instance) => setCropper(instance)}
-                                />
-                            </Box>
-                        </Box>
-                    }
-*/}
                 </DialogContent>
                 <DialogActions>
                     <Button 
@@ -312,7 +362,7 @@ function PhotoUploadDialog(props) {
                         disabled={!cropperImage}
                         onClick={() => handleSetPhoto()}
                     > 
-                        Set {type === "profile" ? "avatar" : type} photo
+                        Set {type} photo
                     </Button>
                     <Button 
                         variant="contained" 
