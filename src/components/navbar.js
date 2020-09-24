@@ -53,7 +53,6 @@ function NavBar(props) {
                                     color="secondary" 
                                     variant="text" 
                                     disableElevation
-                                    style={{ paddingRight: '20px' }}
                                 > 
                                     Sign Up
                                 </Button>

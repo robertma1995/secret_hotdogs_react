@@ -98,7 +98,7 @@ function RegisterForm(props) {
         const emailValid = isValid("email", email, setEmail, setEmailError);
         const passwordValid = isValid("password", password, setPassword, setPasswordError);
         const passwordConfirmValid = isValid("passwordConfirm", passwordConfirm, setPasswordConfirm, setPasswordConfirmError, password);
-
+        
         // TODO: add validity check for photo upload - if no profileImage set, then 
         // set profileImage as the default material ui avatar
         // or, set default value in useState();
@@ -120,7 +120,8 @@ function RegisterForm(props) {
                     setEmail("");
                     setPassword("");
                     setPasswordConfirm("");
-                    // setProfileImage("");
+                    setProfileImage(null);
+                    setProfileImageUrl("");
                     setRegistered(true);
                 }
             })();
@@ -168,7 +169,7 @@ function RegisterForm(props) {
                 also use this as a button to the trigger for photo upload dialog 
             */}
             <PhotoUploadDialog 
-                type="profile" 
+                type="hotdog" 
                 setPhoto={setProfileImage} 
                 photoUrl={profileImageUrl}
                 setPhotoUrl={setProfileImageUrl}

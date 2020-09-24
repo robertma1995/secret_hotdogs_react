@@ -19,7 +19,7 @@ const register = async (name, email, password, profileImage) => {
         // console.log("database: User with id " + userId + " successfully created");
         return true;
     } catch(e) {
-        // console.log("database: " + e);
+        console.log(e);
         return false;
     }
 }
@@ -39,8 +39,8 @@ const getUserProfileImage = async (id) => {
         let url = await users.getProfileImage(id);
         return url;
     } catch(e) {
-        // console.log("database: " + e);
-        return false;
+        console.log("database: " + e + "\n ...no avatar detected, so set to default avatar");
+        return "";
     }
 }
 

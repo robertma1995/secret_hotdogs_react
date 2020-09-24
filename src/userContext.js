@@ -39,6 +39,7 @@ function UserContextProvider(props) {
     useEffect(() => {
         if (userId === null) {
             sessionStorage.removeItem('userId');
+            sessionStorage.removeItem('userProfileImageUrl');
         } else {
             sessionStorage.setItem('userId', userId);
             (async () => {

@@ -16,7 +16,6 @@ const login = async (email, password) => {
 /*
     return true if register successful, otherwise return firebase error
     inserting with custom id: https://stackoverflow.com/questions/48541270/how-to-add-document-with-custom-id-to-firestore
-    TODO: image upload - use firebase storage (see docs)
 */
 const register = async (name, email, password, profileImage) => {
     return new Promise((resolve, reject) => {
@@ -28,13 +27,17 @@ const register = async (name, email, password, profileImage) => {
             })
             .catch(err => reject(err));
 
-            // create profile image reference in firebase storage
-            var storageRef = firebase.storage().ref();
-            storageRef.child("users/" + userId + ".jpg").put(profileImage).then(() => {
-                console.log("Uploaded a file!");
+            // if user set profile image on register, create reference in firebase storage
+            if (profileImage) {
+                var storageRef = firebase.storage().ref();
+                storageRef.child("users/" + userId + ".jpg").put(profileImage).then(() => {
+                    console.log("Uploaded a file!");
+                    resolve(userId);
+                })
+                .catch(err => reject(err));
+            } else {
                 resolve(userId);
-            })
-            .catch(err => reject(err));
+            }
         })
         .catch(err => reject(err));
     });

@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
         padding: 'unset',
         position: 'relative',
         '&:hover': {
-            color: 'black',
+            // color: 'white',
         },
     },
     // place reset icon on top of preview photo - copied from ./progressButton.js
@@ -50,17 +50,15 @@ const useStyles = makeStyles((theme) => ({
         marginTop: -18,
         marginLeft: -18,
     },
-    // TODO: merge opacity and previewPhoto class 
+    //  
     previewPhoto: {
         height: '100px', 
         width: '100px',
     },
-    opacity: {
-        height: '100px',
-        width: '100px',
-        // TODO: test '-webkit-filter: brightness (80%)' with a lighter icon color and see if it looks better
-        opacity: 0.5   
+    hover: {
+        '-webkit-filter': 'brightness(35%)',
     },
+    // make dropzone fill dialogcontent below preview section
     dropzone: {
         height: '100%',
         width: '100%',
@@ -156,7 +154,7 @@ function PhotoUploadDialog(props) {
     }
 
     /* 
-        TODO: resets photo/avatar for parent to default
+        resets photo/avatar for parent to default
     */
     function handleResetPhoto() {
         console.log("reset photo to default");
@@ -233,24 +231,6 @@ function PhotoUploadDialog(props) {
                             <Typography color="primary" variant="caption" style={{ paddingBottom: '5px' }}> 
                                 <b>Preview</b>
                             </Typography>
-                            {/* <div  */}
-                            {/*     onMouseEnter={() => handleHover()} */}
-                            {/*     onMouseLeave={() => handleHover()}  */}
-                            {/*     className={classes.previewPhotoWrapper} */}
-                            {/* > */}
-                            {/*     <IconButton  */}
-                            {/*         onClick={() => handleResetPhoto()}  */}
-                            {/*         className={classes.previewPhotoButton} */}
-                            {/*     > */}
-                            {/*         { type === "profile" &&  */}
-                            {/*             <Avatar src={photoUrl} className={classes.previewPhoto} /> */}
-                            {/*         } */}
-                            {/*         { type === "hotdog" &&  */}
-                            {/*             <img src={photoUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} className={classes.previewPhoto} /> */}
-                            {/*         } */}
-                            {/*     </IconButton> */}
-                            {/*     { hover && <CloseIcon className={classes.previewResetIcon} />} */}
-                            {/* </div> */}
                             <IconButton 
                                 onMouseEnter={() => handleHover()}
                                 onMouseLeave={() => handleHover()} 
@@ -260,12 +240,14 @@ function PhotoUploadDialog(props) {
                                 { type === "profile" && 
                                     <Avatar 
                                         src={photoUrl}
-                                        // TODO: merge previewPhoto and opacity class
-                                        className={hover ? classes.opacity : classes.previewPhoto} 
+                                        className={`${classes.previewPhoto} ` + (hover ? `${classes.hover}` : undefined)}
                                     />
                                 }
                                 { type === "hotdog" && 
-                                    <img src={photoUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} className={classes.previewPhoto} />
+                                    <img 
+                                        src={photoUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} 
+                                        className={`${classes.previewPhoto} ` + (hover ? `${classes.hover}` : undefined)}
+                                    />
                                 }
                                 { hover && <CloseIcon fontSize="large" className={classes.previewResetIcon} /> }
                             </IconButton>
@@ -285,7 +267,7 @@ function PhotoUploadDialog(props) {
                                                 width="100%"
                                                 className={isDragAccept ? classes.accept : undefined}
                                             >
-                                                <Typography align="center" color="textSecondary" variant="h4">
+                                                <Typography align="center" color="textSecondary" variant="h5">
                                                     { !isDragActive && uploadError.trim() === "" && 
                                                         `Drag a new ${type} photo here` 
                                                     }
@@ -304,7 +286,7 @@ function PhotoUploadDialog(props) {
                         }
                         { cropperImage && !loading &&
                             /*  
-                                NOTE: making cropper's parent container dimensions 100% 
+                                NOTE: making Cropper's parent container dimensions 100% 
                                 will scale small images up, but won't re-center the image if window is resized
                             */
                             <Box 
@@ -327,7 +309,8 @@ function PhotoUploadDialog(props) {
                                     </Typography>
                                     <Typography variant="caption"> 
                                         To crop this image, drag the region below and then click 
-                                        "Set {type} photo"
+                                        "Set {type} photo". 
+                                        To upload a new photo, click "Reset photo".
                                     </Typography>
                                 </Box>
                                 <Box flexGrow={1}>
