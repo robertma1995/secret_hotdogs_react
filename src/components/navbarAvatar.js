@@ -87,7 +87,7 @@ function NavbarAvatar(props) {
                             anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                             badgeContent={
                                 <IconButton className={classes.menuAvatarBadge}>
-                                    <Icon name="camera" />
+                                    <Icon name="camera" size="small" />
                                 </IconButton>
                             }
                         >
@@ -107,7 +107,7 @@ function NavbarAvatar(props) {
                             color="primary"
                             disableElevation
                             fullWidth
-                            startIcon={<Icon name="logout" />}
+                            startIcon={<Icon name="logout" size="small" />}
                             onClick={() => handleLogout()}
                             className={classes.menuButton}
                         >

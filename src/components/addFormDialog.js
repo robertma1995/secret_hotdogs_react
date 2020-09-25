@@ -39,7 +39,7 @@ function AddFormDialog() {
                 color="primary"
                 onClick={() => handleOpen()}
             >
-                <Icon name="plus" />
+                <Icon name="plus" color="secondary" />
             </Fab>
             <Dialog 
                 fullWidth

@@ -110,7 +110,12 @@ function PhotoUploadDialog(props) {
         Saves current crop box dimensions/positioning
     */
     function handleSetPhoto() {
-        cropper.getCroppedCanvas({ fillColor: '#fff' }).toBlob((blob) => {
+        const max = 1024;
+        cropper.getCroppedCanvas({ 
+            fillColor: '#fff',
+            maxHeight: max,
+            maxWidth: max,
+        }).toBlob((blob) => {
             setPhoto(blob);
             let reader = new FileReader();
             reader.readAsDataURL(blob);
@@ -176,7 +181,7 @@ function PhotoUploadDialog(props) {
                         width="100%"
                         justifyContent="center"
                         alignItems="center"
-                        style={{ overflow: 'hidden' }}
+                        className={classes.container}
                     >
                         <Box 
                             display="flex"
