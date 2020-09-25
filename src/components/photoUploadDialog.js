@@ -11,10 +11,8 @@ import {
     Dialog, DialogActions, DialogContent 
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-// TODO: testing preview button component
-import icons from '../utils/icons';
-import CloseIcon from '@material-ui/icons/Close';
-import { Icon } from '../utils/icons';
+// my components - photo preview
+import Icon from '../utils/icons';
 import ImageButton from './imageButton';
 
 const useStyles = makeStyles((theme) => ({
@@ -166,7 +164,7 @@ function PhotoUploadDialog(props) {
                     </Box>
                     <Box>
                         <IconButton onClick={() => handleClose()}>
-                            {icons["close"]}
+                            <Icon name="close" />
                         </IconButton>
                     </Box>
                 </Box>

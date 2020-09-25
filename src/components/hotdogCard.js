@@ -5,7 +5,7 @@ import {
     Card, CardHeader, CardMedia, CardContent, CardActions, 
 } from '@material-ui/core';
 // my components
-import icons from '../utils/icons';
+import Icon from '../utils/icons';
 import HotdogDialog from './hotdogDialog';
 import HotdogIngredientsList from './hotdogIngredientsList';
 // database
@@ -42,7 +42,7 @@ const HotdogCard = React.memo((props) => {
             </CardContent>
             <CardActions>
                 <IconButton aria-label="like">
-                    {icons["like"]}
+                    <Icon name="like" />
                 </IconButton>
                 <HotdogDialog 
                     creatorName={creatorName}

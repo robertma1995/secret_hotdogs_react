@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import LoginForm from './loginForm';
-import icons from '../utils/icons';
+import Icon from '../utils/icons';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -63,7 +63,7 @@ function LoginFormDialog(props) {
                     </Box>
                     <Box>
                         <IconButton onClick={() => handleClose()}>
-                            {icons["close"]}
+                            <Icon name="close" />
                         </IconButton>
                     </Box>
                 </Box>

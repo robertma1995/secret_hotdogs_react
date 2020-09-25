@@ -5,7 +5,7 @@ import {
     Dialog, DialogContent 
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import icons from '../utils/icons';
+import Icon from '../utils/icons';
 import HotdogIngredientsList from './hotdogIngredientsList';
 
 const useStyles = makeStyles((theme) => ({
@@ -112,7 +112,7 @@ function HotdogDialog(props) {
                                             </Box>
                                             <Box>
                                                 <IconButton aria-label="close" onClick={() => handleClose()}>
-                                                    {icons["close"]}
+                                                    <Icon name="close" />
                                                 </IconButton>
                                             </Box>
                                         </Box>

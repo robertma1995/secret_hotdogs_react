@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Badge, Box, Button, IconButton, Typography, Menu } from '@material-ui/core';
-import icons from '../utils/icons';
+import Icon from '../utils/icons';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -87,7 +87,7 @@ function NavbarAvatar(props) {
                             anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                             badgeContent={
                                 <IconButton className={classes.menuAvatarBadge}>
-                                    {icons["camera"]}
+                                    <Icon name="camera" />
                                 </IconButton>
                             }
                         >
@@ -107,7 +107,7 @@ function NavbarAvatar(props) {
                             color="primary"
                             disableElevation
                             fullWidth
-                            startIcon={icons["logout"]}
+                            startIcon={<Icon name="logout" />}
                             onClick={() => handleLogout()}
                             className={classes.menuButton}
                         >

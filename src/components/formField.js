@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, IconButton, TextField } from '@material-ui/core';
 import icons from '../utils/icons';
+import Icon from '../utils/icons';
 
 /* 
     Text field with icon - to be wrapped in a Form
@@ -21,7 +22,7 @@ function FormField(props) {
     return (
         <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center" p={0.5}>
             <Box mr={0.5}>
-                {icons[iconName]}
+                <Icon name={iconName} />
             </Box>
             <Box flexGrow={1} p={1} display="flex" flexDirection="row">
                 <Box flexGrow={1}>

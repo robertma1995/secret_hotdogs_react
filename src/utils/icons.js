@@ -61,13 +61,10 @@ const iconsTest = {
 }
 
 function Icon(props) {
-    const { name, size, color, className } = props;
+    const { name, size, color, className, style } = props;
     const Icon = iconsTest[name];
-    return <Icon fontSize={size} color={color} className={className} />;
+    var iconStyle = name === "none" ? { color: 'transparent' } : style;
+    return <Icon fontSize={size} color={color} className={className} style={iconStyle} />;
 }
 
-export default icons;
-export {
-    icons,
-    Icon
-};
+export default Icon;

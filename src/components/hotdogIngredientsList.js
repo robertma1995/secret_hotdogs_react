@@ -4,7 +4,7 @@ import {
     List, ListItem, ListItemIcon, ListItemText, ListSubheader,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import icons from '../utils/icons';
+import Icon from '../utils/icons';
 
 const useStyles = makeStyles((theme) => ({
     // overflow for list items - no need to specify width
@@ -30,7 +30,7 @@ function Topping(props) {
         <ListItem>
             {index === 0 &&
                 <ListItemIcon>
-                    {icons[iconName]}
+                    <Icon name={iconName} />
                 </ListItemIcon>
             }
             <ListItemText 
@@ -82,13 +82,13 @@ function HotdogIngredientsList(props) {
         <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}>
             <ListItem divider>
                 <ListItemIcon>
-                    {icons["hotdogSausage"]}
+                    <Icon name="hotdogSausage" />
                 </ListItemIcon>
                 <ListItemText primary={sausage} className={classes.overflow} />
             </ListItem>
             <ListItem divider>
                 <ListItemIcon>
-                    {icons["hotdogSauce"]}
+                    <Icon name="hotdogSauce" />
                 </ListItemIcon>
                 <ListItemText primary={sauce} className={classes.overflow} />
             </ListItem>

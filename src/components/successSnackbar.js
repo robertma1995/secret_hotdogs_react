@@ -1,7 +1,7 @@
 import React from 'react';
 // material ui
 import { Box, IconButton, Snackbar, Typography }  from '@material-ui/core';
-import icons from '../utils/icons';
+import Icon from '../utils/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +22,7 @@ function Message(props) {
     return (
         <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
             <Box mr={2}>
-                {icons["tick"]}
+                <Icon name="tick" />
             </Box>
             <Box>
                 <Typography variant="subtitle2" display="inline">
@@ -43,7 +43,7 @@ function Action(props) {
         <>
             {actionButton}
             <IconButton size="small" onClick={handleClose} className={classes.button}>
-                {icons["close"]}
+                <Icon name="close" />
             </IconButton>
         </>
     );    

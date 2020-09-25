@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Avatar, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Icon } from '../utils/icons';
+import Icon from '../utils/icons';
 
 const useStyles = makeStyles((theme) => ({
     button: {
