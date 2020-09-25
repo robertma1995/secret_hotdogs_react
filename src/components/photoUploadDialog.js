@@ -11,8 +11,11 @@ import {
     Dialog, DialogActions, DialogContent 
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+// TODO: testing preview button component
 import icons from '../utils/icons';
-import CloseIcon from '@material-ui/icons/Close'
+import CloseIcon from '@material-ui/icons/Close';
+import { Icon } from '../utils/icons';
+import ImageButton from './imageButton';
 
 const useStyles = makeStyles((theme) => ({
     // fixed height of for preview + dropzone/cropper
@@ -32,31 +35,6 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: '5px',
         paddingBottom: '5px', 
         borderBottom: '1px solid #cbb09c',
-    },
-    // position: 'relative' allows reset icon to be placed on top of the preview photo,
-    // also override ./utils/theme.js iconButton '&:hover' color
-    previewPhotoButton: {
-        padding: 'unset',
-        position: 'relative',
-        '&:hover': {
-            // color: 'white',
-        },
-    },
-    // place reset icon on top of preview photo - copied from ./progressButton.js
-    previewResetIcon: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -18,
-        marginLeft: -18,
-    },
-    //  
-    previewPhoto: {
-        height: '100px', 
-        width: '100px',
-    },
-    hover: {
-        '-webkit-filter': 'brightness(35%)',
     },
     // make dropzone fill dialogcontent below preview section
     dropzone: {
@@ -103,9 +81,6 @@ function PhotoUploadDialog(props) {
     const classes = useStyles();
     const [loading, setLoading] = useState(true);
 
-    // TODO: consider moving hover button to separate component
-    const [hover, setHover] = useState(false);
-
     /*
         custom accepted file handler since react-dropzone "mutliple={false}" doesn't work consistently
         react-dropzone behaviour: if multiple files, one is accepted type and others rejected, 
@@ -113,22 +88,18 @@ function PhotoUploadDialog(props) {
         below onDrop handler behaviour: if number of files exceeds 1, then reject all
     */
     function onDrop(files) {
-        console.log("DROPPED FILE(S)");
         if (files.length > 1) {
             setUploadError("Too many photos! Drag your desired profile photo only");
         } else {
             // setLoading(true);
             let file = files[0];
             if (file.type === "image/jpeg" || file.type === "image/png") {
-                console.log("Correct file type!");
-                console.log(file);
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = () => setCropperImage(reader.result);
                 setImageName(file.name);
                 setUploadError("");
             } else {
-                console.log("Incorrect file type - " + file.type);
                 setUploadError("Upload error - choose a JPG or PNG and try again");
             }
             setLoading(false);
@@ -138,18 +109,15 @@ function PhotoUploadDialog(props) {
     /* 
         Sets photo blob for parent, where it will be uploaded via firebase call
         Sets photo dataURL - parent and dialog both use this for preview
+        Saves current crop box dimensions/positioning
     */
     function handleSetPhoto() {
-        console.log("SETTING IMAGE FOR PARENT");
         cropper.getCroppedCanvas({ fillColor: '#fff' }).toBlob((blob) => {
             setPhoto(blob);
-            // TODO: testing avatar preview on photo upload dialog as well
             let reader = new FileReader();
             reader.readAsDataURL(blob);
             reader.onload = () => setPhotoUrl(reader.result);
         }, 'image/jpeg');
-
-        // save cropper data at time of setting picture
         setCropperData(cropper.getData());
     }
 
@@ -157,13 +125,11 @@ function PhotoUploadDialog(props) {
         resets photo/avatar for parent to default
     */
     function handleResetPhoto() {
-        console.log("reset photo to default");
         setPhoto(null);
         setPhotoUrl("");
     }
 
     function handleResetCropper() {
-        console.log("RESET CROPPER!");
         setCropperImage(null);
         setCropperData(null);
     }
@@ -176,15 +142,8 @@ function PhotoUploadDialog(props) {
         setOpen(false);
     }
 
-    // TODO: consider moving hover button to separate component
-    function handleHover() {
-        // console.log("hovered over preview photo");
-        setHover(!hover);
-    }
-
     return (
         <>
-            {/* TODO: separate all dialogs from buttons */}
             <Button 
                 variant="text" 
                 color="primary"
@@ -231,26 +190,13 @@ function PhotoUploadDialog(props) {
                             <Typography color="primary" variant="caption" style={{ paddingBottom: '5px' }}> 
                                 <b>Preview</b>
                             </Typography>
-                            <IconButton 
-                                onMouseEnter={() => handleHover()}
-                                onMouseLeave={() => handleHover()} 
-                                onClick={() => handleResetPhoto()} 
-                                className={classes.previewPhotoButton}
-                            >
-                                { type === "profile" && 
-                                    <Avatar 
-                                        src={photoUrl}
-                                        className={`${classes.previewPhoto} ` + (hover ? `${classes.hover}` : undefined)}
-                                    />
-                                }
-                                { type === "hotdog" && 
-                                    <img 
-                                        src={photoUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} 
-                                        className={`${classes.previewPhoto} ` + (hover ? `${classes.hover}` : undefined)}
-                                    />
-                                }
-                                { hover && <CloseIcon fontSize="large" className={classes.previewResetIcon} /> }
-                            </IconButton>
+                            <ImageButton 
+                                imageType="avatar"
+                                imageUrl={photoUrl}
+                                iconName="close"
+                                iconSize="large"
+                                handleClick={handleResetPhoto}
+                            />
                         </Box>
                         { !cropperImage && 
                             <Box height="100%" width="100%">

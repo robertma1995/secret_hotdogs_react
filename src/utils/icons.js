@@ -39,4 +39,35 @@ const icons = {
     logout: <ExitToAppIcon fontSize="small" />
 }
 
+const iconsTest = {
+    user: AccountCircleIcon,
+    email: EmailIcon,
+    password: LockIcon,
+    hotdogTitle: RestaurantIcon,
+    hotdogDescription: EditIcon,
+    hotdogSausage: OutdoorGrillIcon,
+    hotdogSauce: WavesIcon,
+    hotdogTopping: ShoppingCartIcon,
+    none: ShoppingCartIcon,
+    like: FavoriteIcon,
+    minus: RemoveIcon,
+    plus: AddIcon,
+    close: CloseIcon,
+    tick: CheckCircleOutlineIcon,
+    addTopping: AddShoppingCartIcon,
+    addToppingDisabled: RemoveShoppingCartIcon,
+    camera: PhotoCameraOutlinedIcon,
+    logout: ExitToAppIcon
+}
+
+function Icon(props) {
+    const { name, size, color, className } = props;
+    const Icon = iconsTest[name];
+    return <Icon fontSize={size} color={color} className={className} />;
+}
+
 export default icons;
+export {
+    icons,
+    Icon
+};
