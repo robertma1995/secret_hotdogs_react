@@ -17,13 +17,17 @@ import * as DB from '../database/wrapper';
 function NavBar(props) { 
     // TODO: remove userName placeholder after user profile images finished
     const { userId, setCurrentUserId, userName, setCurrentUserName, userProfileImageUrl } = useContext(UserContext);
-    const [avatarUrl, setAvatarUrl] = useState("");
-        
+    const [openLoginDialog, setOpenLoginDialog] = useState(false);
+
     // unset context vars and redirect to login page
     function handleLogout() {
         setCurrentUserId(null);
         setCurrentUserName(null);
         props.history.push(routes.HOME);
+    }
+
+    function handleOpenLoginDialog() {
+        setOpenLoginDialog(true);
     }
 
     return (
@@ -40,7 +44,7 @@ function NavBar(props) {
                     <Box>
                         { userId && 
                             <NavbarAvatar 
-                                imageUrl={userProfileImageUrl}
+                                avatarUrl={userProfileImageUrl}
                                 userName={userName}
                                 handleLogout={handleLogout} 
                             />
@@ -56,7 +60,14 @@ function NavBar(props) {
                                 > 
                                     Sign Up
                                 </Button>
-                                <LoginFormDialog />
+                                <Button 
+                                    variant="text" 
+                                    color="secondary" 
+                                    onClick={() => handleOpenLoginDialog()}
+                                >
+                                    Login
+                                </Button>
+                                <LoginFormDialog open={openLoginDialog} setOpen={setOpenLoginDialog} />
                             </>
                         }
                     </Box>

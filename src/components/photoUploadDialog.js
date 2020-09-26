@@ -34,13 +34,20 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: '5px', 
         borderBottom: '1px solid #cbb09c',
     },
-    // make dropzone fill dialogcontent below preview section
+    // same behaviour on isDragAccept and &:focus - blue background + border
     dropzone: {
         height: '100%',
         width: '100%',
+        outline: 'none',
+        '&:focus': {
+            boxSizing: 'border-box',
+            border: '2px solid #4d90fe',
+            transition: 'border .1s ease-in-out',
+            backgroundColor: '#eaf2fe'
+        }
     },
-    // highlight dropzone when dropping
     accept: {
+        outline: 'none',
         boxSizing: 'border-box',
         border: '2px solid #4d90fe',
         transition: 'border .1s ease-in-out',
@@ -69,13 +76,12 @@ const useStyles = makeStyles((theme) => ({
     Also saves crop box data in state so user can go back even if the dialog closes
 */
 function PhotoUploadDialog(props) {
-    const { type, setPhoto, photoUrl, setPhotoUrl } = props;
+    const { photoType, setPhoto, photoUrl, setPhotoUrl, open, setOpen } = props;
     const [uploadError, setUploadError] = useState("");
     const [imageName, setImageName] = useState("");
     const [cropperImage, setCropperImage] = useState(null);
     const [cropper, setCropper] = useState();
     const [cropperData, setCropperData] = useState();
-    const [open, setOpen] = useState(true);
     const classes = useStyles();
     const [loading, setLoading] = useState(true);
 
@@ -146,179 +152,170 @@ function PhotoUploadDialog(props) {
     }
 
     return (
-        <>
-            <Button 
-                variant="text" 
-                color="primary"
-                disableRipple 
-                onClick={() => handleOpen()}
-            >
-                Upload profile picture
-            </Button>
-            <Dialog 
-                fullWidth
-                maxWidth="md"
-                open={open}
-                onClose={() => handleClose()}
-            >
-                <Box display="flex" flexDirection="row" alignItems="center">
-                    <Box flexGrow={1}>
-                        <Typography variant="h6" color="textSecondary" className={classes.title}>
-                            Select new {type} photo
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <IconButton onClick={() => handleClose()}>
-                            <Icon name="close" />
-                        </IconButton>
-                    </Box>
+        <Dialog 
+            fullWidth
+            maxWidth="md"
+            open={open}
+            onClose={() => handleClose()}
+        >
+            <Box display="flex" flexDirection="row" alignItems="center">
+                <Box flexGrow={1}>
+                    <Typography variant="h6" color="textSecondary" className={classes.title}>
+                        Select new {photoType} photo
+                    </Typography>
                 </Box>
-                <DialogContent className={classes.dialogContent}>
+                <Box>
+                    <IconButton onClick={() => handleClose()}>
+                        <Icon name="close" />
+                    </IconButton>
+                </Box>
+            </Box>
+            <DialogContent className={classes.dialogContent}>
+                <Box 
+                    display="flex"
+                    flexDirection="column"
+                    height="100%"
+                    width="100%"
+                    justifyContent="center"
+                    alignItems="center"
+                    className={classes.container}
+                >
                     <Box 
                         display="flex"
                         flexDirection="column"
-                        height="100%"
-                        width="100%"
                         justifyContent="center"
                         alignItems="center"
-                        className={classes.container}
+                        className={classes.preview}
                     >
+                        <Typography color="primary" variant="caption" style={{ paddingBottom: '5px' }}> 
+                            <b>Preview</b>
+                        </Typography>
+                        <ImageButton 
+                            imageUrl={photoUrl}
+                            iconName="delete"
+                            iconSize="large"
+                            handleClick={handleResetPhoto}
+                            avatar
+                        />
+                    </Box>
+                    { !cropperImage && 
+                        <Box height="100%" width="100%">
+                            <Dropzone onDrop={(files) => onDrop(files)}>
+                                {({getRootProps, getInputProps, isDragActive, isDragAccept}) => (
+                                    <div {...getRootProps({
+                                        className: `${classes.dropzone} ` + (isDragAccept ? `${classes.accept}` : undefined)
+                                    })}>
+                                        <input {...getInputProps()}/>
+                                        <Box 
+                                            display="flex" 
+                                            flexDirection="row" 
+                                            alignItems="center" 
+                                            justifyContent="center"
+                                            height="100%" 
+                                            width="100%"
+                                        >
+                                            <Typography align="center" color="textSecondary" variant="h5">
+                                                { !isDragActive && uploadError.trim() === "" && 
+                                                    `Drag a new ${photoType} photo here` 
+                                                }
+                                                { isDragAccept && uploadError.trim() === "" && 
+                                                    "Drop photo to upload" 
+                                                }
+                                                { uploadError.trim() !== "" && 
+                                                    uploadError 
+                                                }
+                                            </Typography> 
+                                        </Box>
+                                    </div>
+                                )}
+                            </Dropzone>
+                        </Box>
+                    }
+                    { cropperImage && !loading &&
+                        /*  
+                            NOTE: making Cropper's parent container dimensions 100% 
+                            will scale small images up, but won't re-center the image if window is resized
+                        */
                         <Box 
                             display="flex"
                             flexDirection="column"
+                            height="100%"
+                            width="100%"
                             justifyContent="center"
                             alignItems="center"
-                            className={classes.preview}
                         >
-                            <Typography color="primary" variant="caption" style={{ paddingBottom: '5px' }}> 
-                                <b>Preview</b>
-                            </Typography>
-                            <ImageButton 
-                                imageType="avatar"
-                                imageUrl={photoUrl}
-                                iconName="close"
-                                iconSize="large"
-                                handleClick={handleResetPhoto}
-                            />
-                        </Box>
-                        { !cropperImage && 
-                            <Box height="100%" width="100%">
-                                <Dropzone onDrop={(files) => onDrop(files)}>
-                                    {({getRootProps, getInputProps, isDragActive, isDragAccept}) => (
-                                        <div {...getRootProps({className: classes.dropzone})}>
-                                            <input {...getInputProps()}/>
-                                            <Box 
-                                                display="flex" 
-                                                flexDirection="row" 
-                                                alignItems="center" 
-                                                justifyContent="center"
-                                                height="100%" 
-                                                width="100%"
-                                                className={isDragAccept ? classes.accept : undefined}
-                                            >
-                                                <Typography align="center" color="textSecondary" variant="h5">
-                                                    { !isDragActive && uploadError.trim() === "" && 
-                                                        `Drag a new ${type} photo here` 
-                                                    }
-                                                    { isDragAccept && uploadError.trim() === "" && 
-                                                        "Drop photo to upload" 
-                                                    }
-                                                    { uploadError.trim() !== "" && 
-                                                        uploadError 
-                                                    }
-                                                </Typography> 
-                                            </Box>
-                                        </div>
-                                    )}
-                                </Dropzone>
-                            </Box>
-                        }
-                        { cropperImage && !loading &&
-                            /*  
-                                NOTE: making Cropper's parent container dimensions 100% 
-                                will scale small images up, but won't re-center the image if window is resized
-                            */
                             <Box 
                                 display="flex"
                                 flexDirection="column"
-                                height="100%"
-                                width="100%"
-                                justifyContent="center"
-                                alignItems="center"
+                                height="15%"
+                                width="95%"
+                                className={classes.cropperImageHeader}
                             >
-                                <Box 
-                                    display="flex"
-                                    flexDirection="column"
-                                    height="15%"
-                                    width="95%"
-                                    className={classes.cropperImageHeader}
-                                >
-                                    <Typography variant="caption" className={classes.overflow}> 
-                                        <b>{imageName}</b>
-                                    </Typography>
-                                    <Typography variant="caption"> 
-                                        To crop this image, drag the region below and then click 
-                                        "Set {type} photo". 
-                                        To upload a new photo, click "Reset photo".
-                                    </Typography>
-                                </Box>
-                                <Box flexGrow={1}>
-                                    <Cropper
-                                        aspectRatio={1}
-                                        src={cropperImage}
-                                        data={cropperData}
-                                        viewMode={1}
-                                        center={false}
-                                        minCropBoxHeight={80}
-                                        minCropBoxWidth={80}
-                                        background={false}
-                                        responsive={false}
-                                        autoCropArea={1}
-                                        checkOrientation={false}
-                                        zoomable={false}
-                                        toggleDragModeOnDblclick={false}
-                                        onInitialized={(instance) => setCropper(instance)}
-                                        className={classes.cropper}
-                                    />
-                                </Box>
+                                <Typography variant="caption" className={classes.overflow}> 
+                                    <b>{imageName}</b>
+                                </Typography>
+                                <Typography variant="caption"> 
+                                    To crop this image, drag the region below and then click 
+                                    "Set {photoType} photo". 
+                                    To upload a new photo, click "Reset photo".
+                                </Typography>
                             </Box>
-                        }
-                    </Box>
-                </DialogContent>
-                <DialogActions>
-                    <Button 
-                        variant="contained" 
-                        color="primary"
-                        size="small"
-                        disableElevation
-                        disabled={!cropperImage}
-                        onClick={() => handleSetPhoto()}
-                    > 
-                        Set {type} photo
-                    </Button>
-                    <Button 
-                        variant="contained" 
-                        color="primary"
-                        size="small"
-                        disableElevation
-                        disabled={!cropperImage}
-                        onClick={() => handleResetCropper()}
-                    > 
-                        Reset photo 
-                    </Button>
-                    <Button 
-                        variant="contained" 
-                        color="secondary"
-                        size="small"
-                        disableRipple
-                        disableElevation
-                        onClick={() => handleClose()}
-                    > 
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </>
+                            <Box flexGrow={1}>
+                                <Cropper
+                                    aspectRatio={1}
+                                    src={cropperImage}
+                                    data={cropperData}
+                                    viewMode={1}
+                                    center={false}
+                                    minCropBoxHeight={80}
+                                    minCropBoxWidth={80}
+                                    background={false}
+                                    responsive={false}
+                                    autoCropArea={1}
+                                    checkOrientation={false}
+                                    zoomable={false}
+                                    toggleDragModeOnDblclick={false}
+                                    onInitialized={(instance) => setCropper(instance)}
+                                    className={classes.cropper}
+                                />
+                            </Box>
+                        </Box>
+                    }
+                </Box>
+            </DialogContent>
+            <DialogActions>
+                <Button 
+                    variant="contained" 
+                    color="primary"
+                    size="small"
+                    disableElevation
+                    disabled={!cropperImage}
+                    onClick={() => handleSetPhoto()}
+                > 
+                    Set {photoType} photo
+                </Button>
+                <Button 
+                    variant="contained" 
+                    color="primary"
+                    size="small"
+                    disableElevation
+                    disabled={!cropperImage}
+                    onClick={() => handleResetCropper()}
+                > 
+                    Reset photo 
+                </Button>
+                <Button 
+                    variant="contained" 
+                    color="secondary"
+                    size="small"
+                    disableRipple
+                    disableElevation
+                    onClick={() => handleClose()}
+                > 
+                    Cancel
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 
 }

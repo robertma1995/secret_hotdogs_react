@@ -62,7 +62,7 @@ function SuccessSnackbar(props) {
         setOpen(false);
     }
 
-    const autoHideDuration = 10000;
+    const autoHideDuration = 5000;
     return (
         <Snackbar 
             open={open}

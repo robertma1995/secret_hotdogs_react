@@ -16,29 +16,10 @@ import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import RemoveShoppingCartIcon from '@material-ui/icons/RemoveShoppingCart';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import DeleteIcon from '@material-ui/icons/Delete';
+import SettingsIcon from '@material-ui/icons/Settings';
 
-// "none" = white "invisible" icon with ShoppingCart as a placeholder
-const icons = {
-    user: <AccountCircleIcon />,
-    email: <EmailIcon />,
-    password: <LockIcon />,
-    hotdogTitle: <RestaurantIcon />,
-    hotdogDescription: <EditIcon />,
-    hotdogSausage: <OutdoorGrillIcon />,
-    hotdogSauce: <WavesIcon />,
-    hotdogTopping: <ShoppingCartIcon />,
-    none: <ShoppingCartIcon style={{ color: 'transparent' }} />,
-    like: <FavoriteIcon />,
-    minus: <RemoveIcon />,
-    plus: <AddIcon color="secondary"/>,
-    close: <CloseIcon />,
-    tick: <CheckCircleOutlineIcon />,
-    addTopping: <AddShoppingCartIcon />,
-    addToppingDisabled: <RemoveShoppingCartIcon />,
-    camera: <PhotoCameraOutlinedIcon fontSize="small" />,
-    logout: <ExitToAppIcon fontSize="small" />
-}
-
+// "none" = transparent with ShoppingCartIcon as a placeholder
 const iconsTest = {
     user: AccountCircleIcon,
     email: EmailIcon,
@@ -57,7 +38,9 @@ const iconsTest = {
     addTopping: AddShoppingCartIcon,
     addToppingDisabled: RemoveShoppingCartIcon,
     camera: PhotoCameraOutlinedIcon,
-    logout: ExitToAppIcon
+    logout: ExitToAppIcon,
+    delete: DeleteIcon,
+    settings: SettingsIcon,
 }
 
 function Icon(props) {

@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Grid, CircularProgress, Typography } from '@material-ui/core';
+import { Box, Fab, Grid, CircularProgress, Typography } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { Waypoint } from 'react-waypoint';
 // my components
 import HotdogCard from './hotdogCard';
 import AddFormDialog from './addFormDialog';
+import Icon from '../utils/icons';
 // context
 import { UserContext } from '../userContext';
 // database
@@ -27,11 +28,16 @@ function HomeHotdogGrid() {
     // hd: subset of hotdogs currently in view (infinite scroll)
     const { userId } = useContext(UserContext);
     const [hotdogs, setHotdogs] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [hd, setHd] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [openAddDialog, setOpenAddDialog] = useState(false);
     // TODO: changing load behaviour
-    const [type, setType] = useState("added");
+    const [changeType, setChangeType] = useState("added");
     const [length, setLength] = useState(0);
+
+    function handleOpenAddDialog() {
+        setOpenAddDialog(true);
+    }
 
     // display hotdogs created by current user (reverse chronology)
     useEffect(() => {
@@ -46,15 +52,15 @@ function HomeHotdogGrid() {
 
                 // onSnapshot returns a QuerySnapshot, docChanges gets all items on initial snapshot
                 var changes = [];
-                var changeType = "";
+                var type = "";
                 for (const change of snapshot.docChanges()) {
                     var formattedRow = change.doc.data();
                     formattedRow["id"] = change.doc.id;
                     formattedRow["ts"] = change.doc.data().ts.seconds;
                     changes.push(formattedRow);
-                    changeType = change.type;
+                    type = change.type;
                     // TODO: changing load behaviour
-                    if (change.type === "removed") setType(change.type);
+                    if (change.type === "removed") setChangeType(change.type);
                 }
 
                 // get all creator profile images (returns when all promises resolved)            
@@ -70,10 +76,10 @@ function HomeHotdogGrid() {
                         setHotdogs(res);
                         setHd(res.slice(0, 3));
                     } else if (res.length === 1) {
-                        if (changeType === "added") {
+                        if (type === "added") {
                             setHotdogs(oldHotdogs => [...res, ...oldHotdogs]);
                             setHd(oldHotdogs => [...res, ...oldHotdogs]);
-                        } else if (changeType === "removed") {
+                        } else if (type === "removed") {
                             setHotdogs(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== res[0].id));
                             setHd(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== res[0].id));
                         }
@@ -120,7 +126,7 @@ function HomeHotdogGrid() {
                     </Grid>
                 }
                 {/* adds a spinner loader for each hotdog before the creator avatars are retrieved */}
-                { loading && type === "added" && [...Array(length)].map((e, i) => (
+                { loading && changeType === "added" && [...Array(length)].map((e, i) => (
                     <Grid item key={i} xs={4}>
                         <Box
                             display="flex"
@@ -163,7 +169,19 @@ function HomeHotdogGrid() {
                     </Grid>
                 ))}
             </Grid>
-            <AddFormDialog/>
+            <Fab
+                aria-label="Add a hotdog"
+                color="primary"
+                onClick={() => handleOpenAddDialog()}
+                style={{ 
+                    position: 'fixed', 
+                    bottom: '15px', 
+                    right: '15px' 
+                }} 
+            >
+                <Icon name="plus" color="secondary" />
+            </Fab>
+            <AddFormDialog open={openAddDialog} setOpen={setOpenAddDialog} />
         </Box>
     );
 }

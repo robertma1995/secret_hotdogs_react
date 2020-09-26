@@ -17,6 +17,7 @@ function Form(props) {
             bgcolor="secondary.main"
             display="flex" 
             flexDirection="column"
+            alignItems="center"
             justifyContent="center"
             p={2}
             className={topPadding ? undefined : classes.padding}

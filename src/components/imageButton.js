@@ -4,20 +4,35 @@ import { makeStyles } from '@material-ui/core/styles';
 import Icon from '../utils/icons';
 
 const useStyles = makeStyles((theme) => ({
+    // button padding based on if used in navbar or not
     button: {
-        padding: 'unset',
         position: 'relative',
+        padding: 'unset'
     },
+    navButton: {
+        paddingTop: '5px!important',
+        paddingBottom: '5px!important'    
+    },
+    // image size based on if used in navbar or not
+    navImage: {
+        height: '40px', 
+        width: '40px',
+    },
+    defaultImage: {
+        height: '100px', 
+        width: '100px',
+    },
+    // icon size based on if used in navbar or not
     icon: {
         position: 'absolute',
         top: '50%',
         left: '50%',
-        marginTop: -18,
-        marginLeft: -18,
+        marginTop: '-18px',
+        marginLeft: '-18px',
     },
-    image: {
-        height: '100px', 
-        width: '100px',
+    navIcon: {
+        marginTop: '-12px!important',
+        marginLeft: '-12px!important',
     },
     hover: {
         '-webkit-filter': 'brightness(35%)',
@@ -28,32 +43,45 @@ const useStyles = makeStyles((theme) => ({
     Avatar or img wrapped in a button - on hover, darkens and shows an Icon
 */
 function ImageButton(props) {
-    const { imageType, imageUrl, iconName, iconSize, handleClick } = props;
+    const { imageUrl, iconName, iconSize, handleClick, avatar, navbar } = props;
     const [hover, setHover] = useState(false);
     const classes = useStyles();
 
-    function handleHover() {
-        setHover(!hover);
+    function handleMouseEnter() {
+        setHover(true);
     }
 
-    const Image = imageType === "avatar" ? Avatar : 'img';
+    function handleMouseLeave() {
+        setHover(false);
+    }
+
+    const Image = avatar ? Avatar : 'img';
 
     return (
         <IconButton 
-            onMouseEnter={() => handleHover()}
-            onMouseLeave={() => handleHover()} 
-            onClick={() => handleClick()} 
-            className={classes.button}
+            onMouseEnter={() => handleMouseEnter()}
+            onMouseLeave={() => handleMouseLeave()} 
+            onClick={navbar ? (event) => handleClick(event) : () => handleClick()} 
+            className={
+                `${classes.button} ` +
+                (navbar ? `${classes.navButton}` : undefined)
+            }
         >
             <Image 
                 src={imageUrl} 
-                className={`${classes.image} ` + (hover ? `${classes.hover}` : undefined)} 
+                className={
+                    (navbar ? `${classes.navImage} ` : `${classes.defaultImage} `) +
+                    (hover ? `${classes.hover}` : undefined)
+                } 
             />
-            { hover && 
+            { hover && iconName &&
                 <Icon 
                     name={iconName}
-                    size={iconSize}
-                    className={classes.icon}
+                    size={navbar ? "inherit" : iconSize}
+                    className={
+                        `${classes.icon} ` + 
+                        (navbar ? `${classes.navIcon}` : undefined)
+                    }
                 /> 
             }
         </IconButton>

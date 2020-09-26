@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { Avatar } from '@material-ui/core';
-
-// TODO: remove when finished testing photo upload
-import { useEffect } from 'react';
-
+import { Avatar, Button, Typography } from '@material-ui/core';
 // email validator
 import isEmail from 'validator/lib/isEmail';
 // my components
 import Form from './form';
 import FormField from './formField';
 import FormButtonWrapper from './formButtonWrapper';
+import FormMessage from './formMessage';
+import ImageButton from './imageButton';
 import LoginFormDialog from './loginFormDialog';
 import PhotoUploadDialog from './photoUploadDialog';
 import ProgressButton from './progressButton';
@@ -61,7 +59,7 @@ function isValid(type, input, setInput, setInputError, password) {
 }
 
 function RegisterForm(props) {
- 	// state variables
+    // user details
     const [name, setName] = useState("");
     const [nameError, setNameError] = useState(" ");
     const [email, setEmail] = useState("");
@@ -70,26 +68,21 @@ function RegisterForm(props) {
     const [passwordError, setPasswordError] = useState(" ");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [passwordConfirmError, setPasswordConfirmError] = useState(" ");
-    const [loading, setLoading] = useState(false);
     const [registered, setRegistered] = useState(false);
-
-    // TODO: react-cropper --> image preview + cropping to prevent non-square images
+    const [loading, setLoading] = useState(false);
+    // profile image/avatar
     const [profileImage, setProfileImage] = useState(null);
     const [profileImageUrl, setProfileImageUrl] = useState("");
-    // TODO: remove when finished testing photo upload
-    /*
-    useEffect(() => {
-        if (profileImage === null) {
-            setAvatarUrl("");
-        } else if (profileImage) {
-            console.log("SETTING AVATAR URL");
-            // convert profileImage to avatarUrl so Avatar can use as src
-            let reader = new FileReader();
-            reader.readAsDataURL(profileImage);
-            reader.onload = () => setProfileImageUrl(reader.result);
-        }
-    }, [profileImage])
-    */
+    const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
+    function handleOpenPhotoDialog() {
+        setOpenPhotoDialog(true);
+    }
+    // login dialog for snackbar action on successful registration
+    // TODO: might remove action button altogether from snackbar
+    const [openLoginDialog, setOpenLoginDialog] = useState(false);
+    function handleOpenLoginDialog() {
+        setOpenLoginDialog(true);
+    }
 
     function handleRegister() {
         // set registered to false again to handle consecutive adds on same page (no reload)
@@ -130,6 +123,27 @@ function RegisterForm(props) {
 
     return (
         <Form>
+            <FormMessage variant="body2" color="textSecondary">
+                { !profileImage && "Select your profile picture by clicking the avatar" }
+                { profileImage && "Your profile picture" }
+            </FormMessage>
+            <FormButtonWrapper style={{ borderBottom: '1px solid #cbb09c' }}>
+                <ImageButton
+                    imageUrl={profileImageUrl}
+                    iconName="camera"
+                    iconSize="large"
+                    handleClick={handleOpenPhotoDialog}
+                    avatar
+                />
+            </FormButtonWrapper>
+            <PhotoUploadDialog 
+                photoType="profile" 
+                setPhoto={setProfileImage} 
+                photoUrl={profileImageUrl}
+                setPhotoUrl={setProfileImageUrl}
+                open={openPhotoDialog}
+                setOpen={setOpenPhotoDialog}
+            />
             <FormField
                 type="text"
                 iconName="user"
@@ -162,20 +176,6 @@ function RegisterForm(props) {
                 setValue={setPasswordConfirm}
                 error={passwordConfirmError}
             />
-            
-            {/* 
-                TODO: wrap upload photo button with Box
-                TODO: add avatar preview - default avatar is just with first letter of your name - 
-                also use this as a button to the trigger for photo upload dialog 
-            */}
-            <PhotoUploadDialog 
-                type="hotdog" 
-                setPhoto={setProfileImage} 
-                photoUrl={profileImageUrl}
-                setPhotoUrl={setProfileImageUrl}
-            />
-            <Avatar src={profileImageUrl} style={{ height: '100px', width: '100px' }}/>
-
             <FormButtonWrapper>
                 <ProgressButton 
                     text="Register" 
@@ -187,7 +187,14 @@ function RegisterForm(props) {
                 open={registered}
                 setOpen={setRegistered}
                 message="Registration successful"
-                action={<LoginFormDialog snackbar />}
+                action={
+                    <>
+                        <Button variant="text" color="secondary" onClick={() => handleOpenLoginDialog()}>
+                            Login
+                        </Button>
+                        <LoginFormDialog open={openLoginDialog} setOpen={setOpenLoginDialog} />
+                    </>
+                }
             />
         </Form>
     );

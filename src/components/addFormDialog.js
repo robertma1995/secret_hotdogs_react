@@ -9,18 +9,19 @@ import Icon from '../utils/icons';
 import AddForm from './addForm';
 
 const useStyles = makeStyles((theme) => ({
-    // anchor fab to bottom right of screen
-    fab: {
-        position: 'fixed',
-        bottom: theme.spacing(4),
-        right: theme.spacing(4),
+    title: {
+        paddingLeft: '50px'
     },
+    dialogContent: {
+        paddingLeft: '5px!important',
+        paddingRight: '5px!important'
+    }
 }));
 
 // Dialog wrapper for AddForm used on home page (HomeHotdogGrid)
 // clicking on fab opens the dialog
-function AddFormDialog() {
-    const [open, setOpen] = useState(false);
+function AddFormDialog(props) {
+    const { open, setOpen } = props;
 
     function handleOpen() {
         setOpen(true);
@@ -32,43 +33,33 @@ function AddFormDialog() {
 
     const classes = useStyles();
     return (
-        <div>
-            <Fab
-                className={classes.fab} 
-                aria-label="Add a hotdog"
-                color="primary"
-                onClick={() => handleOpen()}
-            >
-                <Icon name="plus" color="secondary" />
-            </Fab>
-            <Dialog 
-                fullWidth
-                maxWidth="xs"
-                open={open}
-                onClose={() => handleClose()}
-            >
-                <Box display="flex" flexDirection="row" alignItems="center">
-                    <Box flexGrow={1}>
-                        <Typography 
-                            variant="h5" 
-                            align="center" 
-                            color="textSecondary"
-                            className={classes.title}
-                        > 
-                            Post a new hotdog
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <IconButton onClick={() => handleClose()}>
-                            <Icon name="close" />
-                        </IconButton>
-                    </Box>
+        <Dialog 
+            fullWidth
+            maxWidth="xs"
+            open={open}
+            onClose={() => handleClose()}
+        >
+            <Box display="flex" flexDirection="row" alignItems="center">
+                <Box flexGrow={1}>
+                    <Typography 
+                        variant="h5" 
+                        align="center" 
+                        color="textSecondary"
+                        className={classes.title}
+                    > 
+                        Post a new hotdog
+                    </Typography>
                 </Box>
-                <DialogContent>
-                    <AddForm />
-                </DialogContent>
-            </Dialog>
-        </div>
+                <Box>
+                    <IconButton onClick={() => handleClose()}>
+                        <Icon name="close" />
+                    </IconButton>
+                </Box>
+            </Box>
+            <DialogContent className={classes.dialogContent}>
+                <AddForm />
+            </DialogContent>
+        </Dialog>
     );
 }
 

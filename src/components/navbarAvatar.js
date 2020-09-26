@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Badge, Box, Button, IconButton, Typography, Menu } from '@material-ui/core';
 import Icon from '../utils/icons';
+import ImageButton from './imageButton';
 
 const useStyles = makeStyles((theme) => ({
     button: {
-        paddingLeft: 'unset',
-        paddingRight: 'unset'
+        paddingTop: '5px',
+        paddingBottom: '5px'
     },
     avatar: {
         opacity: 0.6,
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     Avatar with material ui menu - for now, only used in navbar, and also takes in handleLogout function
 */
 function NavbarAvatar(props) {
-    const { imageUrl, userName, handleLogout } = props;
+    const { avatarUrl, userName, handleLogout } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const classes = useStyles();
 
@@ -67,9 +68,13 @@ function NavbarAvatar(props) {
 
     return (
         <>
-            <Button onClick={(event) => handleOpen(event)} className={classes.button}>
-                <Avatar src={imageUrl} className={classes.avatar} />
-            </Button>
+            <ImageButton 
+                imageUrl={avatarUrl}
+                iconName="settings"
+                handleClick={handleOpen}
+                avatar
+                navbar
+            />
             <Menu
                 open={Boolean(anchorEl)}
                 onClose={() => handleClose()}
@@ -91,7 +96,7 @@ function NavbarAvatar(props) {
                                 </IconButton>
                             }
                         >
-                            <Avatar src={imageUrl} className={classes.menuAvatar} />
+                            <Avatar src={avatarUrl} className={classes.menuAvatar} />
                         </Badge>
                     </Box>
                     <Box className={classes.menuHeaderItem}>

@@ -6,7 +6,7 @@ import Form from './form';
 import FormField from './formField';
 import FormButtonWrapper from './formButtonWrapper';
 import ProgressButton from './progressButton';
-import FormFooter from './formFooter';
+import FormMessage from './formMessage';
 import RouterLink from './routerLink';
 // routing + utils
 import { withRouter } from 'react-router-dom';
@@ -100,7 +100,7 @@ function LoginForm(props) {
                     handleClick={handleLogin}
                 />
             </FormButtonWrapper>
-            <FormFooter>
+            <FormMessage color="textSecondary" variant="body2">
                 Don't have an account? &nbsp;
                 <RouterLink 
                     color="primary" 
@@ -110,7 +110,7 @@ function LoginForm(props) {
                 > 
                     Sign Up 
                 </RouterLink>
-            </FormFooter>
+            </FormMessage>
         </Form>
     );
 }

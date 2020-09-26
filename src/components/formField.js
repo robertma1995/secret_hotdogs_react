@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, IconButton, TextField } from '@material-ui/core';
-import icons from '../utils/icons';
 import Icon from '../utils/icons';
 
 /* 
@@ -20,7 +19,7 @@ function FormField(props) {
     }
 
     return (
-        <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center" p={0.5}>
+        <Box width="100%" display="flex" flexDirection="row" justifyContent="center" alignItems="center" p={0.5}>
             <Box mr={0.5}>
                 <Icon name={iconName} />
             </Box>
@@ -40,7 +39,7 @@ function FormField(props) {
                 { topping &&
                     <Box display="flex" flexDirection="column" justifyContent="center">
                         <IconButton onClick={() => toppingRemove(toppingKey)}>
-                            {icons["minus"]}
+                            <Icon name="minus" />
                         </IconButton>
                     </Box>
                 }

@@ -8,7 +8,7 @@ import FormButtonWrapper from './formButtonWrapper';
 import ProgressButton from './progressButton';
 import SuccessSnackbar from './successSnackbar';
 // utils
-import icons from '../utils/icons';
+import Icon from '../utils/icons';
 import errors from '../utils/errors';
 // context
 import { UserContext } from '../userContext';
@@ -213,7 +213,7 @@ function AddForm() {
                         variant="text"
                         color="primary"
                         disableElevation
-                        startIcon={icons["addTopping"]}
+                        startIcon={<Icon name="addTopping" />}
                         onClick={() => handleAddTopping()}
                     >
                         Add Topping
@@ -225,7 +225,7 @@ function AddForm() {
                         variant="text"
                         color="primary"
                         disableElevation
-                        startIcon={icons["addToppingDisabled"]}
+                        startIcon={<Icon name="addToppingDisabled" />}
                     >
                         Max. Toppings reached ({maxToppings})
                     </Button>

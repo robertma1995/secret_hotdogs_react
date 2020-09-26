@@ -8,22 +8,17 @@ import LoginForm from './loginForm';
 import Icon from '../utils/icons';
 
 const useStyles = makeStyles((theme) => ({
-    button: {
-        '&:hover': {
-            color: '#b9f6ca',
-        }
-    },
     title: {
         paddingLeft: '50px'
+    },
+    dialogContent: {
+        paddingLeft: '5px!important',
+        paddingRight: '5px!important'
     }
 }));
 
-/*
-    login dialog instead of a separate page, different hover color if used in snackbar
-*/
 function LoginFormDialog(props) {
-    const { snackbar } = props;
-    const [open, setOpen] = useState(false);
+    const { open, setOpen } = props;
     const classes = useStyles();
 
     function handleOpen() {
@@ -35,43 +30,33 @@ function LoginFormDialog(props) {
     }
 
     return (
-        <>
-            <Button 
-                variant="text" 
-                color="secondary" 
-                onClick={() => handleOpen()}
-                className={snackbar ? classes.button : undefined}
-            >
-                Login
-            </Button>
-            <Dialog 
-                fullWidth
-                maxWidth="xs"
-                open={open}
-                onClose={() => handleClose()}
-            >
-                <Box display="flex" flexDirection="row" alignItems="center">
-                    <Box flexGrow={1}>
-                        <Typography 
-                            variant="h5" 
-                            align="center" 
-                            color="textSecondary"
-                            className={classes.title}
-                        > 
-                            Login 
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <IconButton onClick={() => handleClose()}>
-                            <Icon name="close" />
-                        </IconButton>
-                    </Box>
+        <Dialog 
+            fullWidth
+            maxWidth="xs"
+            open={open}
+            onClose={() => handleClose()}
+        >
+            <Box display="flex" flexDirection="row" alignItems="center">
+                <Box flexGrow={1}>
+                    <Typography 
+                        variant="h5" 
+                        align="center" 
+                        color="textSecondary"
+                        className={classes.title}
+                    > 
+                        Login 
+                    </Typography>
                 </Box>
-                <DialogContent>
-                    <LoginForm closeDialog={handleClose} />
-                </DialogContent>
-            </Dialog>
-        </>
+                <Box>
+                    <IconButton onClick={() => handleClose()}>
+                        <Icon name="close" />
+                    </IconButton>
+                </Box>
+            </Box>
+            <DialogContent className={classes.dialogContent}>
+                <LoginForm closeDialog={handleClose} />
+            </DialogContent>
+        </Dialog>
     );
 }
 
