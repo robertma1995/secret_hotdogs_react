@@ -39,10 +39,19 @@ const getUserProfileImage = async (id) => {
         let url = await users.getProfileImage(id);
         return url;
     } catch(e) {
-        console.log("database: " + e + "\n ...no avatar detected, so set to default avatar");
+        console.log("database: no avatar detected, so set to default avatar (ignore annoying firebase error above)");
         return "";
     }
 }
+
+async function putUserProfileImage(id, profileImage) {
+    try {
+        let res = await users.putProfileImage(id, profileImage);
+        return true;
+    } catch(e) {
+        return false;
+    }
+} 
 
 // ========================================= HOTDOGS =========================================
 const getAllHotdogs = async () => {
@@ -86,6 +95,7 @@ export {
     register,
     getUser,
     getUserProfileImage,
+    putUserProfileImage,
     getAllHotdogs,
     getHotdogsCreatedBy,
     getHotdogsCreatedByQuery,

@@ -20,7 +20,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 // "none" = transparent with ShoppingCartIcon as a placeholder
-const iconsTest = {
+const icons = {
     user: AccountCircleIcon,
     email: EmailIcon,
     password: LockIcon,
@@ -45,7 +45,7 @@ const iconsTest = {
 
 function Icon(props) {
     const { name, size, color, className, style } = props;
-    const Icon = iconsTest[name];
+    const Icon = icons[name];
     var iconStyle = name === "none" ? { color: 'transparent' } : style;
     return <Icon fontSize={size} color={color} className={className} style={iconStyle} />;
 }

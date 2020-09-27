@@ -91,15 +91,12 @@ function RegisterForm(props) {
         const emailValid = isValid("email", email, setEmail, setEmailError);
         const passwordValid = isValid("password", password, setPassword, setPasswordError);
         const passwordConfirmValid = isValid("passwordConfirm", passwordConfirm, setPasswordConfirm, setPasswordConfirmError, password);
-        
-        // TODO: add validity check for photo upload - if no profileImage set, then 
-        // set profileImage as the default material ui avatar
-        // or, set default value in useState();
 
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
             setLoading(true);
-            // TODO: testing cropped image upload as blob
             (async () => {
+                // NOTE: if profileImage === null (i.e. user did not set a profile image),
+                // then database does not create a new image reference ("validity" check moved to backend)
                 var registerStatus = await DB.register(name, email, password, profileImage);
                 setLoading(false);
                 
@@ -108,7 +105,6 @@ function RegisterForm(props) {
                     // setEmailError("Email already in use, please type in a different email");
                     setEmailError(errors["email"]);
                 } else {
-                    // TODO: also clear the image input field
                     setName("");
                     setEmail("");
                     setPassword("");

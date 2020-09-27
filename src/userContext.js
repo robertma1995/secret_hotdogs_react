@@ -63,7 +63,7 @@ function UserContextProvider(props) {
             value={{ 
                 userId, setCurrentUserId, 
                 userName, setCurrentUserName, 
-                userProfileImageUrl
+                userProfileImageUrl, setUserProfileImageUrl
             }}
         >
             {props.children}

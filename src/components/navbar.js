@@ -16,7 +16,11 @@ import * as DB from '../database/wrapper';
 
 function NavBar(props) { 
     // TODO: remove userName placeholder after user profile images finished
-    const { userId, setCurrentUserId, userName, setCurrentUserName, userProfileImageUrl } = useContext(UserContext);
+    const { 
+        userId, setCurrentUserId, 
+        userName, setCurrentUserName, 
+        userProfileImageUrl, setUserProfileImageUrl, 
+    } = useContext(UserContext);
     const [openLoginDialog, setOpenLoginDialog] = useState(false);
 
     // unset context vars and redirect to login page
@@ -44,8 +48,10 @@ function NavBar(props) {
                     <Box>
                         { userId && 
                             <NavbarAvatar 
-                                avatarUrl={userProfileImageUrl}
+                                userId={userId}
                                 userName={userName}
+                                profileImageUrl={userProfileImageUrl}
+                                setProfileImageUrl={setUserProfileImageUrl}
                                 handleLogout={handleLogout} 
                             />
                         }

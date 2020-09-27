@@ -61,7 +61,7 @@ function ImageButton(props) {
         <IconButton 
             onMouseEnter={() => handleMouseEnter()}
             onMouseLeave={() => handleMouseLeave()} 
-            onClick={navbar ? (event) => handleClick(event) : () => handleClick()} 
+            onClick={(event) => handleClick(event)} 
             className={
                 `${classes.button} ` +
                 (navbar ? `${classes.navButton}` : undefined)

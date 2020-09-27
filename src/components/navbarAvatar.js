@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Badge, Box, Button, IconButton, Typography, Menu } from '@material-ui/core';
 import Icon from '../utils/icons';
 import ImageButton from './imageButton';
+import PhotoUploadDialog from './photoUploadDialog';
+import * as DB from '../database/wrapper';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -54,9 +56,26 @@ const useStyles = makeStyles((theme) => ({
     Avatar with material ui menu - for now, only used in navbar, and also takes in handleLogout function
 */
 function NavbarAvatar(props) {
-    const { avatarUrl, userName, handleLogout } = props;
+    const { userId, userName, profileImageUrl, setProfileImageUrl, handleLogout } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const classes = useStyles();
+    // profile image/avatar
+    // TODO: for now, placeholder initial value instead of "null" 
+    // since photouploaddialog reset avatar function sets profileImage to null
+    // and we want to update profile picture in backend when profileImage changes (useeffect)
+    const [profileImage, setProfileImage] = useState("initial");
+    const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
+
+    // TODO: backend for updating profile picture
+    useEffect(() => {
+        if (profileImage !== "initial") {
+            console.log("SETTING PROFILE IMAGE IN BACKEND");
+            (async () => {
+                let res = await DB.putUserProfileImage(userId, profileImage);
+                console.log(res);
+            })();
+        }
+    }, [profileImage]);
 
     function handleOpen(event) {
         setAnchorEl(event.currentTarget);
@@ -66,10 +85,14 @@ function NavbarAvatar(props) {
         setAnchorEl(null);
     }
 
+    function handleOpenPhotoDialog() {
+        setOpenPhotoDialog(true);
+    }
+
     return (
         <>
             <ImageButton 
-                imageUrl={avatarUrl}
+                imageUrl={profileImageUrl}
                 iconName="settings"
                 handleClick={handleOpen}
                 avatar
@@ -91,12 +114,22 @@ function NavbarAvatar(props) {
                             overlap="circle"
                             anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                             badgeContent={
-                                <IconButton className={classes.menuAvatarBadge}>
-                                    <Icon name="camera" size="small" />
-                                </IconButton>
+                                <>
+                                    <IconButton onClick={() => handleOpenPhotoDialog()} className={classes.menuAvatarBadge}>
+                                        <Icon name="camera" size="small" />
+                                    </IconButton>
+                                    <PhotoUploadDialog 
+                                        photoType="profile" 
+                                        setPhoto={setProfileImage} 
+                                        photoUrl={profileImageUrl}
+                                        setPhotoUrl={setProfileImageUrl}
+                                        open={openPhotoDialog}
+                                        setOpen={setOpenPhotoDialog}
+                                    />
+                                </>
                             }
                         >
-                            <Avatar src={avatarUrl} className={classes.menuAvatar} />
+                            <Avatar src={profileImageUrl} className={classes.menuAvatar} />
                         </Badge>
                     </Box>
                     <Box className={classes.menuHeaderItem}>

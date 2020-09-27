@@ -7,9 +7,11 @@ import { firebase } from './index';
 */
 const login = async (email, password) => {
     return new Promise((resolve, reject) => {
-        firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(credential => resolve(credential.user.uid))
-        .catch(err => reject(err));
+        firebase.auth().signInWithEmailAndPassword(email, password).then(credential => 
+            resolve(credential.user.uid)
+        ).catch(err => 
+            reject(err)
+        );
     });
 }
 
@@ -24,8 +26,9 @@ const register = async (name, email, password, profileImage) => {
             const userId = credential.user.uid;
             firebase.firestore().collection('users').doc(userId).set({
                 name: name
-            })
-            .catch(err => reject(err));
+            }).catch(err => 
+                reject(err)
+            );
 
             // if user set profile image on register, create reference in firebase storage
             if (profileImage) {
@@ -33,13 +36,15 @@ const register = async (name, email, password, profileImage) => {
                 storageRef.child("users/" + userId + ".jpg").put(profileImage).then(() => {
                     console.log("Uploaded a file!");
                     resolve(userId);
-                })
-                .catch(err => reject(err));
+                }).catch(err => 
+                    reject(err)
+                );
             } else {
                 resolve(userId);
             }
-        })
-        .catch(err => reject(err));
+        }).catch(err => 
+            reject(err)
+        );
     });
 }
 
@@ -48,9 +53,11 @@ const register = async (name, email, password, profileImage) => {
 */
 const get = async (id) => {
     return new Promise((resolve, reject) => {
-        firebase.firestore().collection('users').doc(id).get()
-        .then(snapshot => resolve(snapshot.data()))
-        .catch(err => reject(err));
+        firebase.firestore().collection('users').doc(id).get().then(snapshot => 
+            resolve(snapshot.data())
+        ).catch(err => 
+            reject(err)
+        );
     });
 }
 
@@ -61,10 +68,35 @@ const get = async (id) => {
 const getProfileImage = async (id) => {
     return new Promise((resolve, reject) => {
         var storageRef = firebase.storage().ref();
-        storageRef.child("users/" + id + ".jpg").getDownloadURL()
-        .then(url => resolve(url))
-        .catch(err => reject(err));
+        storageRef.child("users/" + id + ".jpg").getDownloadURL().then(url => 
+            resolve(url)
+        ).catch(err => {
+            reject(err);
+        });
     });
+}
+
+/* 
+    deletes existing profile image blob record if no profile image, updates image otherwise  
+*/
+async function putProfileImage(id, profileImage) {
+    return new Promise((resolve, reject) => {
+        var storageRef = firebase.storage().ref();
+        var imageRef = storageRef.child("users/" + id + ".jpg");
+        if (profileImage) {
+            imageRef.put(profileImage).then(() => {
+                resolve(true);
+            }).catch(err => 
+                reject(err)
+            );
+        } else {
+            imageRef.delete().then(() => {
+                resolve(true);
+            }).catch(err => 
+                reject(err)
+            );
+        }
+    });   
 }
 
 export {
@@ -72,4 +104,5 @@ export {
     register,
     get,
     getProfileImage,
+    putProfileImage,
 }

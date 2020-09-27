@@ -134,6 +134,7 @@ function PhotoUploadDialog(props) {
         resets photo/avatar for parent to default
     */
     function handleResetPhoto() {
+        console.log("RESET PHOTO");
         setPhoto(null);
         setPhotoUrl("");
     }
