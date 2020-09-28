@@ -12,29 +12,24 @@ const useStyles = makeStyles((theme) => ({
     dialogContent: {
         height: '700px'
     },
-    // main grid + column styling
-    grid: {
-        height: '100%',
-        width: '100%'
-    },
-    // only want padding on left half of dialog
-    gridLeft: {
-        padding: '10px',
-        height: '100%'
-    },
-    gridRight: {
-        backgroundColor: '#f5f5f5',
-        height: '100%'
+    // restrict size of left half and add inner padding
+    card: {
+        width: '370px',
+        padding: '10px'
     },
     // remove extra padding from bottom of mui's CardContent
-    image: {
-        maxHeight: '100%',
-        maxWidth: '100%',
-    },
     cardContent: {
         '&:last-child': {
             paddingBottom: 'unset'
         },
+    },
+    // add background to right half
+    paper: {
+        backgroundColor: '#f5f5f5',
+        height: '100%'
+    },
+    grid: {
+        height: '100%',
     },
     // description + comment section same padding as mui's CardHeader
     description: {
@@ -75,15 +70,15 @@ function HotdogDialog(props) {
             </Button>
             <Dialog 
                 fullWidth
-                maxWidth="md"
+                maxWidth="lg"
                 open={open}
                 onClose={() => handleClose()}
             >
                 <DialogContent className={classes.dialogContent}>
-                    <Grid container alignItems="center" className={classes.grid}>
-                        <Grid item xs={5} className={classes.gridLeft}>
-                            <Card elevation={0}>
-                                <CardMedia image="https://www.svgrepo.com/show/133687/hot-dog.svg"/>
+                    <Box display="flex" flexDirection="row" height="100%" width="100%">
+                        <Box height="100%" style={{ width: '390px' }}>
+                            <Card elevation={0} className={classes.card}>
+                                <CardMedia image="https://www.svgrepo.com/show/133687/hot-dog.svg" />
                                 <CardContent className={classes.cardContent}>
                                     <HotdogIngredientsList 
                                         sausage={ingredients["sausage"]}
@@ -93,9 +88,9 @@ function HotdogDialog(props) {
                                     />
                                 </CardContent>
                             </Card>
-                        </Grid>
-                        <Grid item xs={7} className={classes.gridRight}>
-                            <Paper square elevation={0} className={classes.gridRight}>
+                        </Box>
+                        <Box height="100%" flexGrow={1}>
+                            <Paper square elevation={0} className={classes.paper}>
                                 <Grid container direction="column" className={classes.grid}>
                                     <Grid item>
                                         <Box display="flex" flexDirection="row" width="100%">
@@ -125,8 +120,8 @@ function HotdogDialog(props) {
                                     </Grid>
                                 </Grid>
                             </Paper>
-                        </Grid>
-                    </Grid>
+                        </Box>
+                    </Box>
                 </DialogContent>
             </Dialog>
         </>

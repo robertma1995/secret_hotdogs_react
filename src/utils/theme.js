@@ -88,6 +88,9 @@ const theme = {
             },
             paperWidthMd: {
                 maxWidth: '750px'
+            },
+            paperWidthLg: {
+                maxWidth: '950px'
             }
         },
         // unset excessive padding in dialog content
