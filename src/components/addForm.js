@@ -5,6 +5,9 @@ import Button from '@material-ui/core/Button';
 import Form from './form';
 import FormField from './formField';
 import FormButtonWrapper from './formButtonWrapper';
+import FormMessage from './formMessage';
+import ImageButton from './imageButton';
+import PhotoUploadDialog from './photoUploadDialog';
 import ProgressButton from './progressButton';
 import SuccessSnackbar from './successSnackbar';
 // utils
@@ -60,7 +63,6 @@ function AddForm() {
     const [title, setTitle] = useState("");
     const [titleError, setTitleError] = useState(" ");
     const [description, setDescription] = useState("");
-    // TODO: for now, no rules on description input
     const [descriptionError, setDescriptionError] = useState(" ");
     const [sausage, setSausage] = useState("");
     const [sausageError, setSausageError] = useState(" ");
@@ -68,21 +70,32 @@ function AddForm() {
     const [sauceError, setSauceError] = useState(" ");
     // TODO: if need maxToppings in another component, create new "constants" file under utils
     const maxToppings = 15;
+    // TODO: hotdog image
+    const [hotdogImage, setHotdogImage] = useState(null);
+    const [hotdogImageUrl, setHotdogImageUrl] = useState("https://www.svgrepo.com/show/133687/hot-dog.svg");
+    const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
+    function handleOpenPhotoDialog() {
+        setOpenPhotoDialog(true);
+    }
 
     // separate topping/errors Maps, since not always updating error while updating topping (i.e. textfield -> onchange)
     const [toppings, setToppings] = useState(new Map());
+    const [toppingErrors, setToppingErrors] = useState(new Map());
+    
     function updateToppings(key, value) {
         setToppings(new Map(toppings.set(key, value)));
     }
+    
     function removeTopping(key) {
         var t = new Map(toppings);
         t.delete(key);
         setToppings(t);
     }
-    const [toppingErrors, setToppingErrors] = useState(new Map());
+
     function updateToppingErrors(key, value) {
         setToppingErrors(new Map(toppingErrors.set(key, value)));
     }
+
     function removeToppingError(key) {
         var e = new Map(toppingErrors);
         e.delete(key);
@@ -104,7 +117,7 @@ function AddForm() {
                 toppingsValid = false;
             }
         }
-
+        
         // check errors with local vars, since setError functions are asynchronous
         if (titleValid && sausageValid && sauceValid && toppingsValid) {
             setLoading(true);
@@ -125,7 +138,7 @@ function AddForm() {
                         toppings: toppingsArray
                     }
                 }
-                const addStatus = await DB.addHotdog(hotdog);
+                const addStatus = await DB.addHotdog(hotdog, hotdogImage);
                 setLoading(false);
 
                 // if add hotdog succeeds, reset all fields and give user option to go back to homepage 
@@ -138,6 +151,8 @@ function AddForm() {
                     setSausage("");
                     setSauce("");
                     setToppings(new Map());
+                    setHotdogImage(null);
+                    setHotdogImageUrl("https://www.svgrepo.com/show/133687/hot-dog.svg");
                     setAdded(true);
                 }
             })();
@@ -160,6 +175,26 @@ function AddForm() {
 
     return (
         <Form>
+             <FormMessage variant="body2" color="textSecondary">
+                { !hotdogImage && "Select a new picture by clicking the hotdog below" }
+                { hotdogImage && "Your hotdog picture" }
+            </FormMessage>
+            <FormButtonWrapper style={{ borderBottom: '1px solid #cbb09c' }}>
+                <ImageButton
+                    imageUrl={hotdogImageUrl}
+                    iconName="camera"
+                    iconSize="large"
+                    handleClick={handleOpenPhotoDialog}
+                />
+            </FormButtonWrapper>
+            <PhotoUploadDialog 
+                photoType="hotdog" 
+                setPhoto={setHotdogImage} 
+                photoUrl={hotdogImageUrl}
+                setPhotoUrl={setHotdogImageUrl}
+                open={openPhotoDialog}
+                setOpen={setOpenPhotoDialog}
+            />
             <FormField
                 type="text"
                 iconName="hotdogTitle"

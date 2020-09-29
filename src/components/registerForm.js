@@ -133,12 +133,12 @@ function RegisterForm(props) {
                 />
             </FormButtonWrapper>
             <PhotoUploadDialog 
-                photoType="profile" 
                 setPhoto={setProfileImage} 
                 photoUrl={profileImageUrl}
                 setPhotoUrl={setProfileImageUrl}
                 open={openPhotoDialog}
                 setOpen={setOpenPhotoDialog}
+                profile
             />
             <FormField
                 type="text"

@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     },
     // line dividing header and rest of menu - copy-pasted from mui's ListItem divider
     menuHeader: {
+        outline: 'none',
         padding: '5px',
         borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
         backgroundClip: 'padding-box',
@@ -119,12 +120,12 @@ function NavbarAvatar(props) {
                                         <Icon name="camera" size="small" />
                                     </IconButton>
                                     <PhotoUploadDialog 
-                                        photoType="profile" 
                                         setPhoto={setProfileImage} 
                                         photoUrl={profileImageUrl}
                                         setPhotoUrl={setProfileImageUrl}
                                         open={openPhotoDialog}
                                         setOpen={setOpenPhotoDialog}
+                                        profile
                                     />
                                 </>
                             }

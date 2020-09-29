@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     Also saves crop box data in state so user can go back even if the dialog closes
 */
 function PhotoUploadDialog(props) {
-    const { photoType, setPhoto, photoUrl, setPhotoUrl, open, setOpen } = props;
+    const { setPhoto, photoUrl, setPhotoUrl, open, setOpen, profile } = props;
     const [uploadError, setUploadError] = useState("");
     const [imageName, setImageName] = useState("");
     const [cropperImage, setCropperImage] = useState(null);
@@ -131,12 +131,13 @@ function PhotoUploadDialog(props) {
     }
 
     /* 
-        resets photo/avatar for parent to default
+        clicking preview button resets photo/avatar for parent to default
+        if photo upload dialog used for profile picture, then set to default material-ui avatar
     */
     function handleResetPhoto() {
         console.log("RESET PHOTO");
         setPhoto(null);
-        setPhotoUrl("");
+        setPhotoUrl(profile ? "" : "https://www.svgrepo.com/show/133687/hot-dog.svg");
     }
 
     function handleResetCropper() {
@@ -162,7 +163,7 @@ function PhotoUploadDialog(props) {
             <Box display="flex" flexDirection="row" alignItems="center">
                 <Box flexGrow={1}>
                     <Typography variant="h6" color="textSecondary" className={classes.title}>
-                        Select new {photoType} photo
+                        Select new {profile ? "profile" : "hotdog"} photo
                     </Typography>
                 </Box>
                 <Box>
@@ -196,7 +197,7 @@ function PhotoUploadDialog(props) {
                             iconName="delete"
                             iconSize="large"
                             handleClick={handleResetPhoto}
-                            avatar
+                            avatar={profile}
                         />
                     </Box>
                     { !cropperImage && 
@@ -217,7 +218,7 @@ function PhotoUploadDialog(props) {
                                         >
                                             <Typography align="center" color="textSecondary" variant="h5">
                                                 { !isDragActive && uploadError.trim() === "" && 
-                                                    `Drag a new ${photoType} photo here` 
+                                                    `Drag a new ${profile ? "profile" : "hotdog"} photo here` 
                                                 }
                                                 { isDragAccept && uploadError.trim() === "" && 
                                                     "Drop photo to upload" 
@@ -257,7 +258,7 @@ function PhotoUploadDialog(props) {
                                 </Typography>
                                 <Typography variant="caption"> 
                                     To crop this image, drag the region below and then click 
-                                    "Set {photoType} photo". 
+                                    "Set {profile ? "profile" : "hotdog"} photo". 
                                     To upload a new photo, click "Reset photo".
                                 </Typography>
                             </Box>
@@ -293,7 +294,7 @@ function PhotoUploadDialog(props) {
                     disabled={!cropperImage}
                     onClick={() => handleSetPhoto()}
                 > 
-                    Set {photoType} photo
+                    Set {profile ? "profile" : "hotdog"} photo
                 </Button>
                 <Button 
                     variant="contained" 

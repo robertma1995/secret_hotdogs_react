@@ -39,7 +39,7 @@ const getUserProfileImage = async (id) => {
         let url = await users.getProfileImage(id);
         return url;
     } catch(e) {
-        console.log("database: no avatar detected, so set to default avatar (ignore annoying firebase error above)");
+        // console.log("database: no avatar detected, so set to default avatar (ignore annoying firebase error above)");
         return "";
     }
 }
@@ -64,6 +64,16 @@ const getAllHotdogs = async () => {
     }
 }
 
+async function getHotdogImage(id) {
+    try {
+        let url = await hotdogs.getImage(id);
+        return url;
+    } catch(e) {
+        console.log("no hotdog image detected, set url to empty string");
+        return ""
+    } 
+}
+
 const getHotdogsCreatedBy = async (id) => {
     try {
         let res = await hotdogs.getCreatedBy(id);
@@ -79,13 +89,14 @@ const getHotdogsCreatedByQuery = async (id) => {
     return query;
 }
 
-const addHotdog = async (hotdog) => {
+
+async function addHotdog(hotdog, hotdogImage) {
     try {
-        let hotdogId = await hotdogs.add(hotdog);
-        // console.log("database: Hotdog with id " + hotdogId + " successfully created");
+        let hotdogId = await hotdogs.add(hotdog, hotdogImage);
+        console.log("database: Hotdog with id " + hotdogId + " successfully created");
         return true;
     } catch(e) {
-        // console.log("database: " + e);
+        console.log(e);
         return false;
     }
 }
@@ -97,6 +108,7 @@ export {
     getUserProfileImage,
     putUserProfileImage,
     getAllHotdogs,
+    getHotdogImage,
     getHotdogsCreatedBy,
     getHotdogsCreatedByQuery,
     addHotdog,

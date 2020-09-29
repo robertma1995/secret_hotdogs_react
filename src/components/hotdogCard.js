@@ -16,7 +16,11 @@ import * as DB from '../database/wrapper';
 */
 const HotdogCard = React.memo((props) => {
     // TODO: keep id, since will need for liking later on
-    const { id, creatorId, creatorName, creatorProfileImageUrl, description, ingredients, title, ts } = props;
+    const { 
+        id, 
+        creatorId, creatorName, creatorProfileImageUrl, 
+        description, hotdogImageUrl, ingredients, title, ts 
+    } = props;
     // TODO: keep below console log to check for useless rendering
     console.log("Hotdog " + id + " rendered");
 
@@ -32,7 +36,7 @@ const HotdogCard = React.memo((props) => {
                 title={title + " by " + creatorName}
                 subheader={subheader}
             />
-            <CardMedia image="https://www.svgrepo.com/show/133687/hot-dog.svg"/>
+            <CardMedia image={hotdogImageUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} />
             <CardContent>
                 <HotdogIngredientsList 
                     sausage={ingredients["sausage"]}

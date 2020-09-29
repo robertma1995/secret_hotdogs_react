@@ -12,13 +12,15 @@ import { UserContext } from '../userContext';
 import * as DB from '../database/wrapper';
 
 /*
-    given array of hotdogs, gets all creator's profile image urls (in parallel)
+    given array of hotdogs, gets hotdog images and creator's profile image urls (in parallel)
 */
-async function getProfileImages(hotdogs) {
+async function getImages(hotdogs) {
     var hd = [...hotdogs];
     await Promise.all(hd.map(async (formattedRow) => {
-        const url = await DB.getUserProfileImage(formattedRow.creatorId);
-        formattedRow["creatorProfileImageUrl"] = url;
+        const hotdogImageUrl = await DB.getHotdogImage(formattedRow.id);
+        const profileImageurl = await DB.getUserProfileImage(formattedRow.creatorId);
+        formattedRow["hotdogImageUrl"] = hotdogImageUrl;
+        formattedRow["creatorProfileImageUrl"] = profileImageurl;
     }));
     return hd;
 }
@@ -63,8 +65,10 @@ function HomeHotdogGrid() {
                     if (change.type === "removed") setChangeType(change.type);
                 }
 
-                // get all creator profile images (returns when all promises resolved)            
-                getProfileImages(changes)
+                console.log(changes);
+
+                // get all hotdog images and creator profile images (returns when all promises resolved)            
+                getImages(changes)
                 .then(res => {
                     // console.log(res);
                     // sort only on first render
@@ -162,6 +166,7 @@ function HomeHotdogGrid() {
                             creatorName={hotdog.creatorName}
                             creatorProfileImageUrl={hotdog.creatorProfileImageUrl}
                             description={hotdog.description}
+                            hotdogImageUrl={hotdog.hotdogImageUrl}
                             ingredients={hotdog.ingredients}
                             title={hotdog.title}
                             ts={hotdog.ts}
