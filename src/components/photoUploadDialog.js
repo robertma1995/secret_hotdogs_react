@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 /*
     Dialog that allows a photo to be uploaded and cropped,
     Sets parent's photo state variable as the cropped image upon pressing the "set" button
-    Also converts photo into a dataURL so it can be displayed in the preview
+    Converts cropped photo into a dataURL to be used in "img", "Avatar", etc. 
     Also saves crop box data in state so user can go back even if the dialog closes
 */
 function PhotoUploadDialog(props) {

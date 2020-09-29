@@ -67,6 +67,11 @@ function NavbarAvatar(props) {
     const [profileImage, setProfileImage] = useState("initial");
     const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
 
+    // TODO: the "initial" method breaks: if user has empty avatar, presses reset on photo upload dialog,
+    // then calls useEffect anyway - wastes a database call
+    // instead, use a new state variable for profileImageUrl
+    // const [imageUrl, setImageUrl] = useState(profileImageUrl);
+
     // TODO: backend for updating profile picture
     useEffect(() => {
         if (profileImage !== "initial") {
