@@ -46,12 +46,12 @@ const getUserProfileImage = async (id) => {
 
 async function putUserProfileImage(id, profileImage) {
     try {
-        let res = await users.putProfileImage(id, profileImage);
-        return true;
+        let url = await users.putProfileImage(id, profileImage);
+        return url;
     } catch(e) {
         return false;
     }
-} 
+}
 
 // ========================================= HOTDOGS =========================================
 const getAllHotdogs = async () => {

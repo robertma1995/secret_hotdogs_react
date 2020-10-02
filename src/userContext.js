@@ -29,24 +29,26 @@ function UserContextProvider(props) {
     useEffect(() => {
         const id = sessionStorage.getItem('userId');
         const name = sessionStorage.getItem('userName');
-        const url = sessionStorage.getItem('userProfileImageUrl');
+        // const url = sessionStorage.getItem('userProfileImageUrl');
         setUserId(id);
         setUserName(name);
-        setUserProfileImageUrl(url);
+        // setUserProfileImageUrl(url);
     }, []);
 
     // save context to session whenever variable changes, remove if set to null
     useEffect(() => {
         if (userId === null) {
             sessionStorage.removeItem('userId');
-            sessionStorage.removeItem('userProfileImageUrl');
+            // sessionStorage.removeItem('userProfileImageUrl');
         } else {
             sessionStorage.setItem('userId', userId);
+            /* 
             (async () => {
                 const url = await DB.getUserProfileImage(userId);
                 setUserProfileImageUrl(url);
                 sessionStorage.setItem('userProfileImageUrl', url);
             })();
+            */
         }
     }, [userId]);
 
@@ -63,7 +65,7 @@ function UserContextProvider(props) {
             value={{ 
                 userId, setCurrentUserId, 
                 userName, setCurrentUserName, 
-                userProfileImageUrl, setUserProfileImageUrl
+                // userProfileImageUrl, setUserProfileImageUrl
             }}
         >
             {props.children}

@@ -65,8 +65,6 @@ function HomeHotdogGrid() {
                     if (change.type === "removed") setChangeType(change.type);
                 }
 
-                console.log(changes);
-
                 // get all hotdog images and creator profile images (returns when all promises resolved)            
                 getImages(changes)
                 .then(res => {

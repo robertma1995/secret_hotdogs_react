@@ -71,6 +71,7 @@ async function getProfileImage(id) {
 
 /* 
     deletes existing profile image blob record if no profile image, updates image otherwise  
+    resolves with storage url if profileImage defined, otherwise resolves to empty string
 */
 async function putProfileImage(id, profileImage) {
     return new Promise((resolve, reject) => {
@@ -78,7 +79,9 @@ async function putProfileImage(id, profileImage) {
         var imageRef = storageRef.child("users/" + id + ".jpg");
         var action = profileImage ? imageRef.put(profileImage) : imageRef.delete();
         action.then(() => {
-            resolve(true);
+            return profileImage ? imageRef.getDownloadURL() : "";
+        }).then(url => {
+            resolve(url);
         }).catch(err => {
             reject(err);
         });

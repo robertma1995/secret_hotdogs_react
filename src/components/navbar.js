@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // material ui
 import { AppBar, Box, Button, Toolbar, Typography, } from '@material-ui/core';
 // my components
@@ -19,9 +19,22 @@ function NavBar(props) {
     const { 
         userId, setCurrentUserId, 
         userName, setCurrentUserName, 
-        userProfileImageUrl, setUserProfileImageUrl, 
+        // userProfileImageUrl, setUserProfileImageUrl, 
     } = useContext(UserContext);
     const [openLoginDialog, setOpenLoginDialog] = useState(false);
+    const [profileImageUrl, setProfileImageUrl] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (userId !== null) {
+            (async () => {
+                console.log("RETRIEVING USER PROFILE IMAGE FOR " + userId);
+                const url = await DB.getUserProfileImage(userId);
+                setProfileImageUrl(url);
+                setLoading(false);
+            })();
+        }
+    }, [userId]);
 
     // unset context vars and redirect to login page
     function handleLogout() {
@@ -46,12 +59,12 @@ function NavBar(props) {
                         </Typography>
                     </Box>
                     <Box>
-                        { userId && 
+                        { userId && !loading && 
                             <NavbarAvatar 
                                 userId={userId}
                                 userName={userName}
-                                profileImageUrl={userProfileImageUrl}
-                                setProfileImageUrl={setUserProfileImageUrl}
+                                profileImageUrl={profileImageUrl}
+                                setProfileImageUrl={setProfileImageUrl}
                                 handleLogout={handleLogout} 
                             />
                         }

@@ -123,9 +123,13 @@ function PhotoUploadDialog(props) {
             maxWidth: max,
         }).toBlob((blob) => {
             setPhoto(blob);
+            // TODO: only set photo url as raw file if setPhotoUrl defined - i.e. only do this on the register page
+            // navbar avatar sets its url to the firebase url as opposed to the raw file.reader url
+            // if (setPhotoUrl) {
             let reader = new FileReader();
             reader.readAsDataURL(blob);
             reader.onload = () => setPhotoUrl(reader.result);
+            // }
         }, 'image/jpeg');
         setCropperData(cropper.getData());
     }
@@ -137,7 +141,9 @@ function PhotoUploadDialog(props) {
     function handleResetPhoto() {
         console.log("RESET PHOTO");
         setPhoto(null);
+        // if (setPhotoUrl) {
         setPhotoUrl(profile ? "" : "https://www.svgrepo.com/show/133687/hot-dog.svg");
+        // }
     }
 
     function handleResetCropper() {
