@@ -41,6 +41,7 @@ const icons = {
     logout: ExitToAppIcon,
     delete: DeleteIcon,
     settings: SettingsIcon,
+    edit: EditIcon,
 }
 
 function Icon(props) {

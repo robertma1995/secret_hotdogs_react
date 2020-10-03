@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 // my components
 import Icon from '../utils/icons';
-import HotdogDialog from './hotdogDialog';
+import HotdogDetailsDialog from './hotdogDetailsDialog';
 import HotdogIngredientsList from './hotdogIngredientsList';
 
 /*
@@ -45,9 +45,11 @@ const HotdogCard = React.memo((props) => {
                 <IconButton aria-label="like">
                     <Icon name="like" />
                 </IconButton>
-                <HotdogDialog 
+                <HotdogDetailsDialog 
                     creatorName={creatorName}
+                    creatorProfileImageUrl={creatorProfileImageUrl}
                     description={description}
+                    hotdogImageUrl={hotdogImageUrl}
                     ingredients={ingredients}
                     title={title}
                     subheader={subheader}

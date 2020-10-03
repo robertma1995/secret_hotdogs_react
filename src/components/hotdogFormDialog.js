@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import Icon from '../utils/icons';
 // my components
-import AddForm from './addForm';
+import HotdogForm from './hotdogForm';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -18,9 +18,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-// Dialog wrapper for AddForm used on home page (HomeHotdogGrid)
-// clicking on fab opens the dialog
-function AddFormDialog(props) {
+// Dialog wrapper for HotdogForm used on home page (HomeHotdogGrid)
+function HotdogFormDialog(props) {
     const { open, setOpen } = props;
     const classes = useStyles();
 
@@ -53,10 +52,10 @@ function AddFormDialog(props) {
                 </Box>
             </Box>
             <DialogContent className={classes.dialogContent}>
-                <AddForm />
+                <HotdogForm />
             </DialogContent>
         </Dialog>
     );
 }
 
-export default AddFormDialog;
+export default HotdogFormDialog;

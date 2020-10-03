@@ -4,6 +4,10 @@ import {
     Card, CardHeader, CardContent, CardMedia,
     Dialog, DialogContent 
 } from '@material-ui/core';
+
+// TODO: edit hotdog
+import ButtonBase from '@material-ui/core/ButtonBase';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Icon from '../utils/icons';
 import HotdogIngredientsList from './hotdogIngredientsList';
@@ -12,10 +16,36 @@ const useStyles = makeStyles((theme) => ({
     dialogContent: {
         height: '700px'
     },
-    // restrict size of left half and add inner padding
+    // card darkens and shows icon on hover (i.e. same as imagebutton, but with a card)
+    buttonBase: {
+        width: '100%', 
+        height: '100%',
+        color: '#cbb09c'
+    },
+    cardWrapper : {
+        position: 'relative',
+        padding: 'unset',
+        width: '100%', 
+        height: '100%'
+    },
+    cardIcon: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: '-18px',
+        marginLeft: '-18px',
+        '&:hover': {
+            cursor: 'pointer',    
+        }
+    },
+    hover: {
+        cursor: 'pointer',
+        '-webkit-filter': 'brightness(35%)',
+    },
+    // restrict size of left half
     card: {
-        width: '370px',
-        padding: '10px'
+        width: '380px', 
+        height: '100%'
     },
     // remove extra padding from bottom of mui's CardContent
     cardContent: {
@@ -46,10 +76,33 @@ const useStyles = makeStyles((theme) => ({
 /* 
     TODO: consider using only one dialog on home that takes in hotdog id as input
 */
-function HotdogDialog(props) {
-    const { creatorName, description, ingredients, title, subheader } = props;
+function HotdogDetailsDialog(props) {
+    const { 
+        creatorName, creatorProfileImageUrl,
+        description, hotdogImageUrl, ingredients, title, subheader 
+    } = props;
+    const [openForm, setOpenForm] = useState(false);
+    const [hover, setHover] = useState(false);
     const [open, setOpen] = useState(false);
     const classes = useStyles();
+
+    function handleOpenForm() {
+        console.log("OPEN EDIT FORM");
+        setOpenForm(true);
+    }
+
+    function handleCloseForm() {
+        console.log("CLOSE EDIT FORM");
+        setOpenForm(false);    
+    }
+
+    function handleMouseEnter() {
+        setHover(true);
+    }
+
+    function handleMouseLeave() {
+        setHover(false);
+    }
 
     function handleOpen() {
         setOpen(true);
@@ -59,11 +112,13 @@ function HotdogDialog(props) {
         setOpen(false);
     }
 
+
     return (
         <>
             <Button 
                 variant="text" 
-                color="primary" 
+                color="primary"
+                disableRipple 
                 onClick={() => handleOpen()}
             >
                 View details
@@ -76,18 +131,37 @@ function HotdogDialog(props) {
             >
                 <DialogContent className={classes.dialogContent}>
                     <Box display="flex" flexDirection="row" height="100%" width="100%">
-                        <Box height="100%" style={{ width: '390px' }}>
-                            <Card elevation={0} className={classes.card}>
-                                <CardMedia image="https://www.svgrepo.com/show/133687/hot-dog.svg" />
-                                <CardContent className={classes.cardContent}>
-                                    <HotdogIngredientsList 
-                                        sausage={ingredients["sausage"]}
-                                        sauce={ingredients["sauce"]}
-                                        toppings={ingredients["toppings"]}
-                                        dialog
-                                    />
-                                </CardContent>
-                            </Card>
+                        <Box height="100%">
+                            <ButtonBase className={classes.buttonBase}>   
+                                <Box
+                                    onMouseEnter={() => handleMouseEnter()}
+                                    onMouseLeave={() => handleMouseLeave()} 
+                                    onClick={() => handleOpenForm()}
+                                    className={classes.cardWrapper}
+                                >
+                                    <Card 
+                                        elevation={0}
+                                        square 
+                                        className={
+                                            `${classes.card} ` +
+                                            (hover ? `${classes.hover}` : undefined)
+                                        }
+                                    >
+                                        <CardMedia image={hotdogImageUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} />
+                                        <CardContent className={classes.cardContent}>
+                                            <HotdogIngredientsList 
+                                                sausage={ingredients["sausage"]}
+                                                sauce={ingredients["sauce"]}
+                                                toppings={ingredients["toppings"]}
+                                                dialog
+                                            />
+                                        </CardContent>
+                                    </Card>
+                                    { hover &&
+                                        <Icon color="primary" name="edit" size="large" className={classes.cardIcon} /> 
+                                    }
+                                </Box>
+                            </ButtonBase>
                         </Box>
                         <Box height="100%" flexGrow={1}>
                             <Paper square elevation={0} className={classes.paper}>
@@ -96,11 +170,7 @@ function HotdogDialog(props) {
                                         <Box display="flex" flexDirection="row" width="100%">
                                             <Box flexGrow={1}>
                                                 <CardHeader
-                                                    avatar={
-                                                        <Avatar>
-                                                            {creatorName.charAt(0).toUpperCase()}
-                                                        </Avatar>
-                                                    }
+                                                    avatar={<Avatar src={creatorProfileImageUrl} />}
                                                     title={title + " by " + creatorName}
                                                     subheader={subheader}
                                                 />
@@ -128,4 +198,4 @@ function HotdogDialog(props) {
     );
 }
 
-export default HotdogDialog;
+export default HotdogDetailsDialog;

@@ -4,7 +4,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { Waypoint } from 'react-waypoint';
 // my components
 import HotdogCard from './hotdogCard';
-import AddFormDialog from './addFormDialog';
+import HotdogFormDialog from './hotdogFormDialog';
 import Icon from '../utils/icons';
 // context
 import { UserContext } from '../userContext';
@@ -32,11 +32,11 @@ function HomeHotdogGrid() {
     const [hotdogs, setHotdogs] = useState([]);
     const [hd, setHd] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [openAddDialog, setOpenAddDialog] = useState(false);
     // TODO: changing load behaviour
     const [changeType, setChangeType] = useState("added");
     const [length, setLength] = useState(0);
 
+    const [openAddDialog, setOpenAddDialog] = useState(false);
     function handleOpenAddDialog() {
         setOpenAddDialog(true);
     }
@@ -184,7 +184,7 @@ function HomeHotdogGrid() {
             >
                 <Icon name="plus" color="secondary" />
             </Fab>
-            <AddFormDialog open={openAddDialog} setOpen={setOpenAddDialog} />
+            <HotdogFormDialog open={openAddDialog} setOpen={setOpenAddDialog} />
         </Box>
     );
 }

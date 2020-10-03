@@ -56,7 +56,7 @@ function isValidTopping(topping, key, updateToppings, updateToppingErrors) {
     return error.trim() === "";
 }
 
-function AddForm() {
+function HotdogForm() {
     const { userId, userName } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
     const [added, setAdded] = useState(false);
@@ -282,4 +282,4 @@ function AddForm() {
     );
 } 
 
-export default AddForm;
+export default HotdogForm;
