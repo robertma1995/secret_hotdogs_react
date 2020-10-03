@@ -60,59 +60,24 @@ function NavbarAvatar(props) {
     const { userId, userName, profileImageUrl, setProfileImageUrl, handleLogout } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const classes = useStyles();
-    // profile image/avatar
-    // TODO: for now, placeholder initial value instead of "null" 
-    // since photouploaddialog reset avatar function sets profileImage to null
-    // and we want to update profile picture in backend when profileImage changes (useeffect)
-    /* 
-    const [profileImage, setProfileImage] = useState("initial");
-    */
+
     const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
 
-    // TODO: the "initial" method breaks: if user has empty avatar, presses reset on photo upload dialog,
-    // then calls useEffect anyway - wastes a database call
-    // instead, use a new state variable for profileImageUrl
-
-    // TODO: don't pass setProfileImageUrl directly in photoupload dialog, instead pass a separate state variable that
-    // takes profileImageUrl as the initial value; also
-    // TODO: setProfileImageUrl should be set to the return value of putUserProfileImage
-    // TODO: putUserProfileImage should resolve to the getDownloadUrl of the newly set image
-    // this way, the context variable userProfileImageUrl is always a firebase url 
-    // rather than being set to a filereader url (like it is currently)
-
-    // TODO: replace profileImageUrl with below variable
-    // TODO: also need a separate variable like profileImage that is the file blob to upload to backend
-    
-    // TODO: semi-hacky method of determining whether to call backend or not on initial image set
-    // if null, then pressing reset on photoupload dialog will not call the useeffect
-    // note: url variables should ALWAYS be a firebase url (unless picking profile image on register form)
-    /* 
-    const initialImage = profileImageUrl ? "initial" : null;
-    const [newImage, setNewImage] = useState(initialImage);
-    */
-
-    // less hacky method: keep track of previous image url
-    // - prevents recursive useEffect(...[newImageUrl]) if calling setNewImageUrl inside it
-    const [previous, setPrevious] = useState(profileImageUrl);
+    // track previous image url to prevent recursive useEffect 
     const [newImage, setNewImage] = useState(null);
     const [newImageUrl, setNewImageUrl] = useState(profileImageUrl);   
+    const [previousImageUrl, setPreviousImageUrl] = useState(profileImageUrl);
 
-    // TODO: backend for updating profile picture
-    // call only if profile image has been changed
+    // update backend only if profile image has been changed - have to set previous first
     useEffect(() => {
-        if (newImageUrl !== previous) {
-        // if (newImage !== initialImage) {
+        if (newImageUrl !== previousImageUrl) {
             console.log("CHANGED PROFILE IMAGE");
             (async () => {
                 let url = await DB.putUserProfileImage(userId, newImage);
-                console.log(url);
-                setPrevious(url);
+                setPreviousImageUrl(url);
                 setNewImageUrl(url);
-                // setNewImage(url ? "initial" : null);
             })();
-        // }
         }
-    // }, [newImage]);
     }, [newImageUrl]);
 
     function handleOpen(event) {

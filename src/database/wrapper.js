@@ -3,7 +3,7 @@
 import { users, hotdogs } from './database';
 
 // ========================================= USERS ===========================================
-const login = async (email, password) => {
+async function login(email, password) {
     try {
         let userId = await users.login(email, password);
         return userId;
@@ -13,18 +13,17 @@ const login = async (email, password) => {
     }
 }
 
-const register = async (name, email, password, profileImage) => {
+async function register(name, email, password, profileImage) {
     try {
         let userId = await users.register(name, email, password, profileImage);
-        // console.log("database: User with id " + userId + " successfully created");
-        return true;
+        return userId;
     } catch(e) {
         console.log(e);
         return false;
     }
 }
 
-const getUser = async (id) => {
+async function getUser(id) {
     try {
         let user = await users.get(id);
         return user;
@@ -34,7 +33,7 @@ const getUser = async (id) => {
     }
 }
 
-const getUserProfileImage = async (id) => {
+async function getUserProfileImage (id) {
     try {
         let url = await users.getProfileImage(id);
         return url;
@@ -49,12 +48,12 @@ async function putUserProfileImage(id, profileImage) {
         let url = await users.putProfileImage(id, profileImage);
         return url;
     } catch(e) {
-        return false;
+        return "";
     }
 }
 
 // ========================================= HOTDOGS =========================================
-const getAllHotdogs = async () => {
+async function getAllHotdogs() {
     try {
         let res = await hotdogs.all();
         return res;
@@ -74,7 +73,7 @@ async function getHotdogImage(id) {
     } 
 }
 
-const getHotdogsCreatedBy = async (id) => {
+async function getHotdogsCreatedBy(id) {
     try {
         let res = await hotdogs.getCreatedBy(id);
         return res;
@@ -84,7 +83,7 @@ const getHotdogsCreatedBy = async (id) => {
     }
 }
 
-const getHotdogsCreatedByQuery = async (id) => {
+async function getHotdogsCreatedByQuery(id) {
     let query = await hotdogs.getCreatedByQuery(id);
     return query;
 }

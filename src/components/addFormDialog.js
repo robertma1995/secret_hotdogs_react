@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { 
     Box, IconButton, Typography,
-    Dialog, DialogContent, DialogContentText, DialogTitle, Fab
+    Dialog, DialogContent
 } from '@material-ui/core';
 import Icon from '../utils/icons';
 // my components
@@ -22,16 +22,12 @@ const useStyles = makeStyles((theme) => ({
 // clicking on fab opens the dialog
 function AddFormDialog(props) {
     const { open, setOpen } = props;
-
-    function handleOpen() {
-        setOpen(true);
-    }
+    const classes = useStyles();
 
     function handleClose() {
         setOpen(false);
     }
 
-    const classes = useStyles();
     return (
         <Dialog 
             fullWidth

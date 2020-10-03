@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Avatar, Button, Typography } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 // email validator
 import isEmail from 'validator/lib/isEmail';
 // my components
@@ -97,14 +97,14 @@ function RegisterForm(props) {
             (async () => {
                 // NOTE: if profileImage === null (i.e. user did not set a profile image),
                 // then database does not create a new image reference ("validity" check moved to backend)
-                var registerStatus = await DB.register(name, email, password, profileImage);
+                var registerUserId = await DB.register(name, email, password, profileImage);
                 setLoading(false);
                 
                 // if register succeeds, reset all fields and give user option to go to login 
-                if (!registerStatus) {
-                    // setEmailError("Email already in use, please type in a different email");
+                if (!registerUserId) {
                     setEmailError(errors["email"]);
                 } else {
+                    // console.log("database: User with id " + registerUserId + " successfully created");
                     setName("");
                     setEmail("");
                     setPassword("");

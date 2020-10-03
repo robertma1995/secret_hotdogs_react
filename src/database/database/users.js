@@ -79,7 +79,7 @@ async function putProfileImage(id, profileImage) {
         var imageRef = storageRef.child("users/" + id + ".jpg");
         var action = profileImage ? imageRef.put(profileImage) : imageRef.delete();
         action.then(() => {
-            return profileImage ? imageRef.getDownloadURL() : "";
+            return imageRef.getDownloadURL();
         }).then(url => {
             resolve(url);
         }).catch(err => {

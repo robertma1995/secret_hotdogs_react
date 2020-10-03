@@ -13,14 +13,18 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: '5px!important',
         paddingBottom: '5px!important'    
     },
-    // image size based on if used in navbar or not
+    // image size based on if it's an avatar, used in navbar, or used in hotdog addform preview
+    hotdogImage: {
+        height: '200px',
+        width: '200px'
+    },
+    avatarImage: {
+        height: '100px', 
+        width: '100px',
+    },
     navImage: {
         height: '40px', 
         width: '40px',
-    },
-    defaultImage: {
-        height: '100px', 
-        width: '100px',
     },
     // icon size based on if used in navbar or not
     icon: {
@@ -70,7 +74,7 @@ function ImageButton(props) {
             <Image 
                 src={imageUrl} 
                 className={
-                    (navbar ? `${classes.navImage} ` : `${classes.defaultImage} `) +
+                    (navbar ? `${classes.navImage} ` : (avatar ? `${classes.avatarImage} ` : `${classes.hotdogImage} `)) +
                     (hover ? `${classes.hover}` : undefined)
                 } 
             />

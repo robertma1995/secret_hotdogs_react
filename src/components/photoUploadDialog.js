@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 // cropper
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.min.css';
 // dropzone
-import { useDropzone } from 'react-dropzone';
 import Dropzone from 'react-dropzone';
 // material ui
 import { 
-    Avatar, Box, Button, IconButton, Typography,
+    Box, Button, IconButton, Typography,
     Dialog, DialogActions, DialogContent 
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -58,9 +57,12 @@ const useStyles = makeStyles((theme) => ({
         height: '82%', 
         width: '82%',
     },
-    // image name + caption area above cropper
+    // image name + caption area above cropper (no preview if not used for profile picture, so add padding to fill empty space)
     cropperImageHeader: {
         maxWidth: '95%'
+    },
+    paddingBottom: {
+        paddingBottom: '40px'
     },
     // prevent long image names (loses the file tag if overflow)
     overflow: {
@@ -83,7 +85,6 @@ function PhotoUploadDialog(props) {
     const [cropper, setCropper] = useState();
     const [cropperData, setCropperData] = useState();
     const classes = useStyles();
-    const [loading, setLoading] = useState(true);
 
     /*
         custom accepted file handler since react-dropzone "mutliple={false}" doesn't work consistently
@@ -95,7 +96,6 @@ function PhotoUploadDialog(props) {
         if (files.length > 1) {
             setUploadError("Too many photos! Drag your desired profile photo only");
         } else {
-            // setLoading(true);
             let file = files[0];
             if (file.type === "image/jpeg" || file.type === "image/png") {
                 const reader = new FileReader();
@@ -106,7 +106,6 @@ function PhotoUploadDialog(props) {
             } else {
                 setUploadError("Upload error - choose a JPG or PNG and try again");
             }
-            setLoading(false);
         }
     }   
 
@@ -123,13 +122,9 @@ function PhotoUploadDialog(props) {
             maxWidth: max,
         }).toBlob((blob) => {
             setPhoto(blob);
-            // TODO: only set photo url as raw file if setPhotoUrl defined - i.e. only do this on the register page
-            // navbar avatar sets its url to the firebase url as opposed to the raw file.reader url
-            // if (setPhotoUrl) {
             let reader = new FileReader();
             reader.readAsDataURL(blob);
             reader.onload = () => setPhotoUrl(reader.result);
-            // }
         }, 'image/jpeg');
         setCropperData(cropper.getData());
     }
@@ -141,18 +136,12 @@ function PhotoUploadDialog(props) {
     function handleResetPhoto() {
         console.log("RESET PHOTO");
         setPhoto(null);
-        // if (setPhotoUrl) {
         setPhotoUrl(profile ? "" : "https://www.svgrepo.com/show/133687/hot-dog.svg");
-        // }
     }
 
     function handleResetCropper() {
         setCropperImage(null);
         setCropperData(null);
-    }
-
-    function handleOpen() {
-        setOpen(true);
     }
 
     function handleClose() {
@@ -188,24 +177,26 @@ function PhotoUploadDialog(props) {
                     alignItems="center"
                     className={classes.container}
                 >
-                    <Box 
-                        display="flex"
-                        flexDirection="column"
-                        justifyContent="center"
-                        alignItems="center"
-                        className={classes.preview}
-                    >
-                        <Typography color="primary" variant="caption" style={{ paddingBottom: '5px' }}> 
-                            <b>Preview</b>
-                        </Typography>
-                        <ImageButton 
-                            imageUrl={photoUrl}
-                            iconName="delete"
-                            iconSize="large"
-                            handleClick={handleResetPhoto}
-                            avatar={profile}
-                        />
-                    </Box>
+                    { profile && 
+                        <Box 
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="center"
+                            alignItems="center"
+                            className={classes.preview}
+                        >
+                            <Typography color="primary" variant="caption" style={{ paddingBottom: '5px' }}> 
+                                <b>Preview</b>
+                            </Typography>
+                            <ImageButton 
+                                imageUrl={photoUrl}
+                                iconName="delete"
+                                iconSize="large"
+                                handleClick={handleResetPhoto}
+                                avatar={profile}
+                            />
+                        </Box>
+                    }
                     { !cropperImage && 
                         <Box height="100%" width="100%">
                             <Dropzone onDrop={(files) => onDrop(files)}>
@@ -239,7 +230,7 @@ function PhotoUploadDialog(props) {
                             </Dropzone>
                         </Box>
                     }
-                    { cropperImage && !loading &&
+                    { cropperImage &&
                         /*  
                             NOTE: making Cropper's parent container dimensions 100% 
                             will scale small images up, but won't re-center the image if window is resized
@@ -257,7 +248,11 @@ function PhotoUploadDialog(props) {
                                 flexDirection="column"
                                 height="15%"
                                 width="95%"
-                                className={classes.cropperImageHeader}
+                                justifyContent="center"
+                                className={
+                                    `${classes.cropperImageHeader} ` + 
+                                    (!profile ? `${classes.paddingBottom}` : undefined)
+                                }
                             >
                                 <Typography variant="caption" className={classes.overflow}> 
                                     <b>{imageName}</b>

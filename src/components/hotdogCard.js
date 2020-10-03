@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-    Avatar, 
-    IconButton, 
+    Avatar, IconButton, 
     Card, CardHeader, CardMedia, CardContent, CardActions, 
 } from '@material-ui/core';
 // my components
 import Icon from '../utils/icons';
 import HotdogDialog from './hotdogDialog';
 import HotdogIngredientsList from './hotdogIngredientsList';
-// database
-import * as DB from '../database/wrapper';
 
 /*
     has to be a wrapped in a memo to prevent useless re-rendering of existing cards in homehotdoggrid

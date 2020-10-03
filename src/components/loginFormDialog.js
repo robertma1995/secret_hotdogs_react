@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
-    Box, Button, IconButton, Typography,
+    Box, IconButton, Typography,
     Dialog, DialogContent
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,10 +20,6 @@ const useStyles = makeStyles((theme) => ({
 function LoginFormDialog(props) {
     const { open, setOpen } = props;
     const classes = useStyles();
-
-    function handleOpen() {
-        setOpen(true);
-    }
 
     function handleClose() {
         setOpen(false);

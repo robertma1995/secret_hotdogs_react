@@ -15,12 +15,7 @@ import { UserContext } from '../userContext';
 import * as DB from '../database/wrapper';
 
 function NavBar(props) { 
-    // TODO: remove userName placeholder after user profile images finished
-    const { 
-        userId, setCurrentUserId, 
-        userName, setCurrentUserName, 
-        // userProfileImageUrl, setUserProfileImageUrl, 
-    } = useContext(UserContext);
+    const { userId, setCurrentUserId, userName, setCurrentUserName } = useContext(UserContext);
     const [openLoginDialog, setOpenLoginDialog] = useState(false);
     const [profileImageUrl, setProfileImageUrl] = useState("");
     const [loading, setLoading] = useState(true);
