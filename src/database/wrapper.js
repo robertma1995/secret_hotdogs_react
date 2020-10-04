@@ -89,9 +89,9 @@ async function getHotdogsCreatedByQuery(id) {
 }
 
 
-async function addHotdog(hotdog, hotdogImage) {
+async function postHotdog(hotdog, hotdogImage) {
     try {
-        let hotdogId = await hotdogs.add(hotdog, hotdogImage);
+        let hotdogId = await hotdogs.post(hotdog, hotdogImage);
         console.log("database: Hotdog with id " + hotdogId + " successfully created");
         return true;
     } catch(e) {
@@ -110,5 +110,5 @@ export {
     getHotdogImage,
     getHotdogsCreatedBy,
     getHotdogsCreatedByQuery,
-    addHotdog,
+    postHotdog,
 }

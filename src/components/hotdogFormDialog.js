@@ -18,9 +18,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-// Dialog wrapper for HotdogForm used on home page (HomeHotdogGrid)
+/* 
+    Dialog wrapper for HotdogForm
+*/ 
 function HotdogFormDialog(props) {
-    const { open, setOpen } = props;
+    const { 
+        open, setOpen,
+        description, hotdogImageUrl, ingredients, title, edit
+    } = props;
     const classes = useStyles();
 
     function handleClose() {
@@ -42,7 +47,8 @@ function HotdogFormDialog(props) {
                         color="textSecondary"
                         className={classes.title}
                     > 
-                        Post a new hotdog
+                        {edit && "Edit hotdog"}
+                        {!edit && "Post a new hotdog"}
                     </Typography>
                 </Box>
                 <Box>
@@ -52,7 +58,13 @@ function HotdogFormDialog(props) {
                 </Box>
             </Box>
             <DialogContent className={classes.dialogContent}>
-                <HotdogForm />
+                <HotdogForm
+                    initialDescription={description}
+                    initialHotdogImageUrl={hotdogImageUrl}
+                    initialIngredients={ingredients}
+                    initialTitle={title}
+                    edit={edit}
+                />
             </DialogContent>
         </Dialog>
     );

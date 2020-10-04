@@ -4,13 +4,12 @@ import {
     Card, CardHeader, CardContent, CardMedia,
     Dialog, DialogContent 
 } from '@material-ui/core';
-
-// TODO: edit hotdog
 import ButtonBase from '@material-ui/core/ButtonBase';
-
 import { makeStyles } from '@material-ui/core/styles';
-import Icon from '../utils/icons';
+// my components
+import HotdogFormDialog from './hotdogFormDialog';
 import HotdogIngredientsList from './hotdogIngredientsList';
+import Icon from '../utils/icons';
 
 const useStyles = makeStyles((theme) => ({
     dialogContent: {
@@ -79,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
 function HotdogDetailsDialog(props) {
     const { 
         creatorName, creatorProfileImageUrl,
-        description, hotdogImageUrl, ingredients, title, subheader 
+        description, hotdogImageUrl, ingredients, title, subheader
     } = props;
     const [openForm, setOpenForm] = useState(false);
     const [hover, setHover] = useState(false);
@@ -89,11 +88,6 @@ function HotdogDetailsDialog(props) {
     function handleOpenForm() {
         console.log("OPEN EDIT FORM");
         setOpenForm(true);
-    }
-
-    function handleCloseForm() {
-        console.log("CLOSE EDIT FORM");
-        setOpenForm(false);    
     }
 
     function handleMouseEnter() {
@@ -162,6 +156,15 @@ function HotdogDetailsDialog(props) {
                                     }
                                 </Box>
                             </ButtonBase>
+                            <HotdogFormDialog
+                                open={openForm}
+                                setOpen={setOpenForm}
+                                description={description}
+                                hotdogImageUrl={hotdogImageUrl}
+                                ingredients={ingredients}
+                                title={title}
+                                edit
+                            />
                         </Box>
                         <Box height="100%" flexGrow={1}>
                             <Paper square elevation={0} className={classes.paper}>

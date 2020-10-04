@@ -13,6 +13,7 @@ import SuccessSnackbar from './successSnackbar';
 // utils
 import Icon from '../utils/icons';
 import errors from '../utils/errors';
+import constants from '../utils/constants';
 // context
 import { UserContext } from '../userContext';
 // database
@@ -56,31 +57,34 @@ function isValidTopping(topping, key, updateToppings, updateToppingErrors) {
     return error.trim() === "";
 }
 
-function HotdogForm() {
+/*
+    Hotdog adding/editing form - assumes initial values passed if edit is true
+*/
+function HotdogForm(props) {
+    const { initialDescription, initialHotdogImageUrl, initialIngredients, initialTitle, edit } = props;
     const { userId, userName } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
-    const [added, setAdded] = useState(false);
-    const [title, setTitle] = useState("");
+    const [submitted, setSubmitted] = useState(false);
+    // details
+    const [title, setTitle] = useState(edit ? initialTitle : "");
+    const [description, setDescription] = useState(edit ? initialDescription : "");
+    const [sausage, setSausage] = useState(edit ? initialIngredients.sausage : "");
+    const [sauce, setSauce] = useState(edit ? initialIngredients.sauce : "");
+    // errors
     const [titleError, setTitleError] = useState(" ");
-    const [description, setDescription] = useState("");
     const [descriptionError, setDescriptionError] = useState(" ");
-    const [sausage, setSausage] = useState("");
     const [sausageError, setSausageError] = useState(" ");
-    const [sauce, setSauce] = useState("");
     const [sauceError, setSauceError] = useState(" ");
-    // TODO: if need maxToppings in another component, create new "constants" file under utils
-    const maxToppings = 15;
-    // TODO: hotdog image
+    // image
     const [hotdogImage, setHotdogImage] = useState(null);
-    const [hotdogImageUrl, setHotdogImageUrl] = useState("https://www.svgrepo.com/show/133687/hot-dog.svg");
+    const [hotdogImageUrl, setHotdogImageUrl] = useState(initialHotdogImageUrl || constants["hotdogImageUrl"]);
     const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
     function handleOpenPhotoDialog() {
         setOpenPhotoDialog(true);
     }
-
     // separate topping/errors Maps, since not always updating error while updating topping (i.e. textfield -> onchange)
-    const [toppings, setToppings] = useState(new Map());
-    const [toppingErrors, setToppingErrors] = useState(new Map());
+    const [toppings, setToppings] = useState(new Map(edit ? initialIngredients.toppings.map((t, i) => [i, t]) : undefined));
+    const [toppingErrors, setToppingErrors] = useState(new Map(edit ? initialIngredients.toppings.map((t, i) => [i, " "]) : undefined));
     
     function updateToppings(key, value) {
         setToppings(new Map(toppings.set(key, value)));
@@ -102,9 +106,9 @@ function HotdogForm() {
         setToppingErrors(e);
     }
 
-    function handleAdd() {
-        // set added to false again to handle consecutive adds on same page (no reload)
-        setAdded(false);
+    function handleSubmit() {
+        // set submitted to false again to handle consecutive submissions on same page (i.e. user doesn't refresh)
+        setSubmitted(false);
 
         const titleValid = isValid(title, setTitle, setTitleError);
         const sausageValid = isValid(sausage, setSausage, setSausageError);
@@ -138,13 +142,13 @@ function HotdogForm() {
                         toppings: toppingsArray
                     }
                 }
-                const addStatus = await DB.addHotdog(hotdog, hotdogImage);
+                const submitStatus = await DB.postHotdog(hotdog, hotdogImage);
                 setLoading(false);
 
-                // if add hotdog succeeds, reset all fields and give user option to go back to homepage 
+                // if post succeeds, reset all fields and give user option to go back to homepage 
                 // no restrictions on field values for now, so shouldn't fail
-                if (!addStatus) {
-                    console.log("addForm.js: something went wrong :(");
+                if (!submitStatus) {
+                    console.log("hotdogForm.js: something went wrong :(");
                 } else {
                     setTitle("");
                     setDescription("");
@@ -152,8 +156,8 @@ function HotdogForm() {
                     setSauce("");
                     setToppings(new Map());
                     setHotdogImage(null);
-                    setHotdogImageUrl("https://www.svgrepo.com/show/133687/hot-dog.svg");
-                    setAdded(true);
+                    setHotdogImageUrl(constants["hotdogImageUrl"]);
+                    setSubmitted(true);
                 }
             })();
         }
@@ -176,8 +180,8 @@ function HotdogForm() {
     return (
         <Form>
              <FormMessage variant="body2" color="textSecondary">
-                { !hotdogImage && "Select a new picture by clicking the hotdog below" }
-                { hotdogImage && "Your hotdog picture" }
+                { hotdogImageUrl === constants["hotdogImageUrl"] && "Select a new picture by clicking the hotdog below" }
+                { hotdogImageUrl !== constants["hotdogImageUrl"] && "Your hotdog picture" }
             </FormMessage>
             <FormButtonWrapper style={{ borderBottom: '1px solid #cbb09c' }}>
                 <ImageButton
@@ -243,7 +247,7 @@ function HotdogForm() {
                 />
             ))}
             <FormButtonWrapper>
-                { toppings.size < maxToppings &&
+                { toppings.size < constants["maxToppings"] &&
                     <Button
                         variant="text"
                         color="primary"
@@ -254,7 +258,7 @@ function HotdogForm() {
                         Add Topping
                     </Button>
                 }
-                { toppings.size === maxToppings &&
+                { toppings.size === constants["maxToppings"] &&
                     <Button
                         disabled
                         variant="text"
@@ -262,7 +266,7 @@ function HotdogForm() {
                         disableElevation
                         startIcon={<Icon name="addToppingDisabled" />}
                     >
-                        Max. Toppings reached ({maxToppings})
+                        Max. Toppings reached ({constants["maxToppings"]})
                     </Button>
                 }
             </FormButtonWrapper>
@@ -270,12 +274,12 @@ function HotdogForm() {
                 <ProgressButton 
                     text="Submit" 
                     loading={loading} 
-                    handleClick={handleAdd}
+                    handleClick={handleSubmit}
                 />
             </FormButtonWrapper>
             <SuccessSnackbar
-                open={added}
-                setOpen={setAdded}
+                open={submitted}
+                setOpen={setSubmitted}
                 message="Posted new hotdog!"
             />
         </Form>

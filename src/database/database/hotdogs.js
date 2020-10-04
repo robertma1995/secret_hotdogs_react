@@ -51,8 +51,8 @@ async function getImage(id) {
     return storageRef.child("hotdogs/" + id + ".jpg").getDownloadURL();
 }
 
-// insert - returns newly created hotdog id if successful
-async function add(hotdog, hotdogImage) {
+// post - returns newly created hotdog id if successful
+async function post(hotdog, hotdogImage) {
     hotdog["ts"] = firebase.firestore.Timestamp.now();
     return new Promise((resolve, reject) => {
         // add returns a "DocumentReference"
@@ -76,10 +76,15 @@ async function add(hotdog, hotdogImage) {
     });
 }
 
+// TODO: patch - updates hotdog with whatever has been changed - use DocumentReference.set functionality
+async function patch(hotdog, hotdogImage) {
+
+}
+
 export {
     all,
     getCreatedBy,
     getCreatedByQuery,
     getImage,
-    add,
+    post,
 }
