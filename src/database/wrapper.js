@@ -88,6 +88,16 @@ async function getHotdogsCreatedByQuery(id) {
     return query;
 }
 
+async function patchHotdog(id, hotdog, hotdogImage, imageChanged) {
+    try {
+        let hotdogId = await hotdogs.patch(id, hotdog, hotdogImage, imageChanged);
+        console.log("database: Hotdog with id " + hotdogId + " successfully patched");
+        return true;
+    } catch(e) {
+        console.log(e);
+        return false;
+    }
+}
 
 async function postHotdog(hotdog, hotdogImage) {
     try {
@@ -110,5 +120,6 @@ export {
     getHotdogImage,
     getHotdogsCreatedBy,
     getHotdogsCreatedByQuery,
+    patchHotdog,
     postHotdog,
 }

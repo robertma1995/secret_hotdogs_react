@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
 */
 function HotdogDetailsDialog(props) {
     const { 
-        creatorName, creatorProfileImageUrl,
+        id, creatorId, creatorName, creatorProfileImageUrl,
         description, hotdogImageUrl, ingredients, title, subheader
     } = props;
     const [openForm, setOpenForm] = useState(false);
@@ -86,7 +86,6 @@ function HotdogDetailsDialog(props) {
     const classes = useStyles();
 
     function handleOpenForm() {
-        console.log("OPEN EDIT FORM");
         setOpenForm(true);
     }
 
@@ -159,6 +158,7 @@ function HotdogDetailsDialog(props) {
                             <HotdogFormDialog
                                 open={openForm}
                                 setOpen={setOpenForm}
+                                id={id}
                                 description={description}
                                 hotdogImageUrl={hotdogImageUrl}
                                 ingredients={ingredients}

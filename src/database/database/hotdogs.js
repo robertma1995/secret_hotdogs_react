@@ -51,14 +51,41 @@ async function getImage(id) {
     return storageRef.child("hotdogs/" + id + ".jpg").getDownloadURL();
 }
 
-// post - returns newly created hotdog id if successful
+/*  
+    TODO: patch - updates hotdog with whatever has been changed - use DocumentReference.set functionality
+    TODO: convert to same promise flow as post - more control over what's returned/error handling
+*/
+async function patch(id, hotdog, hotdogImage, imageChanged) {
+    firebase.firestore().collection('hotdogs').doc(id).set(hotdog, {merge: true}).then(() => {
+        if (imageChanged) {
+            var imageRef = firebase.storage().ref().child("hotdogs/" + id + ".jpg");
+            if (hotdogImage) {
+                console.log("image changed and image defined, so replace");
+                return imageRef.put(hotdogImage);
+            } else {
+                // delete existing image - should only evaluate to this if originally had an image, but was reset
+                console.log("image changed but no image, so delete");
+                return imageRef.delete();
+            }
+        }
+    }).then(() => {
+        return id;
+    }).catch(err => {
+        return err;
+    });
+}
+
+/* 
+    post - returns newly created hotdog id if successful
+*/
 async function post(hotdog, hotdogImage) {
+    // add timestamp and remove image field before calling add()
     hotdog["ts"] = firebase.firestore.Timestamp.now();
     return new Promise((resolve, reject) => {
         // add returns a "DocumentReference"
         firebase.firestore().collection('hotdogs').add(hotdog).then(data => {
             const hotdogId = data.id;
-            // if hotdog image on register, create reference in firebase storage
+            // if user chose a hotdog image, create reference in firebase storage
             if (hotdogImage) {
                 var storageRef = firebase.storage().ref();
                 storageRef.child("hotdogs/" + hotdogId + ".jpg").put(hotdogImage).then(() => {
@@ -76,15 +103,12 @@ async function post(hotdog, hotdogImage) {
     });
 }
 
-// TODO: patch - updates hotdog with whatever has been changed - use DocumentReference.set functionality
-async function patch(hotdog, hotdogImage) {
-
-}
 
 export {
     all,
     getCreatedBy,
     getCreatedByQuery,
     getImage,
+    patch,
     post,
 }

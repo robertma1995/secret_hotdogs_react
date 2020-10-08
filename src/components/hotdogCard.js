@@ -14,8 +14,7 @@ import HotdogIngredientsList from './hotdogIngredientsList';
 const HotdogCard = React.memo((props) => {
     // TODO: keep id, since will need for liking later on
     const { 
-        id, 
-        creatorId, creatorName, creatorProfileImageUrl, 
+        id, creatorId, creatorName, creatorProfileImageUrl, 
         description, hotdogImageUrl, ingredients, title, ts 
     } = props;
     // TODO: keep below console log to check for useless rendering
@@ -33,7 +32,7 @@ const HotdogCard = React.memo((props) => {
                 title={title + " by " + creatorName}
                 subheader={subheader}
             />
-            <CardMedia image={hotdogImageUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} />
+            <CardMedia image={hotdogImageUrl} />
             <CardContent>
                 <HotdogIngredientsList 
                     sausage={ingredients["sausage"]}
@@ -46,6 +45,7 @@ const HotdogCard = React.memo((props) => {
                     <Icon name="like" />
                 </IconButton>
                 <HotdogDetailsDialog 
+                    id={id}
                     creatorName={creatorName}
                     creatorProfileImageUrl={creatorProfileImageUrl}
                     description={description}

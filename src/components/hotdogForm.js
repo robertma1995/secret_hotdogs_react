@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import isEqual from 'lodash/isEqual';
+import isEmpty from 'lodash/isEmpty';
 import Button from '@material-ui/core/Button';
 // my components
 import Form from './form';
@@ -58,18 +60,18 @@ function isValidTopping(topping, key, updateToppings, updateToppingErrors) {
 }
 
 /*
-    Hotdog adding/editing form - assumes initial values passed if edit is true
+    Hotdog adding/editing form - assumes initial values + hotdog id passed if edit is true
 */
 function HotdogForm(props) {
-    const { initialDescription, initialHotdogImageUrl, initialIngredients, initialTitle, edit } = props;
+    const { id, initialDescription, initialHotdogImageUrl, initialIngredients, initialTitle, edit } = props;
     const { userId, userName } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     // details
     const [title, setTitle] = useState(edit ? initialTitle : "");
     const [description, setDescription] = useState(edit ? initialDescription : "");
-    const [sausage, setSausage] = useState(edit ? initialIngredients.sausage : "");
-    const [sauce, setSauce] = useState(edit ? initialIngredients.sauce : "");
+    const [sausage, setSausage] = useState(edit ? initialIngredients["sausage"] : "");
+    const [sauce, setSauce] = useState(edit ? initialIngredients["sauce"]: "");
     // errors
     const [titleError, setTitleError] = useState(" ");
     const [descriptionError, setDescriptionError] = useState(" ");
@@ -77,15 +79,18 @@ function HotdogForm(props) {
     const [sauceError, setSauceError] = useState(" ");
     // image
     const [hotdogImage, setHotdogImage] = useState(null);
-    const [hotdogImageUrl, setHotdogImageUrl] = useState(initialHotdogImageUrl || constants["hotdogImageUrl"]);
+    const [hotdogImageUrl, setHotdogImageUrl] = useState(edit ? initialHotdogImageUrl : constants["hotdogImageUrl"]);
     const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
+    // separate topping/errors Maps, since not always updating error while updating topping (i.e. textfield -> onchange)
+    const initialToppings = edit ? initialIngredients["toppings"].map((t, i) => [i, t]) : undefined;
+    const initialToppingErrors = edit ? initialIngredients["toppings"].map((t, i) => [i, " "]) : undefined;
+    const [toppings, setToppings] = useState(new Map(initialToppings));
+    const [toppingErrors, setToppingErrors] = useState(new Map(initialToppingErrors));
+    
     function handleOpenPhotoDialog() {
         setOpenPhotoDialog(true);
     }
-    // separate topping/errors Maps, since not always updating error while updating topping (i.e. textfield -> onchange)
-    const [toppings, setToppings] = useState(new Map(edit ? initialIngredients.toppings.map((t, i) => [i, t]) : undefined));
-    const [toppingErrors, setToppingErrors] = useState(new Map(edit ? initialIngredients.toppings.map((t, i) => [i, " "]) : undefined));
-    
+
     function updateToppings(key, value) {
         setToppings(new Map(toppings.set(key, value)));
     }
@@ -104,6 +109,20 @@ function HotdogForm(props) {
         var e = new Map(toppingErrors);
         e.delete(key);
         setToppingErrors(e);
+    }
+
+    // adds a topping and error state variables
+    function handleAddTopping() {
+        const id = uuidv4();
+        updateToppings(id, "");
+        updateToppingErrors(id, " ");
+    }
+
+    // removes given topping and error state variables
+    function handleRemoveTopping(id) {
+        console.log(id);
+        removeTopping(id);
+        removeToppingError(id);
     }
 
     function handleSubmit() {
@@ -131,25 +150,86 @@ function HotdogForm(props) {
                 for (const topping of toppings.values()) {
                     toppingsArray.push(topping);
                 }
-                const hotdog = {
-                    creatorId: userId,
-                    creatorName: userName,
-                    description: description,
-                    title: title,
-                    ingredients: {
-                        sausage: sausage,
-                        sauce: sauce,
-                        toppings: toppingsArray
+
+                var submitStatus = false;
+                if (edit) {
+                    // TODO: testing patching
+                    const initial = {
+                        description: initialDescription,
+                        ingredients: {
+                            sauce: initialIngredients["sauce"],
+                            sausage: initialIngredients["sausage"],
+                            toppings: initialIngredients["toppings"]
+                        },
+                        title: initialTitle,
                     }
+                    
+                    const changes = {
+                        description: description,
+                        ingredients: {
+                            sausage: sausage,
+                            sauce: sauce,
+                            toppings: toppingsArray
+                        },
+                        title: title,
+                    }
+
+                    // TODO: remove fields if they haven't been changed
+                    for (var i in changes) {
+                        if (i !== "ingredients" && changes[i] === initial[i]) {
+                            delete changes[i];
+                        } else if (i === "ingredients") {
+                            const ingredientsInitial = initial[i];
+                            // check fields in ingredients
+                            for (var j in changes[i]) {
+                                if (j !== "toppings" && changes[i][j] === ingredientsInitial[j]) {
+                                    delete changes[i][j];
+                                } else if (j === "toppings") {
+                                    const toppingsInitial = ingredientsInitial[j];
+                                    // TODO: sort arrays, compare equality
+                                    if (isEqual(changes[i][j], toppingsInitial)) {
+                                        delete changes[i][j];
+                                    }
+                                }
+                            }
+                            // remove empty ingredients if nothing left in ingredients
+                            if (isEmpty(changes[i])) {
+                                delete changes[i];
+                            } 
+                        }
+                    }
+                    console.log("PATCH: ");
+                    console.log(changes);
+                    
+                    // only call patch if changes not empty, or image has been changed by PhotoUploadDialog
+                    const imageChanged = hotdogImageUrl !== initialHotdogImageUrl;
+                    if (!isEmpty(changes) || imageChanged) {
+                        submitStatus = await DB.patchHotdog(id, changes, hotdogImage, imageChanged);
+                    }
+                } else {
+                    const hotdog = {
+                        creatorId: userId,
+                        creatorName: userName,
+                        description: description,
+                        ingredients: {
+                            sausage: sausage,
+                            sauce: sauce,
+                            toppings: toppingsArray
+                        },
+                        title: title,
+                    }
+                    submitStatus = await DB.postHotdog(hotdog, hotdogImage);
                 }
-                const submitStatus = await DB.postHotdog(hotdog, hotdogImage);
+
                 setLoading(false);
 
                 // if post succeeds, reset all fields and give user option to go back to homepage 
-                // no restrictions on field values for now, so shouldn't fail
+                // false only if submit has been pressed, but no changes made
                 if (!submitStatus) {
-                    console.log("hotdogForm.js: something went wrong :(");
+                    // TODO: maybe trigger snackbar popup here
+                    console.log("no changes made");
                 } else {
+                    // TODO: change behaviour for successful edit
                     setTitle("");
                     setDescription("");
                     setSausage("");
@@ -163,19 +243,6 @@ function HotdogForm(props) {
         }
     }
 
-    // adds a topping and error state variables
-    function handleAddTopping() {
-        const id = uuidv4();
-        updateToppings(id, "");
-        updateToppingErrors(id, " ");
-    }
-
-    // removes given topping and error state variables
-    function handleRemoveTopping(id) {
-        console.log(id);
-        removeTopping(id);
-        removeToppingError(id);
-    }
 
     return (
         <Form>

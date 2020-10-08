@@ -6,6 +6,7 @@ import { Waypoint } from 'react-waypoint';
 import HotdogCard from './hotdogCard';
 import HotdogFormDialog from './hotdogFormDialog';
 import Icon from '../utils/icons';
+import constants from '../utils/constants';
 // context
 import { UserContext } from '../userContext';
 // database
@@ -19,7 +20,7 @@ async function getImages(hotdogs) {
     await Promise.all(hd.map(async (formattedRow) => {
         const hotdogImageUrl = await DB.getHotdogImage(formattedRow.id);
         const profileImageurl = await DB.getUserProfileImage(formattedRow.creatorId);
-        formattedRow["hotdogImageUrl"] = hotdogImageUrl;
+        formattedRow["hotdogImageUrl"] = hotdogImageUrl || constants["hotdogImageUrl"];
         formattedRow["creatorProfileImageUrl"] = profileImageurl;
     }));
     return hd;

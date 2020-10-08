@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 // my components - photo preview
 import Icon from '../utils/icons';
 import ImageButton from './imageButton';
+import constants from '../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
     // fixed height of for preview + dropzone/cropper
@@ -136,7 +137,7 @@ function PhotoUploadDialog(props) {
     function handleResetPhoto() {
         console.log("RESET PHOTO");
         setPhoto(null);
-        setPhotoUrl(profile ? "" : "https://www.svgrepo.com/show/133687/hot-dog.svg");
+        setPhotoUrl(profile ? "" : constants["hotdogImageUrl"]);
     }
 
     function handleResetCropper() {

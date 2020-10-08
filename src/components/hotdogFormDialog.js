@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 function HotdogFormDialog(props) {
     const { 
         open, setOpen,
-        description, hotdogImageUrl, ingredients, title, edit
+        id, description, hotdogImageUrl, ingredients, title, edit
     } = props;
     const classes = useStyles();
 
@@ -59,6 +59,7 @@ function HotdogFormDialog(props) {
             </Box>
             <DialogContent className={classes.dialogContent}>
                 <HotdogForm
+                    id={id}
                     initialDescription={description}
                     initialHotdogImageUrl={hotdogImageUrl}
                     initialIngredients={ingredients}
