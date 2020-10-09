@@ -9,6 +9,7 @@ import FormField from './formField';
 import FormButtonWrapper from './formButtonWrapper';
 import FormMessage from './formMessage';
 import ImageButton from './imageButton';
+import ImageButtonDouble from './imageButtonDouble';
 import PhotoUploadDialog from './photoUploadDialog';
 import ProgressButton from './progressButton';
 import SuccessSnackbar from './successSnackbar';
@@ -59,11 +60,46 @@ function isValidTopping(topping, key, updateToppings, updateToppingErrors) {
     return error.trim() === "";
 }
 
+/* 
+    removes fields from changes that match initial values
+*/
+function removeMatching(changes, initial) {
+    var res = changes;
+    for (var i in res) {
+        if (i !== "ingredients" && res[i] === initial[i]) {
+            delete res[i];
+        } else if (i === "ingredients") {
+            const ingredientsInitial = initial[i];
+            // check fields in ingredients
+            for (var j in res[i]) {
+                if (j !== "toppings" && res[i][j] === ingredientsInitial[j]) {
+                    delete res[i][j];
+                } else if (j === "toppings") {
+                    const toppingsInitial = ingredientsInitial[j];
+                    // TODO: sort arrays, compare equality
+                    if (isEqual(res[i][j], toppingsInitial)) {
+                        delete res[i][j];
+                    }
+                }
+            }
+            // remove empty ingredients if nothing left in ingredients
+            if (isEmpty(res[i])) {
+                delete res[i];
+            } 
+        }
+    }
+    return res;
+}
+
 /*
     Hotdog adding/editing form - assumes initial values + hotdog id passed if edit is true
 */
 function HotdogForm(props) {
-    const { id, initialDescription, initialHotdogImageUrl, initialIngredients, initialTitle, edit } = props;
+    const { 
+        id, 
+        initialDescription, initialHotdogImageUrl, initialIngredients, initialTitle, edit,
+        setDialogDescription, setDialogHotdogImageUrl, setDialogIngredients, setDialogTitle,
+    } = props;
     const { userId, userName } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
@@ -87,6 +123,11 @@ function HotdogForm(props) {
     const [toppings, setToppings] = useState(new Map(initialToppings));
     const [toppingErrors, setToppingErrors] = useState(new Map(initialToppingErrors));
     
+    function handleResetPhoto() {
+        setHotdogImage(null);
+        setHotdogImageUrl(constants["hotdogImageUrl"]);
+    }
+
     function handleOpenPhotoDialog() {
         setOpenPhotoDialog(true);
     }
@@ -145,7 +186,7 @@ function HotdogForm(props) {
         if (titleValid && sausageValid && sauceValid && toppingsValid) {
             setLoading(true);
             (async () => {
-                // convert map to array - no need for topping id in backend
+                // convert toppings map to array - no need for topping id in backend
                 var toppingsArray = [];
                 for (const topping of toppings.values()) {
                     toppingsArray.push(topping);
@@ -153,7 +194,7 @@ function HotdogForm(props) {
 
                 var submitStatus = false;
                 if (edit) {
-                    // TODO: testing patching
+                    // remove fields from changes if same as initial
                     const initial = {
                         description: initialDescription,
                         ingredients: {
@@ -163,8 +204,7 @@ function HotdogForm(props) {
                         },
                         title: initialTitle,
                     }
-                    
-                    const changes = {
+                    var changes = {
                         description: description,
                         ingredients: {
                             sausage: sausage,
@@ -173,38 +213,22 @@ function HotdogForm(props) {
                         },
                         title: title,
                     }
-
-                    // TODO: remove fields if they haven't been changed
-                    for (var i in changes) {
-                        if (i !== "ingredients" && changes[i] === initial[i]) {
-                            delete changes[i];
-                        } else if (i === "ingredients") {
-                            const ingredientsInitial = initial[i];
-                            // check fields in ingredients
-                            for (var j in changes[i]) {
-                                if (j !== "toppings" && changes[i][j] === ingredientsInitial[j]) {
-                                    delete changes[i][j];
-                                } else if (j === "toppings") {
-                                    const toppingsInitial = ingredientsInitial[j];
-                                    // TODO: sort arrays, compare equality
-                                    if (isEqual(changes[i][j], toppingsInitial)) {
-                                        delete changes[i][j];
-                                    }
-                                }
-                            }
-                            // remove empty ingredients if nothing left in ingredients
-                            if (isEmpty(changes[i])) {
-                                delete changes[i];
-                            } 
-                        }
-                    }
+                    changes = removeMatching(changes, initial);
                     console.log("PATCH: ");
                     console.log(changes);
                     
                     // only call patch if changes not empty, or image has been changed by PhotoUploadDialog
                     const imageChanged = hotdogImageUrl !== initialHotdogImageUrl;
                     if (!isEmpty(changes) || imageChanged) {
-                        submitStatus = await DB.patchHotdog(id, changes, hotdogImage, imageChanged);
+                        var url = await DB.patchHotdog(id, changes, hotdogImage, imageChanged);
+                        // url can be "" or an actual url if patch succeeds, but false if patch false
+                        submitStatus = url !== false;
+                        if (submitStatus) {
+                            const finalUrl = url || constants["hotdogImageUrl"];
+                            console.log(finalUrl);
+                            setHotdogImageUrl(finalUrl);
+                            setDialogHotdogImageUrl(finalUrl);
+                        }
                     }
                 } else {
                     const hotdog = {
@@ -222,27 +246,37 @@ function HotdogForm(props) {
                 }
 
                 setLoading(false);
-
                 // if post succeeds, reset all fields and give user option to go back to homepage 
                 // false only if submit has been pressed, but no changes made
                 if (!submitStatus) {
-                    // TODO: maybe trigger snackbar popup here
                     console.log("no changes made");
                 } else {
-                    // TODO: change behaviour for successful edit
-                    setTitle("");
-                    setDescription("");
-                    setSausage("");
-                    setSauce("");
-                    setToppings(new Map());
-                    setHotdogImage(null);
-                    setHotdogImageUrl(constants["hotdogImageUrl"]);
+                    if (edit) {
+                        // update HotdogDetailsDialog with final edit variables
+                        // TODO: only update the parts that have changed - same thing as removeMatching
+                        // note: dialog image url already set after edit success
+                        setDialogTitle(title);
+                        setDialogDescription(description);
+                        setDialogIngredients({ 
+                            sausage: sausage, 
+                            sauce: sauce,
+                            toppings: toppingsArray
+                        });
+                    } else {
+                        // reset form
+                        setTitle("");
+                        setDescription("");
+                        setSausage("");
+                        setSauce("");
+                        setToppings(new Map());
+                        setHotdogImage(null);
+                        setHotdogImageUrl(constants["hotdogImageUrl"]);
+                    }
                     setSubmitted(true);
                 }
             })();
         }
     }
-
 
     return (
         <Form>
@@ -251,11 +285,12 @@ function HotdogForm(props) {
                 { hotdogImageUrl !== constants["hotdogImageUrl"] && "Your hotdog picture" }
             </FormMessage>
             <FormButtonWrapper style={{ borderBottom: '1px solid #cbb09c' }}>
-                <ImageButton
+                <ImageButtonDouble
                     imageUrl={hotdogImageUrl}
-                    iconName="camera"
-                    iconSize="large"
-                    handleClick={handleOpenPhotoDialog}
+                    iconNameOne="camera"
+                    iconNameTwo="delete"
+                    handleClickOne={handleOpenPhotoDialog}
+                    handleClickTwo={handleResetPhoto}
                 />
             </FormButtonWrapper>
             <PhotoUploadDialog 
@@ -347,7 +382,7 @@ function HotdogForm(props) {
             <SuccessSnackbar
                 open={submitted}
                 setOpen={setSubmitted}
-                message="Posted new hotdog!"
+                message={edit ? "Updated hotdog" : "Posted new hotdog!"}
             />
         </Form>
     );

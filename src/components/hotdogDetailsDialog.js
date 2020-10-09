@@ -80,6 +80,12 @@ function HotdogDetailsDialog(props) {
         id, creatorId, creatorName, creatorProfileImageUrl,
         description, hotdogImageUrl, ingredients, title, subheader
     } = props;
+    // state vars - only changed by HotdogFormDialog > HotdogForm upon submitting form - makes edits reponsive
+    const [dialogDescription, setDialogDescription] = useState(description);
+    const [dialogHotdogImageUrl, setDialogHotdogImageUrl] = useState(hotdogImageUrl);
+    const [dialogIngredients, setDialogIngredients] = useState(ingredients);
+    const [dialogTitle, setDialogTitle] = useState(title);
+
     const [openForm, setOpenForm] = useState(false);
     const [hover, setHover] = useState(false);
     const [open, setOpen] = useState(false);
@@ -140,12 +146,12 @@ function HotdogDetailsDialog(props) {
                                             (hover ? `${classes.hover}` : undefined)
                                         }
                                     >
-                                        <CardMedia image={hotdogImageUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} />
+                                        <CardMedia image={dialogHotdogImageUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} />
                                         <CardContent className={classes.cardContent}>
                                             <HotdogIngredientsList 
-                                                sausage={ingredients["sausage"]}
-                                                sauce={ingredients["sauce"]}
-                                                toppings={ingredients["toppings"]}
+                                                sausage={dialogIngredients["sausage"]}
+                                                sauce={dialogIngredients["sauce"]}
+                                                toppings={dialogIngredients["toppings"]}
                                                 dialog
                                             />
                                         </CardContent>
@@ -164,6 +170,10 @@ function HotdogDetailsDialog(props) {
                                 ingredients={ingredients}
                                 title={title}
                                 edit
+                                setDialogDescription={setDialogDescription}
+                                setDialogHotdogImageUrl={setDialogHotdogImageUrl}
+                                setDialogIngredients={setDialogIngredients}
+                                setDialogTitle={setDialogTitle}
                             />
                         </Box>
                         <Box height="100%" flexGrow={1}>
@@ -174,7 +184,7 @@ function HotdogDetailsDialog(props) {
                                             <Box flexGrow={1}>
                                                 <CardHeader
                                                     avatar={<Avatar src={creatorProfileImageUrl} />}
-                                                    title={title + " by " + creatorName}
+                                                    title={dialogTitle + " by " + creatorName}
                                                     subheader={subheader}
                                                 />
                                             </Box>
@@ -185,7 +195,7 @@ function HotdogDetailsDialog(props) {
                                             </Box>
                                         </Box>
                                         <Typography variant="body2" className={classes.description}>
-                                            {description}
+                                            {dialogDescription}
                                         </Typography>
                                     </Grid>
                                     <Grid item className={classes.comments}>

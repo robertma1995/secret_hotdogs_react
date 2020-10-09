@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { 
     Box, IconButton, Typography,
@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
 function HotdogFormDialog(props) {
     const { 
         open, setOpen,
-        id, description, hotdogImageUrl, ingredients, title, edit
+        id, description, hotdogImageUrl, ingredients, title, edit,
+        setDialogDescription, setDialogHotdogImageUrl, setDialogIngredients, setDialogTitle,
     } = props;
     const classes = useStyles();
 
@@ -65,6 +66,10 @@ function HotdogFormDialog(props) {
                     initialIngredients={ingredients}
                     initialTitle={title}
                     edit={edit}
+                    setDialogDescription={setDialogDescription}
+                    setDialogHotdogImageUrl={setDialogHotdogImageUrl}
+                    setDialogIngredients={setDialogIngredients}
+                    setDialogTitle={setDialogTitle}
                 />
             </DialogContent>
         </Dialog>

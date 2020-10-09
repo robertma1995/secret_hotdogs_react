@@ -90,9 +90,8 @@ async function getHotdogsCreatedByQuery(id) {
 
 async function patchHotdog(id, hotdog, hotdogImage, imageChanged) {
     try {
-        let hotdogId = await hotdogs.patch(id, hotdog, hotdogImage, imageChanged);
-        console.log("database: Hotdog with id " + hotdogId + " successfully patched");
-        return true;
+        let url = await hotdogs.patch(id, hotdog, hotdogImage, imageChanged);
+        return url;
     } catch(e) {
         console.log(e);
         return false;

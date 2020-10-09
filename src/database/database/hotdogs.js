@@ -52,26 +52,36 @@ async function getImage(id) {
 }
 
 /*  
-    TODO: patch - updates hotdog with whatever has been changed - use DocumentReference.set functionality
-    TODO: convert to same promise flow as post - more control over what's returned/error handling
+    patch - updates hotdog with whatever has been changed, returns hotdog image url or empty url if successful
 */
 async function patch(id, hotdog, hotdogImage, imageChanged) {
-    firebase.firestore().collection('hotdogs').doc(id).set(hotdog, {merge: true}).then(() => {
-        if (imageChanged) {
-            var imageRef = firebase.storage().ref().child("hotdogs/" + id + ".jpg");
-            if (hotdogImage) {
-                console.log("image changed and image defined, so replace");
-                return imageRef.put(hotdogImage);
+    return new Promise((resolve, reject) => {
+        firebase.firestore().collection('hotdogs').doc(id).set(hotdog, {merge: true}).then(() => {
+            if (imageChanged) {
+                var imageRef = firebase.storage().ref().child("hotdogs/" + id + ".jpg");
+                if (hotdogImage) {
+                    console.log("image changed and defined - replace existing image");
+                    imageRef.put(hotdogImage).then(() => {
+                        return imageRef.getDownloadURL();
+                    }).then(url => {
+                        resolve(url);
+                    }).catch(err => {
+                        reject(err);
+                    })
+                } else {
+                    console.log("image changed but not defined - delete existing image");
+                    imageRef.delete().then(() => {
+                        resolve("");
+                    }).catch(err => {
+                        reject(err);
+                    })
+                }
             } else {
-                // delete existing image - should only evaluate to this if originally had an image, but was reset
-                console.log("image changed but no image, so delete");
-                return imageRef.delete();
+                resolve("");
             }
-        }
-    }).then(() => {
-        return id;
-    }).catch(err => {
-        return err;
+        }).catch(err => {
+            reject(err);
+        });
     });
 }
 
