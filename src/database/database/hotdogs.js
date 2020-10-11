@@ -21,6 +21,19 @@ async function all() {
     });
 }
 
+// TODO: returns details of hotdog with given id
+async function get(id) {
+    return new Promise((resolve, reject) => {
+        firebase.firestore().collection('hotdogs').doc(id).get().then(snapshot => {
+            var hotdog = snapshot.data();
+            hotdog["ts"] = hotdog["ts"].seconds;
+            resolve(hotdog);
+        }).catch(err => {
+            reject(err);
+        })
+    });
+}
+
 // returns all hotdogs where creator == given user id
 async function getCreatedBy(id) {
     return new Promise((resolve, reject) => {
@@ -116,6 +129,7 @@ async function post(hotdog, hotdogImage) {
 
 export {
     all,
+    get,
     getCreatedBy,
     getCreatedByQuery,
     getImage,

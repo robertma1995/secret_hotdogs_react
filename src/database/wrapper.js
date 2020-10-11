@@ -38,7 +38,7 @@ async function getUserProfileImage (id) {
         let url = await users.getProfileImage(id);
         return url;
     } catch(e) {
-        // console.log("database: no avatar detected, so set to default avatar (ignore annoying firebase error above)");
+        console.log("database: no avatar detected, so set to default avatar (ignore annoying firebase error above)");
         return "";
     }
 }
@@ -60,6 +60,16 @@ async function getAllHotdogs() {
     } catch(e) {
         // console.log("database: " + e);
         return [];
+    }
+}
+
+async function getHotdog(id) {
+    try {
+        let hotdog = await hotdogs.get(id);
+        return hotdog;
+    } catch(e) {
+        console.log(e);
+        return false;
     }
 }
 
@@ -116,6 +126,7 @@ export {
     getUserProfileImage,
     putUserProfileImage,
     getAllHotdogs,
+    getHotdog, 
     getHotdogImage,
     getHotdogsCreatedBy,
     getHotdogsCreatedByQuery,

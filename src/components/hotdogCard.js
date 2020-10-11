@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Avatar, IconButton, 
+    Avatar, Button, IconButton, 
     Card, CardHeader, CardMedia, CardContent, CardActions, 
 } from '@material-ui/core';
 // my components
@@ -15,7 +15,8 @@ const HotdogCard = React.memo((props) => {
     // TODO: keep id, since will need for liking later on
     const { 
         id, creatorId, creatorName, creatorProfileImageUrl, 
-        description, hotdogImageUrl, ingredients, title, ts 
+        description, hotdogImageUrl, ingredients, title, ts,
+        setHotdogDetailsId, setOpenDetailsDialog,
     } = props;
     // TODO: keep below console log to check for useless rendering
     console.log("Hotdog " + id + " rendered");
@@ -24,6 +25,12 @@ const HotdogCard = React.memo((props) => {
     var date = new Date(1970, 0, 1);
     date.setTime(ts * 1000);
     const subheader = date.getDate() + " " + (date.toLocaleString('default', {month: 'long'})) + ", " + date.getFullYear();
+
+    // TODO: one hotdog details dialog
+    function handleSetHotdogDetailsId() {
+        setOpenDetailsDialog(true);
+        setHotdogDetailsId(id);
+    }
 
     return (
         <Card>
@@ -44,6 +51,15 @@ const HotdogCard = React.memo((props) => {
                 <IconButton aria-label="like">
                     <Icon name="like" />
                 </IconButton>
+                <Button 
+                    variant="text" 
+                    color="primary"
+                    disableRipple 
+                    onClick={() => handleSetHotdogDetailsId()}
+                >
+                    SET PARENT HOTDOG ID
+                </Button>
+                {/* 
                 <HotdogDetailsDialog 
                     id={id}
                     creatorName={creatorName}
@@ -54,6 +70,7 @@ const HotdogCard = React.memo((props) => {
                     title={title}
                     subheader={subheader}
                 />
+                */}
             </CardActions>
         </Card>
     );

@@ -12,6 +12,9 @@ import { UserContext } from '../userContext';
 // database
 import * as DB from '../database/wrapper';
 
+// TODO: one hotdog details dialog
+import HotdogDetailsDialogTest from './hotdogDetailsDialogTest';
+
 /*
     given array of hotdogs, gets hotdog images and creator's profile image urls (in parallel)
 */
@@ -33,14 +36,31 @@ function HomeHotdogGrid() {
     const [hotdogs, setHotdogs] = useState([]);
     const [hd, setHd] = useState([]);
     const [loading, setLoading] = useState(true);
+    // add form
+    const [openAddDialog, setOpenAddDialog] = useState(false);
     // TODO: changing load behaviour
     const [changeType, setChangeType] = useState("added");
     const [length, setLength] = useState(0);
+    // TODO: one hotdog details dialog
+    const [hotdogDetailsId, setHotdogDetailsId] = useState("");
+    const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
-    const [openAddDialog, setOpenAddDialog] = useState(false);
+    function handleOpenDetailsDialog() {
+        setOpenDetailsDialog(true);
+    }
+
     function handleOpenAddDialog() {
         setOpenAddDialog(true);
     }
+
+    // TODO: one hotdog details dialog
+    /* 
+    useEffect(() => {
+        if (hotdogDetailsId !== "") {
+            console.log("display details dialog for hotdog: " + hotdogDetailsId);
+        }
+    }, [hotdogDetailsId]);
+    `*/
 
     // display hotdogs created by current user (reverse chronology)
     useEffect(() => {
@@ -169,6 +189,9 @@ function HomeHotdogGrid() {
                             ingredients={hotdog.ingredients}
                             title={hotdog.title}
                             ts={hotdog.ts}
+                            // TODO: one hotdog details dialog
+                            setHotdogDetailsId={setHotdogDetailsId}
+                            setOpenDetailsDialog={setOpenDetailsDialog}
                         />
                     </Grid>
                 ))}
@@ -186,6 +209,13 @@ function HomeHotdogGrid() {
                 <Icon name="plus" color="secondary" />
             </Fab>
             <HotdogFormDialog open={openAddDialog} setOpen={setOpenAddDialog} />
+            { hotdogDetailsId && 
+                <HotdogDetailsDialogTest 
+                    id={hotdogDetailsId}
+                    open={openDetailsDialog}
+                    setOpen={setOpenDetailsDialog}
+                />
+            }
         </Box>
     );
 }
