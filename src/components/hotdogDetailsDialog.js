@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
-    Avatar, Box, Button, Grid, IconButton, Paper, Typography,
+    Avatar, Box, Button, CircularProgress, Grid, IconButton, Paper, Typography,
     Card, CardHeader, CardContent, CardMedia,
     Dialog, DialogContent 
 } from '@material-ui/core';
@@ -10,6 +10,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import HotdogFormDialog from './hotdogFormDialog';
 import HotdogIngredientsList from './hotdogIngredientsList';
 import Icon from '../utils/icons';
+import constants from '../utils/constants';
+import { secondsToDate } from '../utils/functions';
+// database
+import * as DB from '../database/wrapper';
 
 const useStyles = makeStyles((theme) => ({
     dialogContent: {
@@ -73,22 +77,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /* 
-    TODO: consider using only one dialog on home that takes in hotdog id as input
+    Given hotdog id, retrieves hotdog details, supports real-time edits
 */
 function HotdogDetailsDialog(props) {
-    const { 
-        id, creatorId, creatorName, creatorProfileImageUrl,
-        description, hotdogImageUrl, ingredients, title, subheader
-    } = props;
-    // state vars - only changed by HotdogFormDialog > HotdogForm upon submitting form - makes edits reponsive
-    const [dialogDescription, setDialogDescription] = useState(description);
-    const [dialogHotdogImageUrl, setDialogHotdogImageUrl] = useState(hotdogImageUrl);
-    const [dialogIngredients, setDialogIngredients] = useState(ingredients);
-    const [dialogTitle, setDialogTitle] = useState(title);
-
+    const { id, open, setOpen } = props;
+    // initial values to pass to hotdogformdialog
+    const [creatorName, setCreatorName] = useState("");
+    const [description, setDescription] = useState("");
+    const [ingredients, setIngredients] = useState(null);
+    const [title, setTitle] = useState("");
+    const [subheader, setSubheader] = useState("");
+    const [dialogHotdogImageUrl, setDialogHotdogImageUrl] = useState("");
+    const [creatorProfileImageUrl, setCreatorProfileImageUrl] = useState("");
+    const [loading, setLoading] = useState(true);
+    // edit form 
     const [openForm, setOpenForm] = useState(false);
     const [hover, setHover] = useState(false);
-    const [open, setOpen] = useState(false);
     const classes = useStyles();
 
     function handleOpenForm() {
@@ -103,25 +107,41 @@ function HotdogDetailsDialog(props) {
         setHover(false);
     }
 
-    function handleOpen() {
-        setOpen(true);
-    }
-
     function handleClose() {
         setOpen(false);
     }
 
+    // get details on dialog open - allows consecutive opening of same hotdog (unlike id)
+    useEffect(() => {
+        if (open) {
+            setLoading(true);
+            (async () => {
+                // non-realtime data (except hotdogImageUrl - still need to retrieve on initial open)
+                let hotdogInitial = await DB.getHotdog(id);
+                let hotdogUrl = await DB.getHotdogImage(id);
+                let creatorUrl = await DB.getUserProfileImage(hotdogInitial["creatorId"]);
+                setCreatorName(hotdogInitial["creatorName"]);
+                setSubheader(secondsToDate(hotdogInitial["ts"]));
+                setCreatorProfileImageUrl(creatorUrl);
+                setDialogHotdogImageUrl(hotdogUrl || constants["hotdogImageUrl"]);
+
+                // get description, ingredients, and title in real-time
+                // note: no need to get hotdog image url - pass setter down to hotdogFormDialog > hotdogForm
+                let query = await DB.getHotdogQuery(id);
+                query.onSnapshot(snapshot => {
+                    // console.log("hotdog snapshot changed!");
+                    var hotdog = snapshot.data();
+                    setDescription(hotdog["description"]);
+                    setIngredients(hotdog["ingredients"]);
+                    setTitle(hotdog["title"]);
+                    setLoading(false);
+                });
+            })();
+        }
+    }, [open]);
 
     return (
         <>
-            <Button 
-                variant="text" 
-                color="primary"
-                disableRipple 
-                onClick={() => handleOpen()}
-            >
-                View details
-            </Button>
             <Dialog 
                 fullWidth
                 maxWidth="lg"
@@ -130,80 +150,98 @@ function HotdogDetailsDialog(props) {
             >
                 <DialogContent className={classes.dialogContent}>
                     <Box display="flex" flexDirection="row" height="100%" width="100%">
-                        <Box height="100%">
-                            <ButtonBase className={classes.buttonBase}>   
-                                <Box
-                                    onMouseEnter={() => handleMouseEnter()}
-                                    onMouseLeave={() => handleMouseLeave()} 
-                                    onClick={() => handleOpenForm()}
-                                    className={classes.cardWrapper}
-                                >
-                                    <Card 
-                                        elevation={0}
-                                        square 
-                                        className={
-                                            `${classes.card} ` +
-                                            (hover ? `${classes.hover}` : undefined)
-                                        }
-                                    >
-                                        <CardMedia image={dialogHotdogImageUrl || "https://www.svgrepo.com/show/133687/hot-dog.svg"} />
-                                        <CardContent className={classes.cardContent}>
-                                            <HotdogIngredientsList 
-                                                sausage={dialogIngredients["sausage"]}
-                                                sauce={dialogIngredients["sauce"]}
-                                                toppings={dialogIngredients["toppings"]}
-                                                dialog
-                                            />
-                                        </CardContent>
-                                    </Card>
-                                    { hover &&
-                                        <Icon color="primary" name="edit" size="large" className={classes.cardIcon} /> 
+                        { loading && 
+                            <Box
+                                display="flex"
+                                flexDirection="column"
+                                justifyContent="center"
+                                alignItems="center"
+                                height="100%"
+                                width="100%"
+                            >
+                                <CircularProgress color="primary" size={100}/>
+                            </Box>
+                        }
+                        { !loading && 
+                            <>
+                                <Box height="100%">
+                                    <ButtonBase className={classes.buttonBase}>
+                                        <Box
+                                            onMouseEnter={() => handleMouseEnter()}
+                                            onMouseLeave={() => handleMouseLeave()} 
+                                            onClick={() => handleOpenForm()}
+                                            className={classes.cardWrapper}
+                                        >
+                                            <Card 
+                                                elevation={0}
+                                                square 
+                                                className={
+                                                    `${classes.card} ` +
+                                                    (hover ? `${classes.hover}` : undefined)
+                                                }
+                                            >
+                                                <CardMedia image={dialogHotdogImageUrl} />
+                                                <CardContent className={classes.cardContent}>
+                                                    { !loading && 
+                                                        <HotdogIngredientsList 
+                                                            sausage={ingredients["sausage"]}
+                                                            sauce={ingredients["sauce"]}
+                                                            toppings={ingredients["toppings"]}
+                                                            dialog
+                                                        />
+                                                    }
+                                                </CardContent>
+                                            </Card>
+                                            { hover &&
+                                                <Icon color="primary" name="edit" size="large" className={classes.cardIcon} /> 
+                                            }
+                                        </Box>
+                                    </ButtonBase>
+                                    { !loading && 
+                                        <HotdogFormDialog
+                                            open={openForm}
+                                            setOpen={setOpenForm}
+                                            id={id}
+                                            description={description}
+                                            ingredients={ingredients}
+                                            title={title}
+                                            dialogHotdogImageUrl={dialogHotdogImageUrl}
+                                            setDialogHotdogImageUrl={setDialogHotdogImageUrl}
+                                            edit
+                                        />
                                     }
                                 </Box>
-                            </ButtonBase>
-                            <HotdogFormDialog
-                                open={openForm}
-                                setOpen={setOpenForm}
-                                id={id}
-                                description={description}
-                                hotdogImageUrl={hotdogImageUrl}
-                                ingredients={ingredients}
-                                title={title}
-                                edit
-                                setDialogDescription={setDialogDescription}
-                                setDialogHotdogImageUrl={setDialogHotdogImageUrl}
-                                setDialogIngredients={setDialogIngredients}
-                                setDialogTitle={setDialogTitle}
-                            />
-                        </Box>
-                        <Box height="100%" flexGrow={1}>
-                            <Paper square elevation={0} className={classes.paper}>
-                                <Grid container direction="column" className={classes.grid}>
-                                    <Grid item>
-                                        <Box display="flex" flexDirection="row" width="100%">
-                                            <Box flexGrow={1}>
-                                                <CardHeader
-                                                    avatar={<Avatar src={creatorProfileImageUrl} />}
-                                                    title={dialogTitle + " by " + creatorName}
-                                                    subheader={subheader}
-                                                />
-                                            </Box>
-                                            <Box>
-                                                <IconButton aria-label="close" onClick={() => handleClose()}>
-                                                    <Icon name="close" />
-                                                </IconButton>
-                                            </Box>
-                                        </Box>
-                                        <Typography variant="body2" className={classes.description}>
-                                            {dialogDescription}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item className={classes.comments}>
-                                        <p> COMMENTS GO HERE </p>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-                        </Box>
+                                <Box height="100%" flexGrow={1}>
+                                    <Paper square elevation={0} className={classes.paper}>
+                                        <Grid container direction="column" className={classes.grid}>
+                                            <Grid item>
+                                                <Box display="flex" flexDirection="row" width="100%">
+                                                    <Box flexGrow={1}>
+                                                        <CardHeader
+                                                            avatar={<Avatar src={creatorProfileImageUrl} />}
+                                                            title={title + " by " + creatorName}
+                                                            subheader={subheader}
+                                                        />
+                                                    </Box>
+                                                    <Box>
+                                                        <IconButton aria-label="close" onClick={() => handleClose()}>
+                                                            <Icon name="close" />
+                                                        </IconButton>
+                                                    </Box>
+                                                </Box>
+                                                <Typography variant="body2" className={classes.description}>
+                                                    {description}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item className={classes.comments}>
+                                                <p> COMMENTS GO HERE </p>
+                                            </Grid>
+                                        </Grid>
+                                    </Paper>
+                                </Box>
+
+                            </>
+                        }
                     </Box>
                 </DialogContent>
             </Dialog>

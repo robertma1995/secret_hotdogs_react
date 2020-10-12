@@ -34,6 +34,11 @@ async function get(id) {
     });
 }
 
+// real-time query - returned to hotdogDetailsDialog where onSnapshot will be called
+async function getQuery(id) {
+    return firebase.firestore().collection('hotdogs').doc(id);
+}
+
 // returns all hotdogs where creator == given user id
 async function getCreatedBy(id) {
     return new Promise((resolve, reject) => {
@@ -64,43 +69,13 @@ async function getImage(id) {
     return storageRef.child("hotdogs/" + id + ".jpg").getDownloadURL();
 }
 
-/*  
-    patch - updates hotdog with whatever has been changed, returns hotdog image url or empty url if successful
-*/
-async function patch(id, hotdog, hotdogImage, imageChanged) {
-    return new Promise((resolve, reject) => {
-        firebase.firestore().collection('hotdogs').doc(id).set(hotdog, {merge: true}).then(() => {
-            if (imageChanged) {
-                var imageRef = firebase.storage().ref().child("hotdogs/" + id + ".jpg");
-                if (hotdogImage) {
-                    console.log("image changed and defined - replace existing image");
-                    imageRef.put(hotdogImage).then(() => {
-                        return imageRef.getDownloadURL();
-                    }).then(url => {
-                        resolve(url);
-                    }).catch(err => {
-                        reject(err);
-                    })
-                } else {
-                    console.log("image changed but not defined - delete existing image");
-                    imageRef.delete().then(() => {
-                        resolve("");
-                    }).catch(err => {
-                        reject(err);
-                    })
-                }
-            } else {
-                resolve("");
-            }
-        }).catch(err => {
-            reject(err);
-        });
-    });
+// patch - updates hotdog with changes
+async function patch(id, hotdog) {
+    return firebase.firestore().collection('hotdogs').doc(id).set(hotdog, {merge: true});
 }
 
-/* 
-    post - returns newly created hotdog id if successful
-*/
+
+// post - returns newly created hotdog id if successful
 async function post(hotdog, hotdogImage) {
     // add timestamp and remove image field before calling add()
     hotdog["ts"] = firebase.firestore.Timestamp.now();
@@ -126,13 +101,38 @@ async function post(hotdog, hotdogImage) {
     });
 }
 
+// put image - replaces or deletes existing image
+async function putImage(id, hotdogImage) {
+    var imageRef = firebase.storage().ref().child("hotdogs/" + id + ".jpg");
+    return new Promise((resolve, reject) => {
+        if (hotdogImage) {
+            console.log("image defined - replace existing");
+            imageRef.put(hotdogImage).then(() => {
+                return imageRef.getDownloadURL();
+            }).then(url => {
+                resolve(url);
+            }).catch(err => {
+                reject(err);
+            })
+        } else {
+            console.log("image not defined - delete existing");
+            imageRef.delete().then(() => {
+                resolve("");
+            }).catch(err => {
+                reject(err);
+            })
+        }
+    });
+} 
 
 export {
     all,
     get,
+    getQuery,
     getCreatedBy,
     getCreatedByQuery,
     getImage,
     patch,
     post,
+    putImage,
 }

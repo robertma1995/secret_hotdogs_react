@@ -73,6 +73,11 @@ async function getHotdog(id) {
     }
 }
 
+async function getHotdogQuery(id) {
+    let query = await hotdogs.getQuery(id);
+    return query;
+}
+
 async function getHotdogImage(id) {
     try {
         let url = await hotdogs.getImage(id);
@@ -98,12 +103,21 @@ async function getHotdogsCreatedByQuery(id) {
     return query;
 }
 
-async function patchHotdog(id, hotdog, hotdogImage, imageChanged) {
+async function patchHotdog(id, hotdog) {
     try {
-        let url = await hotdogs.patch(id, hotdog, hotdogImage, imageChanged);
-        return url;
+        await hotdogs.patch(id, hotdog);
+        return true;
     } catch(e) {
         console.log(e);
+        return false;
+    }
+}
+
+async function putHotdogImage(id, hotdogImage) {
+    try {
+        let url = await hotdogs.putImage(id, hotdogImage);
+        return url;
+    } catch(e) {
         return false;
     }
 }
@@ -127,9 +141,11 @@ export {
     putUserProfileImage,
     getAllHotdogs,
     getHotdog, 
+    getHotdogQuery,
     getHotdogImage,
     getHotdogsCreatedBy,
     getHotdogsCreatedByQuery,
     patchHotdog,
     postHotdog,
+    putHotdogImage,
 }

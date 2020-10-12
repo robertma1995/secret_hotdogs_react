@@ -4,6 +4,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { Waypoint } from 'react-waypoint';
 // my components
 import HotdogCard from './hotdogCard';
+import HotdogDetailsDialog from './hotdogDetailsDialog';
 import HotdogFormDialog from './hotdogFormDialog';
 import Icon from '../utils/icons';
 import constants from '../utils/constants';
@@ -12,8 +13,6 @@ import { UserContext } from '../userContext';
 // database
 import * as DB from '../database/wrapper';
 
-// TODO: one hotdog details dialog
-import HotdogDetailsDialogTest from './hotdogDetailsDialogTest';
 
 /*
     given array of hotdogs, gets hotdog images and creator's profile image urls (in parallel)
@@ -41,7 +40,7 @@ function HomeHotdogGrid() {
     // TODO: changing load behaviour
     const [changeType, setChangeType] = useState("added");
     const [length, setLength] = useState(0);
-    // TODO: one hotdog details dialog
+    // hotdog details dialog
     const [hotdogDetailsId, setHotdogDetailsId] = useState("");
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
@@ -53,22 +52,15 @@ function HomeHotdogGrid() {
         setOpenAddDialog(true);
     }
 
-    // TODO: one hotdog details dialog
-    /* 
-    useEffect(() => {
-        if (hotdogDetailsId !== "") {
-            console.log("display details dialog for hotdog: " + hotdogDetailsId);
-        }
-    }, [hotdogDetailsId]);
-    `*/
-
     // display hotdogs created by current user (reverse chronology)
     useEffect(() => {
-        // console.log("CALLED");
         (async () => {
             let query = await DB.getHotdogsCreatedByQuery(userId);
             // set up snapshot listener
             query.onSnapshot(snapshot => {
+                // TODO: either prevent this from triggering per edit, or use that somehow
+                // console.log("CALLED");
+
                 setLoading(true);
                 // TODO: changing load behaviour
                 setLength(Math.min(3, snapshot.docChanges().length));
@@ -189,7 +181,6 @@ function HomeHotdogGrid() {
                             ingredients={hotdog.ingredients}
                             title={hotdog.title}
                             ts={hotdog.ts}
-                            // TODO: one hotdog details dialog
                             setHotdogDetailsId={setHotdogDetailsId}
                             setOpenDetailsDialog={setOpenDetailsDialog}
                         />
@@ -210,7 +201,7 @@ function HomeHotdogGrid() {
             </Fab>
             <HotdogFormDialog open={openAddDialog} setOpen={setOpenAddDialog} />
             { hotdogDetailsId && 
-                <HotdogDetailsDialogTest 
+                <HotdogDetailsDialog 
                     id={hotdogDetailsId}
                     open={openDetailsDialog}
                     setOpen={setOpenDetailsDialog}
