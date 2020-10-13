@@ -14,7 +14,7 @@ import { secondsToDate } from '../utils/functions';
 const HotdogCard = React.memo((props) => {
     // TODO: keep id, since will need for liking later on
     const { 
-        id, creatorId, creatorName, creatorProfileImageUrl, 
+        id, creatorId, creatorName, creatorImageUrl, 
         description, hotdogImageUrl, ingredients, title, ts,
         setHotdogDetailsId, setOpenDetailsDialog,
     } = props;
@@ -33,7 +33,7 @@ const HotdogCard = React.memo((props) => {
     return (
         <Card>
             <CardHeader
-                avatar={<Avatar src={creatorProfileImageUrl} />}
+                avatar={<Avatar src={creatorImageUrl} />}
                 title={title + " by " + creatorName}
                 subheader={subheader}
             />

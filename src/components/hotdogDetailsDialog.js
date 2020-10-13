@@ -88,7 +88,7 @@ function HotdogDetailsDialog(props) {
     const [title, setTitle] = useState("");
     const [subheader, setSubheader] = useState("");
     const [dialogHotdogImageUrl, setDialogHotdogImageUrl] = useState("");
-    const [creatorProfileImageUrl, setCreatorProfileImageUrl] = useState("");
+    const [creatorImageUrl, setCreatorImageUrl] = useState("");
     const [loading, setLoading] = useState(true);
     // edit form 
     const [openForm, setOpenForm] = useState(false);
@@ -119,10 +119,11 @@ function HotdogDetailsDialog(props) {
                 // non-realtime data (except hotdogImageUrl - still need to retrieve on initial open)
                 let hotdogInitial = await DB.getHotdog(id);
                 let hotdogUrl = await DB.getHotdogImage(id);
-                let creatorUrl = await DB.getUserProfileImage(hotdogInitial["creatorId"]);
-                setCreatorName(hotdogInitial["creatorName"]);
+                let creatorUrl = await DB.getUserImage(hotdogInitial["creatorId"]);
+                let creator = await DB.getUser(hotdogInitial["creatorId"]);
+                setCreatorName(creator["name"]);
+                setCreatorImageUrl(creatorUrl);
                 setSubheader(secondsToDate(hotdogInitial["ts"]));
-                setCreatorProfileImageUrl(creatorUrl);
                 setDialogHotdogImageUrl(hotdogUrl || constants["hotdogImageUrl"]);
 
                 // get description, ingredients, and title in real-time
@@ -218,7 +219,7 @@ function HotdogDetailsDialog(props) {
                                                 <Box display="flex" flexDirection="row" width="100%">
                                                     <Box flexGrow={1}>
                                                         <CardHeader
-                                                            avatar={<Avatar src={creatorProfileImageUrl} />}
+                                                            avatar={<Avatar src={creatorImageUrl} />}
                                                             title={title + " by " + creatorName}
                                                             subheader={subheader}
                                                         />

@@ -44,7 +44,7 @@ function isValid(type, input, setInput, setInputError) {
 function LoginForm(props) {
  	// context + state variables (default error " " prevents form from looking ugly)
     const { closeDialog } = props;
-    const { setCurrentUserId, setCurrentUserName } = useContext(UserContext);
+    const { setCurrentUserId } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(" ");
     const [password, setPassword] = useState("");
@@ -59,16 +59,13 @@ function LoginForm(props) {
             // if login succeeds, set context user id and redirect to home page
             (async () => {
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
-                const loginUserId = await DB.login(email.trim(), password);
+                const userId = await DB.login(email.trim(), password);
                 setLoading(false);
-                if (!loginUserId) {
+                if (!userId) {
                     setEmailError(errors["login"]);
                     setPasswordError(errors["login"]);
                 } else {
-                    // get user details (users currently only have a name)
-                    const loginUser = await DB.getUser(loginUserId);
-                    setCurrentUserName(loginUser.name);
-                    setCurrentUserId(loginUserId);
+                    setCurrentUserId(userId);
                     props.history.push(routes.HOME);
                 }
             })();

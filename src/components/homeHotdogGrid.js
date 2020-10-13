@@ -20,10 +20,12 @@ import * as DB from '../database/wrapper';
 async function getImages(hotdogs) {
     var hd = [...hotdogs];
     await Promise.all(hd.map(async (formattedRow) => {
-        const hotdogImageUrl = await DB.getHotdogImage(formattedRow.id);
-        const profileImageurl = await DB.getUserProfileImage(formattedRow.creatorId);
+        const hotdogImageUrl = await DB.getHotdogImage(formattedRow["id"]);
+        const creatorImageUrl = await DB.getUserImage(formattedRow["creatorId"]);
+        const creator = await DB.getUser(formattedRow["creatorId"]);
         formattedRow["hotdogImageUrl"] = hotdogImageUrl || constants["hotdogImageUrl"];
-        formattedRow["creatorProfileImageUrl"] = profileImageurl;
+        formattedRow["creatorImageUrl"] = creatorImageUrl;
+        formattedRow["creatorName"] = creator["name"];
     }));
     return hd;
 }
@@ -175,7 +177,7 @@ function HomeHotdogGrid() {
                             id={hotdog.id}
                             creatorId={hotdog.creatorId}
                             creatorName={hotdog.creatorName}
-                            creatorProfileImageUrl={hotdog.creatorProfileImageUrl}
+                            creatorImageUrl={hotdog.creatorImageUrl}
                             description={hotdog.description}
                             hotdogImageUrl={hotdog.hotdogImageUrl}
                             ingredients={hotdog.ingredients}

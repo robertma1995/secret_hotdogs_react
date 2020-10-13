@@ -5,18 +5,18 @@ import { users, hotdogs } from './database';
 // ========================================= USERS ===========================================
 async function login(email, password) {
     try {
-        let userId = await users.login(email, password);
-        return userId;
+        let id = await users.login(email, password);
+        return id;
     } catch(e) {
         // console.log("database: " + e);
         return false;
     }
 }
 
-async function register(name, email, password, profileImage) {
+async function register(name, email, password, image) {
     try {
-        let userId = await users.register(name, email, password, profileImage);
-        return userId;
+        let id = await users.register(name, email, password, image);
+        return id;
     } catch(e) {
         console.log(e);
         return false;
@@ -33,9 +33,9 @@ async function getUser(id) {
     }
 }
 
-async function getUserProfileImage (id) {
+async function getUserImage (id) {
     try {
-        let url = await users.getProfileImage(id);
+        let url = await users.getImage(id);
         return url;
     } catch(e) {
         console.log("database: no avatar detected, so set to default avatar (ignore annoying firebase error above)");
@@ -43,9 +43,9 @@ async function getUserProfileImage (id) {
     }
 }
 
-async function putUserProfileImage(id, profileImage) {
+async function putUserImage(id, image) {
     try {
-        let url = await users.putProfileImage(id, profileImage);
+        let url = await users.putImage(id, image);
         return url;
     } catch(e) {
         return "";
@@ -113,19 +113,19 @@ async function patchHotdog(id, hotdog) {
     }
 }
 
-async function putHotdogImage(id, hotdogImage) {
+async function putHotdogImage(id, image) {
     try {
-        let url = await hotdogs.putImage(id, hotdogImage);
+        let url = await hotdogs.putImage(id, image);
         return url;
     } catch(e) {
         return false;
     }
 }
 
-async function postHotdog(hotdog, hotdogImage) {
+async function postHotdog(hotdog, image) {
     try {
-        let hotdogId = await hotdogs.post(hotdog, hotdogImage);
-        console.log("database: Hotdog with id " + hotdogId + " successfully created");
+        let id = await hotdogs.post(hotdog, image);
+        console.log("database: Hotdog with id " + id + " successfully created");
         return true;
     } catch(e) {
         console.log(e);
@@ -137,8 +137,8 @@ export {
     login,
     register,
     getUser,
-    getUserProfileImage,
-    putUserProfileImage,
+    getUserImage,
+    putUserImage,
     getAllHotdogs,
     getHotdog, 
     getHotdogQuery,

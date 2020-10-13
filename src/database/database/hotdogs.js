@@ -76,7 +76,7 @@ async function patch(id, hotdog) {
 
 
 // post - returns newly created hotdog id if successful
-async function post(hotdog, hotdogImage) {
+async function post(hotdog, image) {
     // add timestamp and remove image field before calling add()
     hotdog["ts"] = firebase.firestore.Timestamp.now();
     return new Promise((resolve, reject) => {
@@ -84,9 +84,9 @@ async function post(hotdog, hotdogImage) {
         firebase.firestore().collection('hotdogs').add(hotdog).then(data => {
             const hotdogId = data.id;
             // if user chose a hotdog image, create reference in firebase storage
-            if (hotdogImage) {
+            if (image) {
                 var storageRef = firebase.storage().ref();
-                storageRef.child("hotdogs/" + hotdogId + ".jpg").put(hotdogImage).then(() => {
+                storageRef.child("hotdogs/" + hotdogId + ".jpg").put(image).then(() => {
                     resolve(hotdogId);
                 }).catch(err => {
                     reject(err)
@@ -102,12 +102,12 @@ async function post(hotdog, hotdogImage) {
 }
 
 // put image - replaces or deletes existing image
-async function putImage(id, hotdogImage) {
+async function putImage(id, image) {
     var imageRef = firebase.storage().ref().child("hotdogs/" + id + ".jpg");
     return new Promise((resolve, reject) => {
-        if (hotdogImage) {
+        if (image) {
             console.log("image defined - replace existing");
-            imageRef.put(hotdogImage).then(() => {
+            imageRef.put(image).then(() => {
                 return imageRef.getDownloadURL();
             }).then(url => {
                 resolve(url);

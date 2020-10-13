@@ -95,7 +95,7 @@ function PhotoUploadDialog(props) {
     */
     function onDrop(files) {
         if (files.length > 1) {
-            setUploadError("Too many photos! Drag your desired profile photo only");
+            setUploadError(`Too many photos! Drag your desired ${profile ? "profile" : "hotdog"} photo only`);
         } else {
             let file = files[0];
             if (file.type === "image/jpeg" || file.type === "image/png") {

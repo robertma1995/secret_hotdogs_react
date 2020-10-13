@@ -19,7 +19,7 @@ async function login(email, password) {
     return true if register successful, otherwise return firebase error
     inserting with custom id: https://stackoverflow.com/questions/48541270/how-to-add-document-with-custom-id-to-firestore
 */
-async function register(name, email, password, profileImage) {
+async function register(name, email, password, image) {
     return new Promise((resolve, reject) => {
         firebase.auth().createUserWithEmailAndPassword(email, password).then(credential => {
             // add to users collection and set name if register successful
@@ -31,9 +31,9 @@ async function register(name, email, password, profileImage) {
             });
 
             // if user set profile image on register, create reference in firebase storage
-            if (profileImage) {
+            if (image) {
                 var storageRef = firebase.storage().ref();
-                storageRef.child("users/" + userId + ".jpg").put(profileImage).then(() => {
+                storageRef.child("users/" + userId + ".jpg").put(image).then(() => {
                     resolve(userId);
                 }).catch(err => 
                     reject(err)
@@ -64,20 +64,20 @@ async function get(id) {
     get user profile image url given firebase auth id 
     TODO: consider combining this with get user function
 */
-async function getProfileImage(id) {
+async function getImage(id) {
     var storageRef = firebase.storage().ref();
     return storageRef.child("users/" + id + ".jpg").getDownloadURL();
 }
 
 /* 
     deletes existing profile image blob record if no profile image, updates image otherwise  
-    resolves with storage url if profileImage defined, otherwise resolves to empty string
+    wrapper.js resolves with storage url if image defined, otherwise it resolves to empty string
 */
-async function putProfileImage(id, profileImage) {
+async function putImage(id, image) {
     return new Promise((resolve, reject) => {
         var storageRef = firebase.storage().ref();
         var imageRef = storageRef.child("users/" + id + ".jpg");
-        var action = profileImage ? imageRef.put(profileImage) : imageRef.delete();
+        var action = image ? imageRef.put(image) : imageRef.delete();
         action.then(() => {
             return imageRef.getDownloadURL();
         }).then(url => {
@@ -92,6 +92,6 @@ export {
     login,
     register,
     get,
-    getProfileImage,
-    putProfileImage,
+    getImage,
+    putImage,
 }

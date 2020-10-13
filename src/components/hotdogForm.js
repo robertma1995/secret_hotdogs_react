@@ -100,7 +100,7 @@ function HotdogForm(props) {
         initialDescription, initialHotdogImageUrl, initialIngredients, initialTitle, edit,
         setDialogHotdogImageUrl
     } = props;
-    const { userId, userName } = useContext(UserContext);
+    const { userId } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
     const [submitStatus, setSubmitStatus] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -191,6 +191,8 @@ function HotdogForm(props) {
             for (const topping of toppings.values()) {
                 toppingsArray.push(topping);
             }
+            
+            console.log("KAPPA2");
 
             if (edit) {
                 // remove fields from changes if same as initial
@@ -202,7 +204,7 @@ function HotdogForm(props) {
                         toppings: initialIngredients["toppings"]
                     },
                     title: initialTitle,
-                }
+                };
                 var changes = {
                     description: description,
                     ingredients: {
@@ -211,7 +213,7 @@ function HotdogForm(props) {
                         toppings: toppingsArray
                     },
                     title: title,
-                }
+                };
                 changes = removeMatching(changes, initial);
                 console.log("PATCH: ");
                 console.log(changes);
@@ -238,7 +240,6 @@ function HotdogForm(props) {
             } else {
                 const hotdog = {
                     creatorId: userId,
-                    creatorName: userName,
                     description: description,
                     ingredients: {
                         sausage: sausage,
@@ -246,7 +247,7 @@ function HotdogForm(props) {
                         toppings: toppingsArray
                     },
                     title: title,
-                }
+                };
                 (async () => {
                     var postSuccess = await DB.postHotdog(hotdog, hotdogImage);
                     setSubmitStatus(postSuccess);
@@ -276,7 +277,7 @@ function HotdogForm(props) {
 
     return (
         <Form>
-             <FormMessage variant="body2" color="textSecondary">
+            <FormMessage variant="body2" color="textSecondary" style={{ paddingBottom: 'unset' }}>
                 { hotdogImageUrl === constants["hotdogImageUrl"] && "Select a new picture by clicking the hotdog below" }
                 { hotdogImageUrl !== constants["hotdogImageUrl"] && "Your hotdog picture" }
             </FormMessage>

@@ -15,17 +15,20 @@ import { UserContext } from '../userContext';
 import * as DB from '../database/wrapper';
 
 function NavBar(props) { 
-    const { userId, setCurrentUserId, userName, setCurrentUserName } = useContext(UserContext);
+    const { userId, setCurrentUserId } = useContext(UserContext);
     const [openLoginDialog, setOpenLoginDialog] = useState(false);
-    const [profileImageUrl, setProfileImageUrl] = useState("");
+    const [userName, setUserName] = useState("");
+    const [userImageUrl, setUserImageUrl] = useState("");
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (userId !== null) {
             (async () => {
-                console.log("RETRIEVING USER PROFILE IMAGE FOR " + userId);
-                const url = await DB.getUserProfileImage(userId);
-                setProfileImageUrl(url);
+                console.log("RETRIEVING DETAILS AND IMAGE FOR USER: " + userId);
+                const user = await DB.getUser(userId);
+                const url = await DB.getUserImage(userId);
+                setUserName(user["name"]);
+                setUserImageUrl(url);
                 setLoading(false);
             })();
         }
@@ -34,7 +37,6 @@ function NavBar(props) {
     // unset context vars and redirect to login page
     function handleLogout() {
         setCurrentUserId(null);
-        setCurrentUserName(null);
         props.history.push(routes.HOME);
     }
 
@@ -58,8 +60,8 @@ function NavBar(props) {
                             <NavbarAvatar 
                                 userId={userId}
                                 userName={userName}
-                                profileImageUrl={profileImageUrl}
-                                setProfileImageUrl={setProfileImageUrl}
+                                userImageUrl={userImageUrl}
+                                setUserImageUrl={setUserImageUrl}
                                 handleLogout={handleLogout} 
                             />
                         }

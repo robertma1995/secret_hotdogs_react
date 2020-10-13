@@ -71,8 +71,8 @@ function RegisterForm(props) {
     const [registered, setRegistered] = useState(false);
     const [loading, setLoading] = useState(false);
     // profile image/avatar
-    const [profileImage, setProfileImage] = useState(null);
-    const [profileImageUrl, setProfileImageUrl] = useState("");
+    const [image, setImage] = useState(null);
+    const [imageUrl, setImageUrl] = useState("");
     const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
     function handleOpenPhotoDialog() {
         setOpenPhotoDialog(true);
@@ -95,9 +95,9 @@ function RegisterForm(props) {
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
             setLoading(true);
             (async () => {
-                // NOTE: if profileImage === null (i.e. user did not set a profile image),
+                // NOTE: if image === null (i.e. user did not set a profile image),
                 // then database does not create a new image reference ("validity" check moved to backend)
-                var registerUserId = await DB.register(name, email, password, profileImage);
+                var registerUserId = await DB.register(name, email, password, Image);
                 setLoading(false);
                 
                 // if register succeeds, reset all fields and give user option to go to login 
@@ -109,8 +109,8 @@ function RegisterForm(props) {
                     setEmail("");
                     setPassword("");
                     setPasswordConfirm("");
-                    setProfileImage(null);
-                    setProfileImageUrl("");
+                    setImage(null);
+                    setImageUrl("");
                     setRegistered(true);
                 }
             })();
@@ -120,12 +120,12 @@ function RegisterForm(props) {
     return (
         <Form>
             <FormMessage variant="body2" color="textSecondary">
-                { !profileImage && "Select your profile picture by clicking the avatar" }
-                { profileImage && "Your profile picture" }
+                { !image && "Select your profile picture by clicking the avatar" }
+                { image && "Your profile picture" }
             </FormMessage>
             <FormButtonWrapper style={{ borderBottom: '1px solid #cbb09c' }}>
                 <ImageButton
-                    imageUrl={profileImageUrl}
+                    imageUrl={imageUrl}
                     iconName="camera"
                     iconSize="large"
                     handleClick={handleOpenPhotoDialog}
@@ -133,9 +133,9 @@ function RegisterForm(props) {
                 />
             </FormButtonWrapper>
             <PhotoUploadDialog 
-                setPhoto={setProfileImage} 
-                photoUrl={profileImageUrl}
-                setPhotoUrl={setProfileImageUrl}
+                setPhoto={setImage} 
+                photoUrl={imageUrl}
+                setPhotoUrl={setImageUrl}
                 open={openPhotoDialog}
                 setOpen={setOpenPhotoDialog}
                 profile

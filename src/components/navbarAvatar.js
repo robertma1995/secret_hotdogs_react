@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     Avatar with material ui menu - for now, only used in navbar, and also takes in handleLogout function
 */
 function NavbarAvatar(props) {
-    const { userId, userName, profileImageUrl, setProfileImageUrl, handleLogout } = props;
+    const { userId, userName, userImageUrl, setUserImageUrl, handleLogout } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const classes = useStyles();
 
@@ -65,15 +65,15 @@ function NavbarAvatar(props) {
 
     // track previous image url to prevent recursive useEffect 
     const [newImage, setNewImage] = useState(null);
-    const [newImageUrl, setNewImageUrl] = useState(profileImageUrl);   
-    const [previousImageUrl, setPreviousImageUrl] = useState(profileImageUrl);
+    const [newImageUrl, setNewImageUrl] = useState(userImageUrl);   
+    const [previousImageUrl, setPreviousImageUrl] = useState(userImageUrl);
 
-    // update backend only if profile image has been changed - have to set previous first
+    // update backend only if user image has been changed - have to set previous first
     useEffect(() => {
         if (newImageUrl !== previousImageUrl) {
-            console.log("CHANGED PROFILE IMAGE");
+            console.log("CHANGED USER IMAGE");
             (async () => {
-                let url = await DB.putUserProfileImage(userId, newImage);
+                let url = await DB.putUserImage(userId, newImage);
                 setPreviousImageUrl(url);
                 setNewImageUrl(url);
             })();
