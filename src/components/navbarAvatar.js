@@ -63,9 +63,9 @@ function NavbarAvatar(props) {
 
     const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
 
-    // track previous image url to prevent recursive useEffect 
+    // track previous image url to prevent recursive useEffect
     const [newImage, setNewImage] = useState(null);
-    const [newImageUrl, setNewImageUrl] = useState(userImageUrl);   
+    const [newImageUrl, setNewImageUrl] = useState(userImageUrl);
     const [previousImageUrl, setPreviousImageUrl] = useState(userImageUrl);
 
     // update backend only if user image has been changed - have to set previous first

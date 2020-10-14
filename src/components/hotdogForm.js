@@ -61,36 +61,7 @@ function isValidTopping(topping, key, updateToppings, updateToppingErrors) {
 }
 
 /* 
-    removes fields from changes that match initial values - ignores order
-*/
-/* 
-function removeMatching(changes, initial) {
-    var res = changes;
-    for (var i in res) {
-        if (i !== "ingredients" && res[i] === initial[i]) {
-            delete res[i];
-        } else if (i === "ingredients") {
-            const ingredientsInitial = initial[i];
-            // check fields in ingredients
-            for (var j in res[i]) {
-                if (j !== "toppings" && res[i][j] === ingredientsInitial[j]) {
-                    delete res[i][j];
-                } else if (j === "toppings") {
-                    const toppingsInitial = ingredientsInitial[j];
-                    // sort arrays, compare equality
-                    if (isEqual(res[i][j].sort(), toppingsInitial.sort())) {
-                        delete res[i][j];
-                    }
-                }
-            }
-            // remove empty ingredients (i.e. "{}"), otherwise gets included in patch
-            if (isEmpty(res[i])) {
-                delete res[i];
-            } 
-        }
-    }
-    return res;
-}
+    helper: removes fields from changes that match initial values - ignores order
 */
 function removeMatching(changes, initial) {
     var res = changes;
@@ -185,7 +156,6 @@ function HotdogForm(props) {
     function handleSubmit() {
         // handle consecutive submits on same form
         setOpenSnackbar(false);
-        setLoading(true);
         
         const titleValid = isValid(title, setTitle, setTitleError);
         const sausageValid = isValid(sausage, setSausage, setSausageError);
@@ -201,6 +171,7 @@ function HotdogForm(props) {
         // check errors with local vars, since setError functions are asynchronous
         if (titleValid && sausageValid && sauceValid && toppingsValid) {
             // strip topping ids
+            setLoading(true);
             let toppingsArray = [];
             for (const topping of toppings.values()) {
                 toppingsArray.push(topping);

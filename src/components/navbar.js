@@ -24,6 +24,8 @@ function NavBar(props) {
     useEffect(() => {
         if (userId !== null) {
             (async () => {
+                // reset loading status to allow logging in/out to refresh the navbar avatar
+                setLoading(true);
                 const user = await DB.getUser(userId);
                 const url = await DB.getUserImage(userId);
                 setUserName(user["name"]);
