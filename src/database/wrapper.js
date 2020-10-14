@@ -13,16 +13,6 @@ async function login(email, password) {
     }
 }
 
-async function register(name, email, password, image) {
-    try {
-        let id = await users.register(name, email, password, image);
-        return id;
-    } catch(e) {
-        console.log(e);
-        return false;
-    }
-}
-
 async function getUser(id) {
     try {
         let user = await users.get(id);
@@ -33,13 +23,31 @@ async function getUser(id) {
     }
 }
 
-async function getUserImage (id) {
+async function getUserImage(id) {
     try {
         let url = await users.getImage(id);
         return url;
     } catch(e) {
         console.log("database: no avatar detected, so set to default avatar (ignore annoying firebase error above)");
         return "";
+    }
+}
+
+async function postUser(name, email, password) {
+    try {
+        let id = await users.post(name, email, password);
+        return id;
+    } catch(e) {
+        return false;
+    }
+}
+
+async function postUserImage(id, image) {
+    try {
+        await users.postImage(id, image);
+        return true;
+    } catch(e) {
+        return false;
     }
 }
 
@@ -113,6 +121,25 @@ async function patchHotdog(id, hotdog) {
     }
 }
 
+async function postHotdog(hotdog) {
+    try {
+        let id = await hotdogs.post(hotdog);
+        return id;
+    } catch(e) {
+        console.log(e);
+        return false;
+    }
+}
+
+async function postHotdogImage(id, image) {
+    try {
+        await hotdogs.postImage(id, image);
+        return true;
+    } catch(e) {
+        return false;
+    }
+}
+
 async function putHotdogImage(id, image) {
     try {
         let url = await hotdogs.putImage(id, image);
@@ -122,22 +149,13 @@ async function putHotdogImage(id, image) {
     }
 }
 
-async function postHotdog(hotdog, image) {
-    try {
-        let id = await hotdogs.post(hotdog, image);
-        console.log("database: Hotdog with id " + id + " successfully created");
-        return true;
-    } catch(e) {
-        console.log(e);
-        return false;
-    }
-}
 
 export {
     login,
-    register,
     getUser,
     getUserImage,
+    postUser,
+    postUserImage,
     putUserImage,
     getAllHotdogs,
     getHotdog, 
@@ -147,5 +165,6 @@ export {
     getHotdogsCreatedByQuery,
     patchHotdog,
     postHotdog,
+    postHotdogImage,
     putHotdogImage,
 }

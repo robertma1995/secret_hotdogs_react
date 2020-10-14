@@ -63,6 +63,7 @@ function isValidTopping(topping, key, updateToppings, updateToppingErrors) {
 /* 
     removes fields from changes that match initial values - ignores order
 */
+/* 
 function removeMatching(changes, initial) {
     var res = changes;
     for (var i in res) {
@@ -86,6 +87,20 @@ function removeMatching(changes, initial) {
             if (isEmpty(res[i])) {
                 delete res[i];
             } 
+        }
+    }
+    return res;
+}
+*/
+function removeMatching(changes, initial) {
+    var res = changes;
+    for (var k in res) {
+        if (k !== "toppings" && res[k] === initial[k]) {
+            delete res[k];
+        } else if (k === "toppings") {
+            if (isEqual(res[k].sort(), initial[k].sort())) {
+                delete res[k];
+            }
         }
     }
     return res;
@@ -146,15 +161,15 @@ function HotdogForm(props) {
 
     // adds a topping and error state variables
     function handleAddTopping() {
-        const id = uuidv4();
-        updateToppings(id, "");
-        updateToppingErrors(id, " ");
+        const toppingId = uuidv4();
+        updateToppings(toppingId, "");
+        updateToppingErrors(toppingId, " ");
     }
 
     // removes given topping and error state variables
-    function handleRemoveTopping(id) {
-        removeTopping(id);
-        removeToppingError(id);
+    function handleRemoveTopping(toppingId) {
+        removeTopping(toppingId);
+        removeToppingError(toppingId);
     }
 
     function handleOpenPhotoDialog() {
@@ -175,7 +190,6 @@ function HotdogForm(props) {
         const titleValid = isValid(title, setTitle, setTitleError);
         const sausageValid = isValid(sausage, setSausage, setSausageError);
         const sauceValid = isValid(sauce, setSauce, setSauceError);
-
         var toppingsValid = true;
         for (const key of toppings.keys()) {
             var topping = toppings.get(key);
@@ -183,50 +197,43 @@ function HotdogForm(props) {
                 toppingsValid = false;
             }
         }
-        
+
         // check errors with local vars, since setError functions are asynchronous
         if (titleValid && sausageValid && sauceValid && toppingsValid) {
             // strip topping ids
-            var toppingsArray = [];
+            let toppingsArray = [];
             for (const topping of toppings.values()) {
                 toppingsArray.push(topping);
             }
             
-            console.log("KAPPA2");
+            let hotdog = { 
+                description: description, 
+                sauce: sauce, 
+                sausage: sausage, 
+                toppings: toppingsArray, 
+                title: title 
+            };
 
             if (edit) {
                 // remove fields from changes if same as initial
                 const initial = {
                     description: initialDescription,
-                    ingredients: {
-                        sauce: initialIngredients["sauce"],
-                        sausage: initialIngredients["sausage"],
-                        toppings: initialIngredients["toppings"]
-                    },
+                    sauce: initialIngredients["sauce"],
+                    sausage: initialIngredients["sausage"],
+                    toppings: initialIngredients["toppings"],
                     title: initialTitle,
                 };
-                var changes = {
-                    description: description,
-                    ingredients: {
-                        sausage: sausage,
-                        sauce: sauce,
-                        toppings: toppingsArray
-                    },
-                    title: title,
-                };
-                changes = removeMatching(changes, initial);
-                console.log("PATCH: ");
-                console.log(changes);
+                const changes = removeMatching(hotdog, initial);
                 
                 // update hotdog details (triggers real-time update of details dialog)
                 (async () => {
-                    var editSuccess = false;
+                    let editSuccess = false;
                     if (!isEmpty(changes)) {
                         editSuccess = await DB.patchHotdog(id, changes);
                     }
                     // update details dialog image to simulate "real-time" since storage doesn't support it
                     if (hotdogImageUrl !== initialHotdogImageUrl) {
-                        var url = await DB.putHotdogImage(id, hotdogImage);
+                        let url = await DB.putHotdogImage(id, hotdogImage);
                         editSuccess = url !== false;
                         if (editSuccess) {
                             const finalUrl = url || constants["hotdogImageUrl"];
@@ -238,20 +245,15 @@ function HotdogForm(props) {
                     setLoading(false);
                 })();
             } else {
-                const hotdog = {
-                    creatorId: userId,
-                    description: description,
-                    ingredients: {
-                        sausage: sausage,
-                        sauce: sauce,
-                        toppings: toppingsArray
-                    },
-                    title: title,
-                };
+                hotdog["creatorId"] = userId;
                 (async () => {
-                    var postSuccess = await DB.postHotdog(hotdog, hotdogImage);
-                    setSubmitStatus(postSuccess);
+                    let id = await DB.postHotdog(hotdog);
+                    let addSuccess = id !== false;
+                    if (addSuccess && hotdogImage) {
+                        addSuccess = await DB.postHotdogImage(id, hotdogImage);
+                    }
                     setLoading(false);
+                    setSubmitStatus(addSuccess);
                 })();
             }
         }

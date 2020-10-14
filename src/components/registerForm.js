@@ -95,16 +95,18 @@ function RegisterForm(props) {
         if (nameValid && emailValid && passwordValid && passwordConfirmValid) {
             setLoading(true);
             (async () => {
-                // NOTE: if image === null (i.e. user did not set a profile image),
-                // then database does not create a new image reference ("validity" check moved to backend)
-                var registerUserId = await DB.register(name, email, password, Image);
+                // only set user image if defined and account creation succeeded
+                let id = await DB.postUser(name, email, password);
+                let registerSuccess = id !== false;
+                if (registerSuccess && image) {
+                    registerSuccess = await DB.postUserImage(id, image);
+                }
                 setLoading(false);
-                
+
                 // if register succeeds, reset all fields and give user option to go to login 
-                if (!registerUserId) {
+                if (!registerSuccess) {
                     setEmailError(errors["email"]);
                 } else {
-                    // console.log("database: User with id " + registerUserId + " successfully created");
                     setName("");
                     setEmail("");
                     setPassword("");

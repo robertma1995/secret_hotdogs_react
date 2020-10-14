@@ -1,7 +1,9 @@
 // imports
 import { firebase } from './index';
 
-// return all hotdogs with id and readable timestamps
+/* 
+    return all hotdogs with id and readable timestamps
+*/
 async function all() {
     return new Promise((resolve, reject) => {
         firebase.firestore().collection('hotdogs').get().then(data => {
@@ -21,7 +23,9 @@ async function all() {
     });
 }
 
-// TODO: returns details of hotdog with given id
+/*
+    returns details of hotdog with given id
+*/
 async function get(id) {
     return new Promise((resolve, reject) => {
         firebase.firestore().collection('hotdogs').doc(id).get().then(snapshot => {
@@ -34,12 +38,16 @@ async function get(id) {
     });
 }
 
-// real-time query - returned to hotdogDetailsDialog where onSnapshot will be called
+/*
+    real-time query - returned to hotdogDetailsDialog where onSnapshot will be called
+*/
 async function getQuery(id) {
     return firebase.firestore().collection('hotdogs').doc(id);
 }
 
-// returns all hotdogs where creator == given user id
+/*
+    returns all hotdogs where creator == given user id
+*/
 async function getCreatedBy(id) {
     return new Promise((resolve, reject) => {
         firebase.firestore().collection('hotdogs').where("creatorId", "==", id).get().then(data => {
@@ -58,50 +66,81 @@ async function getCreatedBy(id) {
     });
 }
 
-// real-time query - returned to hotdogGrid where onSnapshot will be called
+/*
+    real-time query - returned to hotdogGrid where onSnapshot will be called
+*/
 async function getCreatedByQuery(id) {
     return firebase.firestore().collection('hotdogs').where("creatorId", "==", id);
 }
 
-// given hotdog id, retrieves image from storage
+/*
+    given hotdog id, retrieves image from storage
+*/
 async function getImage(id) {
     var storageRef = firebase.storage().ref();
     return storageRef.child("hotdogs/" + id + ".jpg").getDownloadURL();
 }
 
-// patch - updates hotdog with changes
+/* 
+    updates existing hotdog record
+*/
 async function patch(id, hotdog) {
-    return firebase.firestore().collection('hotdogs').doc(id).set(hotdog, {merge: true});
+    const { description, sauce, sausage, toppings, title } = hotdog;
+    let h = {
+        description, 
+        ingredients: {sauce, sausage, toppings},
+        title,
+    }
+    // remove undefined values before patching
+    for (var i in h) {
+        if (i !== "ingredients" && h[i] === undefined) {
+            delete h[i];
+        } else if (i === "ingredients") {
+            for (var j in h[i]) {
+                if (h[i][j] === undefined) {
+                    delete h[i][j];
+                }
+            }
+            // remove empty ingredients (i.e. "{}"), otherwise gets included in patch
+            if (Object.keys(h[i]).length === 0) {
+                delete h[i];
+            }
+        }
+    }
+    return firebase.firestore().collection('hotdogs').doc(id).set(h, {merge: true});
 }
 
-
-// post - returns newly created hotdog id if successful
-async function post(hotdog, image) {
-    // add timestamp and remove image field before calling add()
-    hotdog["ts"] = firebase.firestore.Timestamp.now();
+/* 
+    returns newly created hotdog id if successful
+*/
+async function post(hotdog) {
+    const { creatorId, description, sauce, sausage, toppings, title } = hotdog;
+    let h = {
+        creatorId,
+        description, 
+        ingredients: {sauce, sausage, toppings},
+        title,
+        ts: firebase.firestore.Timestamp.now()
+    }
     return new Promise((resolve, reject) => {
-        // add returns a "DocumentReference"
-        firebase.firestore().collection('hotdogs').add(hotdog).then(data => {
-            const hotdogId = data.id;
-            // if user chose a hotdog image, create reference in firebase storage
-            if (image) {
-                var storageRef = firebase.storage().ref();
-                storageRef.child("hotdogs/" + hotdogId + ".jpg").put(image).then(() => {
-                    resolve(hotdogId);
-                }).catch(err => {
-                    reject(err)
-                });
-            } else {
-                resolve(hotdogId);
-            }
-            resolve(hotdogId);
+        firebase.firestore().collection('hotdogs').add(h).then(data => {
+            resolve(data.id);
         }).catch(err => {
-            reject(err)
+            reject(err);
         });
     });
 }
 
-// put image - replaces or deletes existing image
+/* 
+    wrapper.js returns true if new image added successfully
+*/
+async function postImage(id, image) {
+    return firebase.storage().ref().child("hotdogs/" + id + ".jpg").put(image);
+} 
+
+/* 
+    replaces or deletes existing image
+*/
 async function putImage(id, image) {
     var imageRef = firebase.storage().ref().child("hotdogs/" + id + ".jpg");
     return new Promise((resolve, reject) => {
@@ -134,5 +173,6 @@ export {
     getImage,
     patch,
     post,
+    postImage,
     putImage,
 }

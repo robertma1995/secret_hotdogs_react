@@ -24,7 +24,6 @@ function NavBar(props) {
     useEffect(() => {
         if (userId !== null) {
             (async () => {
-                console.log("RETRIEVING DETAILS AND IMAGE FOR USER: " + userId);
                 const user = await DB.getUser(userId);
                 const url = await DB.getUserImage(userId);
                 setUserName(user["name"]);

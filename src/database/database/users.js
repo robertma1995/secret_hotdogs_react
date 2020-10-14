@@ -15,38 +15,6 @@ async function login(email, password) {
     });
 }
 
-/*
-    return true if register successful, otherwise return firebase error
-    inserting with custom id: https://stackoverflow.com/questions/48541270/how-to-add-document-with-custom-id-to-firestore
-*/
-async function register(name, email, password, image) {
-    return new Promise((resolve, reject) => {
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(credential => {
-            // add to users collection and set name if register successful
-            const userId = credential.user.uid;
-            firebase.firestore().collection('users').doc(userId).set({
-                name: name
-            }).catch(err => {
-                reject(err);
-            });
-
-            // if user set profile image on register, create reference in firebase storage
-            if (image) {
-                var storageRef = firebase.storage().ref();
-                storageRef.child("users/" + userId + ".jpg").put(image).then(() => {
-                    resolve(userId);
-                }).catch(err => 
-                    reject(err)
-                );
-            } else {
-                resolve(userId);
-            }
-        }).catch(err => 
-            reject(err)
-        );
-    });
-}
-
 /*  
     get user details given firebase auth id
 */
@@ -70,14 +38,38 @@ async function getImage(id) {
 }
 
 /* 
+    returns user id if registration successful - set name in users collection
+*/
+async function post(name, email, password) {
+    return new Promise((resolve, reject) => {
+        firebase.auth().createUserWithEmailAndPassword(email, password).then(credential => {
+            const id = credential.user.uid;
+            firebase.firestore().collection('users').doc(id).set({name: name}).then(() => {
+                resolve(id);
+            }).catch(err => {
+                reject(err);
+            });
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+/* 
+    wrapper.js returns true if new image added successfully
+*/
+async function postImage(id, image) {
+    return firebase.storage().ref().child("users/" + id + ".jpg").put(image);
+}
+
+/* 
     deletes existing profile image blob record if no profile image, updates image otherwise  
     wrapper.js resolves with storage url if image defined, otherwise it resolves to empty string
 */
 async function putImage(id, image) {
     return new Promise((resolve, reject) => {
-        var storageRef = firebase.storage().ref();
-        var imageRef = storageRef.child("users/" + id + ".jpg");
-        var action = image ? imageRef.put(image) : imageRef.delete();
+        let imageRef = firebase.storage().ref().child("users/" + id + ".jpg");
+        let action = image ? imageRef.put(image) : imageRef.delete();
         action.then(() => {
             return imageRef.getDownloadURL();
         }).then(url => {
@@ -90,8 +82,9 @@ async function putImage(id, image) {
 
 export {
     login,
-    register,
     get,
     getImage,
+    post, 
+    postImage,
     putImage,
 }
