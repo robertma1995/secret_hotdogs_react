@@ -18,18 +18,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ProgressButton(props) {
-    const { text, loading, handleClick } = props;
+    const { size, disabled, loading, handleClick } = props;
     const classes = useStyles();
     return (
         <div className={classes.wrapper}>
             <Button
                 color="primary" 
                 variant="contained"
-                disabled={loading}
+                size={size}
+                disabled={disabled || loading}
                 onClick={() => handleClick()}
                 disableElevation
             >
-                {text}
+                {props.children}
             </Button>
             {loading && <CircularProgress size={24} className={classes.buttonSpinner}/>}
         </div>

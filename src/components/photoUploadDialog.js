@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // cropper
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.min.css';
@@ -11,8 +11,9 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 // my components - photo preview
-import Icon from '../utils/icons';
 import ImageButton from './imageButton';
+import ProgressButton from './progressButton';
+import Icon from '../utils/icons';
 import constants from '../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
@@ -77,15 +78,26 @@ const useStyles = makeStyles((theme) => ({
     Sets parent's photo state variable as the cropped image upon pressing the "set" button
     Converts cropped photo into a dataURL to be used in "img", "Avatar", etc. 
     Also saves crop box data in state so user can go back even if the dialog closes
+    If confirm is required, then pressing set button will only set local photo url variables 
+    - once the confirm button is pressed, then calls parent setPhoto and setPhotoUrl variable is changed
 */
 function PhotoUploadDialog(props) {
-    const { setPhoto, photoUrl, setPhotoUrl, open, setOpen, profile } = props;
+    const { 
+        setPhoto, photoUrl, setPhotoUrl, 
+        open, setOpen, profile, 
+        confirmRequired, confirmLoading 
+    } = props;
     const [uploadError, setUploadError] = useState("");
     const [imageName, setImageName] = useState("");
     const [cropperImage, setCropperImage] = useState(null);
     const [cropper, setCropper] = useState();
     const [cropperData, setCropperData] = useState();
     const classes = useStyles();
+
+    // TODO: confirm button before setting parent photo
+    const [confirmActive, setConfirmActive] = useState(false);
+    const [localPhoto, setLocalPhoto] = useState(null);
+    const [localPhotoUrl, setLocalPhotoUrl] = useState(photoUrl);
 
     /*
         custom accepted file handler since react-dropzone "mutliple={false}" doesn't work consistently
@@ -122,10 +134,17 @@ function PhotoUploadDialog(props) {
             maxHeight: max,
             maxWidth: max,
         }).toBlob((blob) => {
-            setPhoto(blob);
             let reader = new FileReader();
             reader.readAsDataURL(blob);
-            reader.onload = () => setPhotoUrl(reader.result);
+            // TODO: confirm button before setting parent photo
+            if (confirmRequired) {
+                reader.onload = () => setLocalPhotoUrl(reader.result);
+                setLocalPhoto(blob);
+                setConfirmActive(true);
+            } else {
+                reader.onload = () => setPhotoUrl(reader.result);
+                setPhoto(blob);
+            }
         }, 'image/jpeg');
         setCropperData(cropper.getData());
     }
@@ -136,8 +155,24 @@ function PhotoUploadDialog(props) {
     */
     function handleResetPhoto() {
         console.log("RESET PHOTO");
-        setPhoto(null);
-        setPhotoUrl(profile ? "" : constants["hotdogImageUrl"]);
+        // TODO: confirm button before setting parent photo
+        const url = profile ? "" : constants["hotdogImageUrl"];
+        if (confirmRequired) {
+            setLocalPhoto(null);
+            setLocalPhotoUrl(url);
+            setConfirmActive(true);
+        } else {
+            setPhoto(null);
+            setPhotoUrl(url);
+        }
+    }
+
+    // TODO: confirm button before setting parent photo
+    function handleConfirmPhoto() {
+        console.log("CONFIRMED - SETTING PARENT PHOTO");
+        setPhoto(localPhoto);
+        setPhotoUrl(localPhotoUrl);
+        setConfirmActive(false);
     }
 
     function handleResetCropper() {
@@ -147,6 +182,17 @@ function PhotoUploadDialog(props) {
 
     function handleClose() {
         setOpen(false);
+        // TODO: confirm button before setting parent photo
+        if (confirmRequired) {
+            const sleep = (ms) => {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            };
+            sleep(500).then(() => {
+                setCropperImage(null);
+                setLocalPhotoUrl(photoUrl);
+                setConfirmActive(false);
+            });
+        }
     }
 
     return (
@@ -187,14 +233,14 @@ function PhotoUploadDialog(props) {
                             className={classes.preview}
                         >
                             <Typography color="primary" variant="caption" style={{ paddingBottom: '5px' }}> 
-                                <b>Preview</b>
+                                <b>Your photo</b>
                             </Typography>
                             <ImageButton 
-                                imageUrl={photoUrl}
+                                imageUrl={confirmRequired ? localPhotoUrl : photoUrl}
                                 iconName="delete"
                                 iconSize="large"
                                 handleClick={handleResetPhoto}
-                                avatar={profile}
+                                avatar
                             />
                         </Box>
                     }
@@ -216,7 +262,7 @@ function PhotoUploadDialog(props) {
                                         >
                                             <Typography align="center" color="textSecondary" variant="h5">
                                                 { !isDragActive && uploadError.trim() === "" && 
-                                                    `Drag a new ${profile ? "profile" : "hotdog"} photo here` 
+                                                    `Drag a new ${profile ? "profile" : "hotdog"} photo here or click to upload` 
                                                 }
                                                 { isDragAccept && uploadError.trim() === "" && 
                                                     "Drop photo to upload" 
@@ -259,9 +305,8 @@ function PhotoUploadDialog(props) {
                                     <b>{imageName}</b>
                                 </Typography>
                                 <Typography variant="caption"> 
-                                    To crop this image, drag the region below and then click 
-                                    "Set {profile ? "profile" : "hotdog"} photo". 
-                                    To upload a new photo, click "Reset photo".
+                                    To crop, drag the region below and click "Set". 
+                                    To upload another photo, click "Reset". 
                                 </Typography>
                             </Box>
                             <Box flexGrow={1}>
@@ -296,7 +341,7 @@ function PhotoUploadDialog(props) {
                     disabled={!cropperImage}
                     onClick={() => handleSetPhoto()}
                 > 
-                    Set {profile ? "profile" : "hotdog"} photo
+                    Set
                 </Button>
                 <Button 
                     variant="contained" 
@@ -306,8 +351,18 @@ function PhotoUploadDialog(props) {
                     disabled={!cropperImage}
                     onClick={() => handleResetCropper()}
                 > 
-                    Reset photo 
+                    Reset
                 </Button>
+                { confirmRequired && 
+                    <ProgressButton 
+                        size="small"
+                        disabled={!confirmActive}
+                        loading={confirmLoading}
+                        handleClick={handleConfirmPhoto}
+                    >
+                        Confirm new photo
+                    </ProgressButton>
+                }
                 <Button 
                     variant="contained" 
                     color="secondary"
