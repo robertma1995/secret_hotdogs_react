@@ -18,17 +18,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ProgressButton(props) {
-    const { size, disabled, loading, handleClick } = props;
+    const { 
+        color, variant, size, disabled, disableRipple, disableElevation, 
+        loading, handleClick 
+    } = props;
     const classes = useStyles();
     return (
         <div className={classes.wrapper}>
             <Button
-                color="primary" 
-                variant="contained"
+                color={color} 
+                variant={variant}
                 size={size}
                 disabled={disabled || loading}
+                disableElevation={disableElevation}
+                disableRipple={disableRipple}
                 onClick={() => handleClick()}
-                disableElevation
             >
                 {props.children}
             </Button>

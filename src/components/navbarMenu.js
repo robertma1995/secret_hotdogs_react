@@ -64,46 +64,20 @@ function NavbarMenu(props) {
         anchor, setAnchor, 
         userId, userName, userImageUrl, setUserImageUrl, 
         handleLogout, 
-        // loading, setLoading,
     } = props;
-    const classes = useStyles();
-
     const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
-
-    // track previous image url to prevent recursive useEffect
-    /*
-    const [newImage, setNewImage] = useState(null);
-    const [newImageUrl, setNewImageUrl] = useState(userImageUrl);
-    const [previousImageUrl, setPreviousImageUrl] = useState(userImageUrl);
-    */
     const [newImage, setNewImage] = useState(null);
     const [newImageUrl, setNewImageUrl] = useState(userImageUrl);
     const [loading, setLoading] = useState(false);
+    const classes = useStyles();
 
-    // const [previousImageUrl, setPreviousImageUrl] = useState(userImageUrl);
-
-    // update backend only if user image has been changed - have to set previous first
-    /*
-    useEffect(() => {
-        if (newImageUrl !== previousImageUrl) {
-            console.log("CHANGED USER IMAGE");
-            (async () => {
-                let url = await DB.putUserImage(userId, newImage);
-                setPreviousImageUrl(url);
-                setNewImageUrl(url);
-            })();
-        }
-    }, [newImageUrl]);
-    */
-
-    // update backend, set image src (for this and parent) as firebase url - set previous first to prevent recursive calls
+    // update backend, set image src as firebase url - set new image last to prevent recursive calls
     useEffect(() => {
         if (newImageUrl !== userImageUrl) {
             console.log("CHANGED USER IMAGE");
             (async () => {
                 setLoading(true);
                 let url = await DB.putUserImage(userId, newImage);
-                // setPreviousImageUrl(url);
                 setUserImageUrl(url);
                 setNewImageUrl(url);
                 setLoading(false);

@@ -87,17 +87,17 @@ function PhotoUploadDialog(props) {
         open, setOpen, profile, 
         confirmRequired, confirmLoading 
     } = props;
+    // cropper
     const [uploadError, setUploadError] = useState("");
     const [imageName, setImageName] = useState("");
     const [cropperImage, setCropperImage] = useState(null);
     const [cropper, setCropper] = useState();
     const [cropperData, setCropperData] = useState();
-    const classes = useStyles();
-
-    // TODO: confirm button before setting parent photo
+    // confirm button before setting parent photo
     const [confirmActive, setConfirmActive] = useState(false);
     const [localPhoto, setLocalPhoto] = useState(null);
     const [localPhotoUrl, setLocalPhotoUrl] = useState(photoUrl);
+    const classes = useStyles();
 
     /*
         custom accepted file handler since react-dropzone "mutliple={false}" doesn't work consistently
@@ -126,6 +126,7 @@ function PhotoUploadDialog(props) {
         Sets photo blob for parent, where it will be uploaded via firebase call
         Sets photo dataURL - parent and dialog both use this for preview
         Saves current crop box dimensions/positioning
+        If confirm is required, set local variables instead of parent
     */
     function handleSetPhoto() {
         const max = 1024;
@@ -136,7 +137,6 @@ function PhotoUploadDialog(props) {
         }).toBlob((blob) => {
             let reader = new FileReader();
             reader.readAsDataURL(blob);
-            // TODO: confirm button before setting parent photo
             if (confirmRequired) {
                 reader.onload = () => setLocalPhotoUrl(reader.result);
                 setLocalPhoto(blob);
@@ -150,12 +150,10 @@ function PhotoUploadDialog(props) {
     }
 
     /* 
-        clicking preview button resets photo/avatar for parent to default
-        if photo upload dialog used for profile picture, then set to default material-ui avatar
+        Clicking preview button sets photo/avatar for parent to default
+        If confirm is required, set local variables instead of parent
     */
-    function handleResetPhoto() {
-        console.log("RESET PHOTO");
-        // TODO: confirm button before setting parent photo
+    function handleUnsetPhoto() {
         const url = profile ? "" : constants["hotdogImageUrl"];
         if (confirmRequired) {
             setLocalPhoto(null);
@@ -167,9 +165,7 @@ function PhotoUploadDialog(props) {
         }
     }
 
-    // TODO: confirm button before setting parent photo
     function handleConfirmPhoto() {
-        console.log("CONFIRMED - SETTING PARENT PHOTO");
         setPhoto(localPhoto);
         setPhotoUrl(localPhotoUrl);
         setConfirmActive(false);
@@ -180,9 +176,12 @@ function PhotoUploadDialog(props) {
         setCropperData(null);
     }
 
+    /*
+        If confirm is required, reset cropper and preview when dialog is closed
+        sleep before resetting images to prevent user from seeing this right as dialog is closed
+    */
     function handleClose() {
         setOpen(false);
-        // TODO: confirm button before setting parent photo
         if (confirmRequired) {
             const sleep = (ms) => {
                 return new Promise(resolve => setTimeout(resolve, ms));
@@ -239,7 +238,7 @@ function PhotoUploadDialog(props) {
                                 imageUrl={confirmRequired ? localPhotoUrl : photoUrl}
                                 iconName="delete"
                                 iconSize="large"
-                                handleClick={handleResetPhoto}
+                                handleClick={handleUnsetPhoto}
                                 avatar
                             />
                         </Box>
@@ -355,6 +354,8 @@ function PhotoUploadDialog(props) {
                 </Button>
                 { confirmRequired && 
                     <ProgressButton 
+                        color="primary"
+                        variant="contained"
                         size="small"
                         disabled={!confirmActive}
                         loading={confirmLoading}

@@ -92,10 +92,13 @@ function LoginForm(props) {
             />
             <FormButtonWrapper>
                 <ProgressButton 
-                    text="Login" 
+                    color="primary"
+                    variant="contained"
                     loading={loading} 
                     handleClick={handleLogin}
-                />
+                >
+                    Login
+                </ProgressButton>
             </FormButtonWrapper>
             <FormMessage color="textSecondary" variant="body2">
                 Don't have an account? &nbsp;

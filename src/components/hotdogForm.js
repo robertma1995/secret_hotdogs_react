@@ -344,10 +344,13 @@ function HotdogForm(props) {
             </FormButtonWrapper>
             <FormButtonWrapper>
                 <ProgressButton 
-                    text="Submit" 
+                    color="primary"
+                    variant="contained"
                     loading={loading} 
                     handleClick={handleSubmit}
-                />
+                >
+                    Submit
+                </ProgressButton>
             </FormButtonWrapper>
             <SuccessSnackbar
                 open={openSnackbar}

@@ -79,29 +79,47 @@ function HomeHotdogGrid() {
                     // TODO: changing load behaviour
                     if (change.type === "removed") setChangeType(change.type);
                 }
-
-                // get all hotdog images and creator profile images (returns when all promises resolved)            
-                getImages(changes)
-                .then(res => {
-                    // console.log(res);
-                    // sort only on first render
-                    // prepend new hotdog(s), or filter out deleted hotdog based on id
-                    if (res.length > 1) {
-                        res.sort((a, b) => {
-                            return b.ts - a.ts;
-                        });
-                        setHotdogs(res);
-                        setHd(res.slice(0, 3));
-                    } else if (res.length === 1) {
-                        if (type === "added") {
-                            setHotdogs(oldHotdogs => [...res, ...oldHotdogs]);
-                            setHd(oldHotdogs => [...res, ...oldHotdogs]);
-                        } else if (type === "removed") {
-                            setHotdogs(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== res[0].id));
-                            setHd(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== res[0].id));
+                
+                // TODO: temporary solution for adding new hotdog not immediately showing image
+                // sleep allows hotdogForm more time to complete postHotdogImage database call
+                // alternative: pass flag variable from grid to hotdogForm, hotdogForm sets flag,
+                // and grid only starts getImages() call if the flag is true
+                // will work, but makes code confusing
+                const sleep = (ms) => {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                };
+                sleep(500).then(() => {    
+                    // get all hotdog images and creator profile images (returns when all promises resolved)            
+                    getImages(changes)
+                    .then(res => {
+                        // console.log(res);
+                        // sort only on first render
+                        // prepend new hotdog(s), or filter out deleted hotdog based on id
+                        if (res.length > 1) {
+                            res.sort((a, b) => {
+                                return b.ts - a.ts;
+                            });
+                            setHotdogs(res);
+                            setHd(res.slice(0, 3));
+                        } else if (res.length === 1) {
+                            if (type === "added") {
+                                setHotdogs(oldHotdogs => [...res, ...oldHotdogs]);
+                                setHd(oldHotdogs => [...res, ...oldHotdogs]);
+                            } else if (type === "removed") {
+                                setHotdogs(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== res[0].id));
+                                setHd(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== res[0].id));
+                            } else if (type === "modified") {
+                                // TODO: temporary solution for editing in real-time
+                                // remove unedited hotdog from old, then add newly edited hotdog
+                                // doesn't work if editing image only, since query snapshot doesn't include image
+                                setHotdogs(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== res[0].id));
+                                setHd(oldHotdogs => oldHotdogs.filter(hotdog => hotdog.id !== res[0].id));
+                                setHotdogs(oldHotdogs => [...res, ...oldHotdogs]);
+                                setHd(oldHotdogs => [...res, ...oldHotdogs]);
+                            }
                         }
-                    }
-                    setLoading(false);
+                        setLoading(false);
+                    });
                 });
             });
         })();
