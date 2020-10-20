@@ -55,6 +55,25 @@ function HomeHotdogGrid() {
     }
 
     // display hotdogs created by current user (reverse chronology)
+    /* 
+        TODO: change loading behaviour
+        - use one hotdog array instead of two
+        - fetchmore should make a firebase call to fetch the next 3 results
+            = less reads = less expensive on user data + less expensive on database
+            currently reads all hotdogs created by user, then slices those results
+        - new firebase function - get next X hotdogs: collection.where().orderBy().limit(X)
+        - in fetchmore: ... .startAfter(lastDocumentSnapshot).get().then(data => foreach(doc): add hotdog to list, set lastDocumentSnapshot to last doc)
+        - real-time: 
+            adding: should be fine since only prepending 
+                don't need to set lastDocumentSnapshot unless there's only one hotdog
+            editing: should also be fine since not changing order of documents
+                BUT if edited hotdog = startAfter cursor, then need to set lastDocumentSnapshot again
+                since editing changes the fields (and therefore the document snapshot)
+            deleting: will mess up the startAfter query cursor if correct hotdog deleted
+                i.e. if happen to delete the hotdog document that startAfter cursor is pointing to
+                (OR store documentSnapshot for each hotdog - if deleting the same hotdog as cursor, 
+                then set lastDocumentSnapshot)
+    */
     useEffect(() => {
         (async () => {
             let query = await DB.getHotdogsCreatedByQuery(userId);
@@ -90,8 +109,7 @@ function HomeHotdogGrid() {
                 };
                 sleep(500).then(() => {    
                     // get all hotdog images and creator profile images (returns when all promises resolved)            
-                    getImages(changes)
-                    .then(res => {
+                    getImages(changes).then(res => {
                         // console.log(res);
                         // sort only on first render
                         // prepend new hotdog(s), or filter out deleted hotdog based on id
@@ -184,7 +202,7 @@ function HomeHotdogGrid() {
                     <Grid item key={hotdog.id} xs={4}>
                         {/* 
                             TODO: the above spinner loader breaks the waypoints - loads everything at once, 
-                            so need to improve fetching method (react-visualizer maybe)
+                            so need to improve fetching method (react-virtualizer maybe)
                         */}
                         { (i+1) % 3 === 0 && 
                           (i+1) >= hd.length && 

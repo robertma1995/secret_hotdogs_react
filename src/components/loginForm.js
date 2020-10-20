@@ -96,6 +96,7 @@ function LoginForm(props) {
                     variant="contained"
                     loading={loading} 
                     handleClick={handleLogin}
+                    disableElevation
                 >
                     Login
                 </ProgressButton>

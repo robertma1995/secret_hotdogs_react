@@ -107,8 +107,13 @@ async function getHotdogsCreatedBy(id) {
 }
 
 async function getHotdogsCreatedByQuery(id) {
-    let query = await hotdogs.getCreatedByQuery(id);
-    return query;
+    let q = await hotdogs.getCreatedByQuery(id);
+    return q;
+}
+
+async function getHotdogsNextQuery(id, n) {
+    let q = await hotdogs.getNextQuery(id, n);
+    return q;
 }
 
 async function patchHotdog(id, hotdog) {
@@ -163,6 +168,7 @@ export {
     getHotdogImage,
     getHotdogsCreatedBy,
     getHotdogsCreatedByQuery,
+    getHotdogsNextQuery,
     patchHotdog,
     postHotdog,
     postHotdogImage,

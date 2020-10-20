@@ -82,6 +82,13 @@ async function getImage(id) {
 }
 
 /* 
+    TODO: query for getting next n hotdogs created by given user (startAfter called in hotdogGrid)
+*/
+async function getNextQuery(id, n) {
+    return firebase.firestore().collection('hotdogs').where("creatorId", "==", id).orderBy("ts", "desc").limit(n);
+}
+
+/* 
     updates existing hotdog record
 */
 async function patch(id, hotdog) {
@@ -171,6 +178,7 @@ export {
     getCreatedBy,
     getCreatedByQuery,
     getImage,
+    getNextQuery,
     patch,
     post,
     postImage,
