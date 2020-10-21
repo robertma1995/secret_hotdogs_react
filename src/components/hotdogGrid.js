@@ -41,6 +41,8 @@ function HomeHotdogGrid() {
     const [length, setLength] = useState(0);
     const [loading, setLoading] = useState(true);
     const [lastSnapshot, setLastSnapshot] = useState(null);
+    // TODO: deleting hotdog
+    const [deleteId, setDeleteId] = useState("");
 
     function handleOpenDetailsDialog() {
         setOpenDetailsDialog(true);
@@ -49,6 +51,13 @@ function HomeHotdogGrid() {
     function handleOpenAddDialog() {
         setOpenAddDialog(true);
     }
+
+    // TODO: deleting hotdog
+    useEffect(() => {
+        if (deleteId) {
+            console.log("DELETING HOTDOG " + deleteId);
+        }
+    }, [deleteId]);
 
     // display hotdogs created by current user (reverse chronology)
     /* 
@@ -97,6 +106,7 @@ function HomeHotdogGrid() {
                     let h = doc.data();
                     h["id"] = doc.id;
                     h["ts"] = doc.data().ts.seconds;
+                    h["snapshot"] = doc;
                     next.push(h);
                     // if reached last document, set startAfter cursor
                     if (i === n) {
@@ -118,6 +128,15 @@ function HomeHotdogGrid() {
         })();
     }
 
+    // TODO: delete button on hotdogcard - sets state var in hotdogGrid, then hotdogGrid handles the deleting
+    // useEffect depends on this id, set back to null, but only triggered if not null (i.e. set by clicking hotdogCard)
+    // deleting also calls fetchMore for one hotdog to fill the "gap" created by the deleted hotdog 
+    // (if no hotdogs left past the lastSnapshot, then gap remains)
+
+    // TODO: fetchCount - if num hotdogs % 3 === 0, fetchCount = 3. Adding decreases fetchCount by 1, 
+    // delete increases fetchCount by 1. 
+    // Every time fetchMore is called, it uses fetchCount to determine how many hotdogs to fetch
+
     return (
         <Box height="100%" width="100%">
             <Grid container spacing={3} style={{ height: '100%' }}>
@@ -135,6 +154,7 @@ function HomeHotdogGrid() {
                             ts={hotdog.ts}
                             setHotdogDetailsId={setHotdogDetailsId}
                             setOpenDetailsDialog={setOpenDetailsDialog}
+                            setDeleteId={setDeleteId}
                         />
                         { (i+1) % 3 === 0 && (i+1) >= hotdogs.length && 
                             <Waypoint onEnter={() => fetchMore(i+1)}/>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Avatar, Button, IconButton, 
+    Avatar, Button, Box, IconButton, 
     Card, CardHeader, CardMedia, CardContent, CardActions, 
 } from '@material-ui/core';
 // my components
@@ -17,6 +17,7 @@ const HotdogCard = React.memo((props) => {
         id, creatorId, creatorName, creatorImageUrl, 
         description, hotdogImageUrl, ingredients, title, ts,
         setHotdogDetailsId, setOpenDetailsDialog,
+        setDeleteId,
     } = props;
     // TODO: keep below console log to check for useless rendering
     console.log("Hotdog " + id + " rendered");
@@ -28,6 +29,11 @@ const HotdogCard = React.memo((props) => {
     function handleSetHotdogDetailsId() {
         setOpenDetailsDialog(true);
         setHotdogDetailsId(id);
+    }
+
+    // let hotdog grid handle hotdog deleting
+    function handleSetDeleteId() {
+        setDeleteId(id);
     }
 
     return (
@@ -46,17 +52,26 @@ const HotdogCard = React.memo((props) => {
                 />
             </CardContent>
             <CardActions>
-                <IconButton aria-label="like">
-                    <Icon name="like" />
-                </IconButton>
-                <Button 
-                    variant="text" 
-                    color="primary"
-                    disableRipple 
-                    onClick={() => handleSetHotdogDetailsId()}
-                >
-                    View details
-                </Button>
+                <Box display="flex" width="100%">
+                    <Box flexGrow={1}>
+                        <IconButton aria-label="like">
+                            <Icon name="like" />
+                        </IconButton>
+                        <Button 
+                            variant="text" 
+                            color="primary"
+                            disableRipple 
+                            onClick={() => handleSetHotdogDetailsId()}
+                        >
+                            View details
+                        </Button>
+                    </Box>
+                    <Box>
+                        <IconButton onClick={() => handleSetDeleteId()}>
+                            <Icon name="delete" />
+                        </IconButton>
+                    </Box>
+                </Box>
             </CardActions>
         </Card>
     );
