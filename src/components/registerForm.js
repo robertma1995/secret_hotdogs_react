@@ -176,10 +176,14 @@ function RegisterForm(props) {
             />
             <FormButtonWrapper>
                 <ProgressButton 
-                    text="Register" 
+                    color="primary"
+                    variant="contained"
+                    disableElevation
                     loading={loading} 
                     handleClick={handleRegister}
-                />
+                >
+                    Register
+                </ProgressButton>
             </FormButtonWrapper>
             <SuccessSnackbar
                 open={registered}

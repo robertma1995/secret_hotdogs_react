@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Fab, Grid, CircularProgress, Typography } from '@material-ui/core';
+import { Box, Fab, Grid, CircularProgress, LinearProgress, Typography } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { Waypoint } from 'react-waypoint';
 // my components
@@ -14,7 +14,7 @@ import { UserContext } from '../userContext';
 import * as DB from '../database/wrapper';
 
 /*
-    given array of hotdogs, gets hotdog images and creator's profile image urls (in parallel)
+    given array of hotdogs, gets hotdog images, creator's profile image and name
 */
 async function getImages(hotdogs) {
     var hd = [...hotdogs];
@@ -38,9 +38,10 @@ function HomeHotdogGrid() {
     const [hotdogDetailsId, setHotdogDetailsId] = useState("");
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
     // TODO: improve fetching method
-    const [length, setLength] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const maxColumns = 3;
+    const [fetchCount, setFetchCount] = useState(maxColumns);
     const [lastSnapshot, setLastSnapshot] = useState(null);
+    const [loading, setLoading] = useState(true);
     // TODO: deleting hotdog
     const [deleteId, setDeleteId] = useState("");
 
@@ -52,12 +53,47 @@ function HomeHotdogGrid() {
         setOpenAddDialog(true);
     }
 
-    // TODO: deleting hotdog
-    useEffect(() => {
-        if (deleteId) {
-            console.log("DELETING HOTDOG " + deleteId);
-        }
-    }, [deleteId]);
+    // TODO: improve fetching method
+    function fetchMore() {
+        setLoading(true);
+        console.log("FETCHING NEXT " + fetchCount + " HOTDOGS");
+        (async() => {
+            let q = await DB.getHotdogsNextQuery(userId, fetchCount);
+            if (lastSnapshot) {
+                console.log("fetch from last snapshot");
+                q = q.startAfter(lastSnapshot);
+            } else {
+                console.log("initial fetch")
+            }
+            q.get().then(query => {
+                let next = [];
+                query.forEach(doc => {
+                    let h = doc.data();
+                    h["id"] = doc.id;
+                    h["ts"] = doc.data().ts.seconds;
+                    h["snapshot"] = doc;
+                    next.push(h);
+                });
+                // set startAfter cursor for next fetch call
+                console.log("update last snapshot: ");
+                console.log(next[next.length-1].snapshot.data());
+                setLastSnapshot(next[next.length-1].snapshot);
+
+                // prevent fetch calls if reached end
+                if (next.length < fetchCount) {
+                    setFetchCount(0);
+                }
+
+                // get hotdog images before appending
+                getImages(next).then(res => {
+                    setHotdogs(current => [...current, ...next]);
+                    setLoading(false);
+                })
+            }).catch(err => {
+                console.log(err);
+            })
+        })();
+    }
 
     // display hotdogs created by current user (reverse chronology)
     /* 
@@ -80,62 +116,52 @@ function HomeHotdogGrid() {
                 then set lastDocumentSnapshot)
     */
     useEffect(() => {
-        (async () => {
-            // TODO: call fetchMore for initial 3 hotdogs
-            fetchMore();
-        })();
+        fetchMore();
+        // TODO: add real-time listener here
     }, [userId]);
 
-    // TODO: improve fetching method
-    function fetchMore() {
-        const n = 3;
-        console.log("FETCHING NEXT " + n + " HOTDOGS");
-        (async() => {
-            let query = await DB.getHotdogsNextQuery(userId, n);
-            // TODO: testing startAfter query
-            if (lastSnapshot) {
-                console.log("fetch from last snapshot");
-                query = query.startAfter(lastSnapshot);
-            } else {
-                console.log("initial fetch")
-            }
-            query.get().then(data => {
-                let i = 1;
-                let next = [];
-                data.forEach(doc => {
-                    let h = doc.data();
-                    h["id"] = doc.id;
-                    h["ts"] = doc.data().ts.seconds;
-                    h["snapshot"] = doc;
-                    next.push(h);
-                    // if reached last document, set startAfter cursor
-                    if (i === n) {
-                        setLastSnapshot(doc);
-                        console.log("update last snapshot: ");
-                        console.log(doc.data());
-                    }
-                    i++;
-                })
-                console.log("next hotdogs: ");
-                console.log(next);
-                // TODO: get hotdog images before appending
-
-                // append next n hotdogs
-                setHotdogs(current => [...current, ...next]);
-            }).catch(err => {
-                console.log(err);
-            })
-        })();
-    }
-
-    // TODO: delete button on hotdogcard - sets state var in hotdogGrid, then hotdogGrid handles the deleting
-    // useEffect depends on this id, set back to null, but only triggered if not null (i.e. set by clicking hotdogCard)
-    // deleting also calls fetchMore for one hotdog to fill the "gap" created by the deleted hotdog 
-    // (if no hotdogs left past the lastSnapshot, then gap remains)
-
-    // TODO: fetchCount - if num hotdogs % 3 === 0, fetchCount = 3. Adding decreases fetchCount by 1, 
-    // delete increases fetchCount by 1. 
+    // TODO: fetchCount - if num hotdogs % 3 === 0, fetchCount = 3. 
+    // Adding decreases fetchCount by 1, delete increases fetchCount by 1
     // Every time fetchMore is called, it uses fetchCount to determine how many hotdogs to fetch
+    // (and therefore also how many loading spinners to render)
+    // note: will always need waypoint at the end of hotdogs array, unless user has no more hotdogs to render
+    // only call if haven't rendered all user's hotdogs
+    useEffect(() => {
+        if (fetchCount !== 0) {
+            setFetchCount(maxColumns - (hotdogs.length % maxColumns));
+        }
+    }, [hotdogs]);
+
+    // TODO: testing fetchCount
+    useEffect(() => {
+        console.log("new fetch count: " + fetchCount);
+    }, [fetchCount]);
+
+    // TODO: deleting hotdog
+    useEffect(() => {
+        if (deleteId) {
+            console.log("DELETING HOTDOG " + deleteId);
+            if (deleteId === lastSnapshot.id) {
+                console.log("deleting last hotdog - find previous");
+                let previousSnapshot = null;
+                for (let i = 0; i < hotdogs.length; i++) {
+                    let h = hotdogs[i];
+                    if (h.id === deleteId) {
+                        if (i !== 0) {
+                            previousSnapshot = hotdogs[i-1].snapshot;
+                        }
+                        break;
+                    }
+                }
+                // TODO: testing
+                if (previousSnapshot) {
+                    console.log(previousSnapshot.data());
+                }
+                setLastSnapshot(previousSnapshot);
+            }
+            // TODO: call backend delete (after real-time working)
+        }
+    }, [deleteId]);
 
     return (
         <Box height="100%" width="100%">
@@ -156,11 +182,24 @@ function HomeHotdogGrid() {
                             setOpenDetailsDialog={setOpenDetailsDialog}
                             setDeleteId={setDeleteId}
                         />
-                        { (i+1) % 3 === 0 && (i+1) >= hotdogs.length && 
-                            <Waypoint onEnter={() => fetchMore(i+1)}/>
+                        { fetchCount !== 0 && (i+1) === hotdogs.length &&
+                            <Waypoint onEnter={() => fetchMore()}/>
                         }
                     </Grid>
                 ))}
+                {/* TODO: separate loading state for real-time + fetching */}
+                { loading && 
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        width="100%"
+                        style={hotdogs.length === 0 ? { height: '100%' } : { height: '50px' }}
+                    >
+                        <LinearProgress color="primary" style={{ height: '5px', width: '80%' }}/>
+                    </Box>
+                }
             </Grid>
             <Fab
                 aria-label="Add a hotdog"
