@@ -11,7 +11,7 @@ async function all() {
             let hotdogs = [];
             data.forEach(row => {
                 // add document id
-                var formattedRow = row.data();
+                let formattedRow = row.data();
                 formattedRow["id"] = row.id;
                 formattedRow["ts"] = row.data().ts.seconds;
                 hotdogs.push(formattedRow);
@@ -29,7 +29,7 @@ async function all() {
 async function get(id) {
     return new Promise((resolve, reject) => {
         firebase.firestore().collection('hotdogs').doc(id).get().then(snapshot => {
-            var hotdog = snapshot.data();
+            let hotdog = snapshot.data();
             hotdog["ts"] = hotdog["ts"].seconds;
             resolve(hotdog);
         }).catch(err => {
@@ -54,7 +54,7 @@ async function getCreatedBy(id) {
             let hotdogs = [];
             data.forEach(row => {
                 // add document id
-                var formattedRow = row.data();
+                let formattedRow = row.data();
                 formattedRow["id"] = row.id;
                 formattedRow["ts"] = row.data().ts.seconds;
                 hotdogs.push(formattedRow);
@@ -67,17 +67,18 @@ async function getCreatedBy(id) {
 }
 
 /*
-    real-time query - returned to hotdogGrid where onSnapshot will be called
+    real-time query returned to hotdogGrid where onSnapshot will be called - avoids initial call
 */
 async function getCreatedByQuery(id) {
-    return firebase.firestore().collection('hotdogs').where("creatorId", "==", id);
+    const ts = firebase.firestore.Timestamp.now();
+    return firebase.firestore().collection('hotdogs').where("creatorId", "==", id).where("ts", ">", ts);
 }
 
 /*
     given hotdog id, retrieves image from storage
 */
 async function getImage(id) {
-    var storageRef = firebase.storage().ref();
+    const storageRef = firebase.storage().ref();
     return storageRef.child("hotdogs/" + id + ".jpg").getDownloadURL();
 }
 
@@ -97,6 +98,7 @@ async function patch(id, hotdog) {
         description, 
         ingredients: {sauce, sausage, toppings},
         title,
+        ts: firebase.firestore.Timestamp.now()
     }
     // remove undefined values before patching
     for (var i in h) {
@@ -149,7 +151,7 @@ async function postImage(id, image) {
     replaces or deletes existing image
 */
 async function putImage(id, image) {
-    var imageRef = firebase.storage().ref().child("hotdogs/" + id + ".jpg");
+    let imageRef = firebase.storage().ref().child("hotdogs/" + id + ".jpg");
     return new Promise((resolve, reject) => {
         if (image) {
             console.log("image defined - replace existing");
@@ -168,6 +170,7 @@ async function putImage(id, image) {
                 reject(err);
             })
         }
+        // TODO: update timestamp in hotdogs
     });
 } 
 

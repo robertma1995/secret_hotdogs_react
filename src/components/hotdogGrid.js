@@ -41,7 +41,8 @@ function HomeHotdogGrid() {
     const maxColumns = 3;
     const [fetchCount, setFetchCount] = useState(maxColumns);
     const [lastSnapshot, setLastSnapshot] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [fetchLoading, setFetchLoading] = useState(true);
+    const [changeLoading, setChangeLoading] = useState(false);
     // TODO: deleting hotdog
     const [deleteId, setDeleteId] = useState("");
 
@@ -54,45 +55,42 @@ function HomeHotdogGrid() {
     }
 
     // TODO: improve fetching method
-    function fetchMore() {
-        setLoading(true);
+    async function fetchMore() {
+        setFetchLoading(true);
         console.log("FETCHING NEXT " + fetchCount + " HOTDOGS");
-        (async() => {
-            let q = await DB.getHotdogsNextQuery(userId, fetchCount);
-            if (lastSnapshot) {
-                console.log("fetch from last snapshot");
-                q = q.startAfter(lastSnapshot);
-            } else {
-                console.log("initial fetch")
+        let q = await DB.getHotdogsNextQuery(userId, fetchCount);
+        if (lastSnapshot) {
+            console.log("fetch from last snapshot");
+            console.log(lastSnapshot.data());
+            q = q.startAfter(lastSnapshot);
+        } else {
+            console.log("initial fetch");
+        }
+        q.get().then(query => {
+            let next = [];
+            query.forEach(doc => {
+                let h = doc.data();
+                h["id"] = doc.id;
+                h["ts"] = doc.data().ts.seconds;
+                h["snapshot"] = doc;
+                next.push(h);
+            });
+            // set startAfter cursor for next fetch call
+            setLastSnapshot(next[next.length-1].snapshot);
+
+            // prevent fetch calls if reached end
+            if (next.length < fetchCount) {
+                setFetchCount(0);
             }
-            q.get().then(query => {
-                let next = [];
-                query.forEach(doc => {
-                    let h = doc.data();
-                    h["id"] = doc.id;
-                    h["ts"] = doc.data().ts.seconds;
-                    h["snapshot"] = doc;
-                    next.push(h);
-                });
-                // set startAfter cursor for next fetch call
-                console.log("update last snapshot: ");
-                console.log(next[next.length-1].snapshot.data());
-                setLastSnapshot(next[next.length-1].snapshot);
-
-                // prevent fetch calls if reached end
-                if (next.length < fetchCount) {
-                    setFetchCount(0);
-                }
-
-                // get hotdog images before appending
-                getImages(next).then(res => {
-                    setHotdogs(current => [...current, ...next]);
-                    setLoading(false);
-                })
-            }).catch(err => {
-                console.log(err);
+            
+            // append
+            getImages(next).then(res => {
+                setHotdogs(current => [...current, ...next]);
+                setFetchLoading(false);
             })
-        })();
+        }).catch(err => {
+            console.log(err);
+        });
     }
 
     // display hotdogs created by current user (reverse chronology)
@@ -117,7 +115,50 @@ function HomeHotdogGrid() {
     */
     useEffect(() => {
         fetchMore();
-        // TODO: add real-time listener here
+        // TODO: prevent onSnapshot from getting initial state 
+        // currently no way to do this with firebase
+        // option 1: use state variable to track if initial snapshot or not
+        //  res: doesn't work - setInitialChange(false) is asynchronous - possible to not get set to false for next snapshot call
+        // option 2: only listen after timestamp (i.e. now) - will need edits to update "ts"
+        //  res: works, but change type will always be "added" since initial snapshot has nothing
+        // option 2.1: don't use docChange.type, if change id doesn't exist, then "added"
+        //  can't disntinguish between "modified" and "removed",
+        //  don't track "modified" at all
+        // option 3: fetchMore 1 snapshot listener per 3 hotdogs, then 1 snapshot listener here for all new adds/modifies/removes
+        //  editing old hotdogs - might be weird to see newer hotdogs when scrolling down - doesn't preserve reverse chronology
+        //  revert to old edit that doesn't change timestamp
+        //  + prevent users from changing title (something "constant" - if users could edit everything in old posts, then somewhat removes the need to make new posts)
+        (async () => {
+            let q = await DB.getHotdogsCreatedByQuery(userId);
+            q.onSnapshot(snapshot => {
+                // ignore initial snapshot with 0 docs
+                if (!snapshot.empty) {
+                    setChangeLoading(true);
+                    // onSnapshot returns a QuerySnapshot, docChanges gets all items on initial snapshot
+                    const docChange = (snapshot.docChanges())[0];
+                    let type = docChange.type;
+                    let change = docChange.doc.data();
+                    change["id"] = docChange.doc.id;
+                    change["ts"] = change.ts.seconds;
+                    console.log("change: hotdog id = " + change.id);
+                    if (type === "added" || type === "modified") {
+                        getImages([change]).then(res => {
+                            const hotdog = res[0];
+                            // TODO: only handling add for now
+                            console.log(type);
+                            if (type === "added") {
+                                setHotdogs(current => [res[0], ...current]);
+                            } else if (type === "modified") {
+                                setHotdogs(current => current.map(h => h.id === hotdog.id ? {...hotdog} : h));
+                            } else if (type === "removed") {
+                                setHotdogs(current => current.filter(h => h.id !== hotdog.id));
+                            }
+                            setChangeLoading(false);
+                        });
+                    }
+                }
+            });
+        })();
     }, [userId]);
 
     // TODO: fetchCount - if num hotdogs % 3 === 0, fetchCount = 3. 
@@ -166,6 +207,20 @@ function HomeHotdogGrid() {
     return (
         <Box height="100%" width="100%">
             <Grid container spacing={3} style={{ height: '100%' }}>
+                { changeLoading &&
+                    <Grid item xs={4}>
+                        <Box
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="center"
+                            alignItems="center"
+                            height="100%"
+                            width="100%"
+                        >
+                            <LinearProgress color="primary" style={{ height: '5px', width: '80%' }}/>
+                        </Box>
+                    </Grid>
+                }
                 { hotdogs.length !== 0 && hotdogs.map((hotdog, i) => (
                     <Grid item key={hotdog.id} xs={4}>
                         <HotdogCard
@@ -188,7 +243,7 @@ function HomeHotdogGrid() {
                     </Grid>
                 ))}
                 {/* TODO: separate loading state for real-time + fetching */}
-                { loading && 
+                { fetchLoading && 
                     <Box
                         display="flex"
                         flexDirection="column"
