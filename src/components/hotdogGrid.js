@@ -67,14 +67,49 @@ function HomeHotdogGrid() {
             console.log("initial fetch");
         }
         q.get().then(query => {
+            // prevent next fetch call if reached end
+            if (query.size < fetchCount) {
+                setFetchCount(0);
+            }
+            if (!query.empty) {
+                let next = [];
+                query.forEach(doc => {
+                    let h = doc.data();
+                    h["id"] = doc.id;
+                    h["ts"] = doc.data().ts.seconds;
+                    h["snapshot"] = doc;
+                    next.push(h);
+                });
+                // set startAfter cursor for next fetch call, append current
+                setLastSnapshot(next[next.length-1].snapshot);
+                getImages(next).then(res => {
+                    setHotdogs(current => [...current, ...next]);
+                    setFetchLoading(false);
+                });
+            } else {
+                setFetchLoading(false);
+            }
+        }).catch(err => {
+            console.log(err);
+        });
+
+        // NOTE: below causes snapshots to overlap if you delete (see comments below )
+        /* 
+        q.onSnapshot(snapshot => {
+            console.log("changes length: " + snapshot.docChanges().length);
             let next = [];
-            query.forEach(doc => {
-                let h = doc.data();
+            let type = "";
+            for (const change of snapshot.docChanges()) {
+                type = change.type;
+                const doc = change.doc;
+                let h = doc.data(); 
                 h["id"] = doc.id;
-                h["ts"] = doc.data().ts.seconds;
+                h["ts"] = h.ts.seconds;
                 h["snapshot"] = doc;
                 next.push(h);
-            });
+                console.log("changed doc id: " + h.id);
+                console.log("change type: " + type);
+            }
             // set startAfter cursor for next fetch call
             setLastSnapshot(next[next.length-1].snapshot);
 
@@ -82,15 +117,16 @@ function HomeHotdogGrid() {
             if (next.length < fetchCount) {
                 setFetchCount(0);
             }
-            
-            // append
-            getImages(next).then(res => {
-                setHotdogs(current => [...current, ...next]);
-                setFetchLoading(false);
-            })
-        }).catch(err => {
-            console.log(err);
-        });
+
+            if (type === "added") {
+                // append
+                getImages(next).then(res => {
+                    setHotdogs(current => [...current, ...next]);
+                    setFetchLoading(false);
+                });
+            }
+        })
+        */
     }
 
     // display hotdogs created by current user (reverse chronology)
@@ -128,6 +164,23 @@ function HomeHotdogGrid() {
         //  editing old hotdogs - might be weird to see newer hotdogs when scrolling down - doesn't preserve reverse chronology
         //  revert to old edit that doesn't change timestamp
         //  + prevent users from changing title (something "constant" - if users could edit everything in old posts, then somewhat removes the need to make new posts)
+        //  res: 
+        //      snapshot listener 1: f, e, d
+        //      snapshot listener 2: c, b, a
+        //      delete e (or any among f, e, d)
+        //      snapshot listener 1: f, d, c (change 1: "remove" e, change 2: "added" c)
+        //      snapshot listener 2: c, b, a, (doesn't show any changes)
+        //      delete c 
+        //      snapshot listener 1: f, d, b (change 1: "remove" c, change 2: "added" b)
+        //      snapshot listener 2: b, a, a-1 (change 1: "remove" c, change 2: "added" a-1)
+        //  i.e. deleting causes snapshot listeners to overlap, which is not desired
+        //  can prevent this by tracking all snapshot listeners and updating them accordingly,
+        //  but too much overhead + complexity...
+        // option 4: pass setId functions to add form, edit form - when these change, trigger useEffect in hotdogGrid
+        //  i.e. "fake" real-time - not actually listening to database updates
+        //  removes need for snapshot listeners, get to keep pagination functionality, but subcomponents become messier
+
+        /*
         (async () => {
             let q = await DB.getHotdogsCreatedByQuery(userId);
             q.onSnapshot(snapshot => {
@@ -149,7 +202,7 @@ function HomeHotdogGrid() {
                             if (type === "added") {
                                 setHotdogs(current => [res[0], ...current]);
                             } else if (type === "modified") {
-                                setHotdogs(current => current.map(h => h.id === hotdog.id ? {...hotdog} : h));
+                                setHotdogs(current => current.map(h => h.id === hotdog.id ? hotdog : h));
                             } else if (type === "removed") {
                                 setHotdogs(current => current.filter(h => h.id !== hotdog.id));
                             }
@@ -159,6 +212,7 @@ function HomeHotdogGrid() {
                 }
             });
         })();
+        */
     }, [userId]);
 
     // TODO: fetchCount - if num hotdogs % 3 === 0, fetchCount = 3. 
@@ -252,7 +306,25 @@ function HomeHotdogGrid() {
                         width="100%"
                         style={hotdogs.length === 0 ? { height: '100%' } : { height: '50px' }}
                     >
-                        <LinearProgress color="primary" style={{ height: '5px', width: '80%' }}/>
+                        <LinearProgress color="primary" style={{ height: '5px', width: '85%' }}/>
+                    </Box>
+                }
+
+                {/* show message if reached end of hotdogs */}
+                { !fetchLoading && fetchCount === 0 && 
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        width="100%"
+                        style={{ height: '50px' }}
+                    >
+                        <Typography color="textSecondary" align="center" style={{ borderBottom: '1px solid', lineHeight: '0.1em', width: '85%' }}>
+                            <span style={{ background: '#f5f5f5', padding: '0 10px' }}>
+                                End
+                            </span>
+                        </Typography>
                     </Box>
                 }
             </Grid>
