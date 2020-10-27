@@ -19,13 +19,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /* 
-    Dialog wrapper for HotdogForm
+    Dialog wrapper for HotdogForm - used in HotdogGrid & HotdogDetailsDialog
+        id, description, ..., setDialogHotdogImageUrl - used exclusively in HotdogDetailsDialog
+        setAddId, setEditId - used exclusively for HotdogGrid fake real-time
 */ 
 function HotdogFormDialog(props) {
     const { 
         open, setOpen,
-        id, description, ingredients, title, edit,
-        dialogHotdogImageUrl, setDialogHotdogImageUrl
+        id, description, ingredients, title, edit, dialogHotdogImageUrl, setDialogHotdogImageUrl,
+        setAddId, setEditId,
     } = props;
     const classes = useStyles();
 
@@ -67,6 +69,8 @@ function HotdogFormDialog(props) {
                     initialTitle={title}
                     edit={edit}
                     setDialogHotdogImageUrl={setDialogHotdogImageUrl}
+                    setAddId={setAddId}
+                    setEditId={setEditId}
                 />
             </DialogContent>
         </Dialog>

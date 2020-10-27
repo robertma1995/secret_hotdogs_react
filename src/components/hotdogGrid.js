@@ -17,14 +17,14 @@ import * as DB from '../database/wrapper';
     given array of hotdogs, gets hotdog images, creator's profile image and name
 */
 async function getImages(hotdogs) {
-    var hd = [...hotdogs];
-    await Promise.all(hd.map(async (formattedRow) => {
-        const hotdogImageUrl = await DB.getHotdogImage(formattedRow["id"]);
-        const creatorImageUrl = await DB.getUserImage(formattedRow["creatorId"]);
-        const creator = await DB.getUser(formattedRow["creatorId"]);
-        formattedRow["hotdogImageUrl"] = hotdogImageUrl || constants["hotdogImageUrl"];
-        formattedRow["creatorImageUrl"] = creatorImageUrl;
-        formattedRow["creatorName"] = creator["name"];
+    let hd = [...hotdogs];
+    await Promise.all(hd.map(async (h) => {
+        const hotdogImageUrl = await DB.getHotdogImage(h.id);
+        const creatorImageUrl = await DB.getUserImage(h.creatorId);
+        const creator = await DB.getUser(h.creatorId);
+        h["hotdogImageUrl"] = hotdogImageUrl || constants.hotdogImageUrl;
+        h["creatorImageUrl"] = creatorImageUrl;
+        h["creatorName"] = creator.name;
     }));
     return hd;
 }
@@ -43,7 +43,12 @@ function HomeHotdogGrid() {
     const [lastSnapshot, setLastSnapshot] = useState(null);
     const [fetchLoading, setFetchLoading] = useState(true);
     const [changeLoading, setChangeLoading] = useState(false);
-    // TODO: deleting hotdog
+    // TODO: adding, deleting, editing hotdog in fake real-time
+    // addId - HotdogFormDialog > HotdogForm, 
+    // editId - HotdogDetailsDialog > HotdogFormDialog > HotdogForm,
+    // deleteId - HotdogCard
+    const [addId, setAddId] = useState("");
+    const [editId, setEditId] = useState("");
     const [deleteId, setDeleteId] = useState("");
 
     function handleOpenDetailsDialog() {
@@ -57,14 +62,10 @@ function HomeHotdogGrid() {
     // TODO: improve fetching method
     async function fetchMore() {
         setFetchLoading(true);
-        console.log("FETCHING NEXT " + fetchCount + " HOTDOGS");
         let q = await DB.getHotdogsNextQuery(userId, fetchCount);
         if (lastSnapshot) {
-            console.log("fetch from last snapshot");
-            console.log(lastSnapshot.data());
             q = q.startAfter(lastSnapshot);
-        } else {
-            console.log("initial fetch");
+            console.log("fetching from last snapshot: " + lastSnapshot.data().title);
         }
         q.get().then(query => {
             // prevent next fetch call if reached end
@@ -80,6 +81,7 @@ function HomeHotdogGrid() {
                     h["snapshot"] = doc;
                     next.push(h);
                 });
+                console.log("TRIED TO FETCH: " + fetchCount + ", RETURNED: " + query.size);
                 // set startAfter cursor for next fetch call, append current
                 setLastSnapshot(next[next.length-1].snapshot);
                 getImages(next).then(res => {
@@ -92,41 +94,6 @@ function HomeHotdogGrid() {
         }).catch(err => {
             console.log(err);
         });
-
-        // NOTE: below causes snapshots to overlap if you delete (see comments below )
-        /* 
-        q.onSnapshot(snapshot => {
-            console.log("changes length: " + snapshot.docChanges().length);
-            let next = [];
-            let type = "";
-            for (const change of snapshot.docChanges()) {
-                type = change.type;
-                const doc = change.doc;
-                let h = doc.data(); 
-                h["id"] = doc.id;
-                h["ts"] = h.ts.seconds;
-                h["snapshot"] = doc;
-                next.push(h);
-                console.log("changed doc id: " + h.id);
-                console.log("change type: " + type);
-            }
-            // set startAfter cursor for next fetch call
-            setLastSnapshot(next[next.length-1].snapshot);
-
-            // prevent fetch calls if reached end
-            if (next.length < fetchCount) {
-                setFetchCount(0);
-            }
-
-            if (type === "added") {
-                // append
-                getImages(next).then(res => {
-                    setHotdogs(current => [...current, ...next]);
-                    setFetchLoading(false);
-                });
-            }
-        })
-        */
     }
 
     // display hotdogs created by current user (reverse chronology)
@@ -227,10 +194,35 @@ function HomeHotdogGrid() {
         }
     }, [hotdogs]);
 
-    // TODO: testing fetchCount
+    // TODO: fake real-time add
     useEffect(() => {
-        console.log("new fetch count: " + fetchCount);
-    }, [fetchCount]);
+        if (addId) {
+            (async () => {
+                setChangeLoading(true);
+                let h = await DB.getHotdog(addId);
+                h["id"] = addId;
+                getImages([h]).then(res => {
+                    setHotdogs(current => [res[0], ...current]);
+                    setChangeLoading(false);
+                });
+            })();
+        }
+    }, [addId]);
+
+    // TODO: fake real-time edit - unset id to allow consecutive edits of same hotdog
+    useEffect(() => {
+        if (editId) {
+            (async () => {
+                let h = await DB.getHotdog(editId);
+                h["id"] = editId;
+                getImages([h]).then(res => {
+                    setHotdogs(current => current.map(hotdog => hotdog.id === res[0].id ? res[0] : hotdog));
+                    // TODO: highlight hotdog card with editId
+                });
+            })();
+            setEditId("");
+        }
+    }, [editId]);
 
     // TODO: deleting hotdog
     useEffect(() => {
@@ -340,12 +332,17 @@ function HomeHotdogGrid() {
             >
                 <Icon name="plus" color="secondary" />
             </Fab>
-            <HotdogFormDialog open={openAddDialog} setOpen={setOpenAddDialog} />
+            <HotdogFormDialog 
+                open={openAddDialog} 
+                setOpen={setOpenAddDialog} 
+                setAddId={setAddId}
+            />
             { hotdogDetailsId && 
                 <HotdogDetailsDialog 
                     id={hotdogDetailsId}
                     open={openDetailsDialog}
                     setOpen={setOpenDetailsDialog}
+                    setEditId={setEditId}
                 />
             }
         </Box>

@@ -78,13 +78,16 @@ function removeMatching(changes, initial) {
 }
 
 /*
-    Hotdog adding/editing form - assumes initial values + hotdog id passed if edit is true
+    Hotdog adding/editing form 
+        assumes initial values + hotdog id passed if edit is true:
+            used exclusively in HotdogDetailsDialog (> HotdogFormDialog)
+        setAddId, setEditId:
+            used exclusively for HotdogGrid to fake real-time updates
 */
 function HotdogForm(props) {
     const { 
-        id, 
-        initialDescription, initialHotdogImageUrl, initialIngredients, initialTitle, edit,
-        setDialogHotdogImageUrl
+        id, initialDescription, initialHotdogImageUrl, initialIngredients, initialTitle, edit, setDialogHotdogImageUrl,
+        setAddId, setEditId
     } = props;
     const { userId } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
@@ -213,6 +216,7 @@ function HotdogForm(props) {
                         }
                     }
                     setSubmitStatus(editSuccess);
+                    setEditId(id);
                     setLoading(false);
                 })();
             } else {
@@ -223,8 +227,9 @@ function HotdogForm(props) {
                     if (addSuccess && hotdogImage) {
                         addSuccess = await DB.postHotdogImage(id, hotdogImage);
                     }
-                    setLoading(false);
                     setSubmitStatus(addSuccess);
+                    setAddId(id);
+                    setLoading(false);
                 })();
             }
         }

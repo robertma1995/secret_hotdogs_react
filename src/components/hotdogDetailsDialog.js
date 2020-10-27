@@ -78,9 +78,10 @@ const useStyles = makeStyles((theme) => ({
 
 /* 
     Given hotdog id, retrieves hotdog details, supports real-time edits
+    setEditId used by HotdogGrid for fake real-time updates - passed down to HotdogFormDialog
 */
 function HotdogDetailsDialog(props) {
-    const { id, open, setOpen } = props;
+    const { id, open, setOpen, setEditId } = props;
     // initial values to pass to hotdogformdialog
     const [creatorName, setCreatorName] = useState("");
     const [description, setDescription] = useState("");
@@ -198,19 +199,18 @@ function HotdogDetailsDialog(props) {
                                             }
                                         </Box>
                                     </ButtonBase>
-                                    { !loading && 
-                                        <HotdogFormDialog
-                                            open={openForm}
-                                            setOpen={setOpenForm}
-                                            id={id}
-                                            description={description}
-                                            ingredients={ingredients}
-                                            title={title}
-                                            dialogHotdogImageUrl={dialogHotdogImageUrl}
-                                            setDialogHotdogImageUrl={setDialogHotdogImageUrl}
-                                            edit
-                                        />
-                                    }
+                                    <HotdogFormDialog
+                                        open={openForm}
+                                        setOpen={setOpenForm}
+                                        id={id}
+                                        description={description}
+                                        ingredients={ingredients}
+                                        title={title}
+                                        dialogHotdogImageUrl={dialogHotdogImageUrl}
+                                        setDialogHotdogImageUrl={setDialogHotdogImageUrl}
+                                        edit
+                                        setEditId={setEditId}
+                                    />
                                 </Box>
                                 <Box height="100%" flexGrow={1}>
                                     <Paper square elevation={0} className={classes.paper}>
