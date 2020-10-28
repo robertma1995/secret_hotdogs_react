@@ -2,9 +2,61 @@
 import { firebase } from './index';
 
 /* 
+    delete hotdog with given id
+*/
+async function del(id) {
+    return firebase.firestore().collection('hotdogs').doc(id).delete();
+}
+
+/* 
+    delete hotdog image with given id
+*/
+async function deleteImage(id) {
+    return firebase.storage().ref().child("hotdogs/" + id + ".jpg").delete();
+}
+
+/*
+    returns details of hotdog with given id
+*/
+async function get(id) {
+    return new Promise((resolve, reject) => {
+        firebase.firestore().collection('hotdogs').doc(id).get().then(snapshot => {
+            let h = snapshot.data();
+            h["ts"] = h.ts.seconds;
+            resolve(h);
+        }).catch(err => {
+            reject(err);
+        })
+    });
+}
+
+/*
+    real-time query - used in HotdogDetailsDialog for real-time edits in dialog
+*/
+function getQuery(id) {
+    return firebase.firestore().collection('hotdogs').doc(id);
+}
+
+/* 
+    same as get, but adds snapshot to return value - used in HotdogGrid for fake real-time adding
+*/
+async function getWithSnapshot(id) {
+    return new Promise((resolve, reject) => {
+        firebase.firestore().collection('hotdogs').doc(id).get().then(snapshot => {
+            let h = snapshot.data();
+            h["ts"] = h.ts.seconds;
+            h["snapshot"] = snapshot;
+            resolve(h);
+        }).catch(err => {
+            reject(err);
+        })
+    });
+}
+
+/* 
     return all hotdogs with id and readable timestamps
 */
-async function all() {
+async function getAll() {
     return new Promise((resolve, reject) => {
         firebase.firestore().collection('hotdogs').get().then(data => {
             // note: each "row" is a "DocumentSnapshot": https://firebase.google.com/docs/reference/js/firebase.firestore.DocumentSnapshot
@@ -21,28 +73,6 @@ async function all() {
             reject(err);
         });
     });
-}
-
-/*
-    returns details of hotdog with given id
-*/
-async function get(id) {
-    return new Promise((resolve, reject) => {
-        firebase.firestore().collection('hotdogs').doc(id).get().then(snapshot => {
-            let hotdog = snapshot.data();
-            hotdog["ts"] = hotdog["ts"].seconds;
-            resolve(hotdog);
-        }).catch(err => {
-            reject(err);
-        })
-    });
-}
-
-/*
-    real-time query - returned to hotdogDetailsDialog where onSnapshot will be called
-*/
-async function getQuery(id) {
-    return firebase.firestore().collection('hotdogs').doc(id);
 }
 
 /*
@@ -67,14 +97,6 @@ async function getCreatedBy(id) {
 }
 
 /*
-    real-time query returned to hotdogGrid where onSnapshot will be called - avoids initial call
-*/
-async function getCreatedByQuery(id) {
-    const ts = firebase.firestore.Timestamp.now();
-    return firebase.firestore().collection('hotdogs').where("creatorId", "==", id).where("ts", ">", ts);
-}
-
-/*
     given hotdog id, retrieves image from storage
 */
 async function getImage(id) {
@@ -83,14 +105,14 @@ async function getImage(id) {
 }
 
 /* 
-    TODO: query for getting next n hotdogs created by given user (startAfter called in hotdogGrid)
+    pagination - used in HotdogGrid, get next n hotdogs created by given user
 */
-async function getNextQuery(id, n) {
+function getNextQuery(id, n) {
     return firebase.firestore().collection('hotdogs').where("creatorId", "==", id).orderBy("ts", "desc").limit(n);
 }
 
 /* 
-    updates existing hotdog record
+    updates existing hotdog record - does NOT change timestamp 
 */
 async function patch(id, hotdog) {
     const { description, sauce, sausage, toppings, title } = hotdog;
@@ -98,7 +120,6 @@ async function patch(id, hotdog) {
         description, 
         ingredients: {sauce, sausage, toppings},
         title,
-        ts: firebase.firestore.Timestamp.now()
     }
     // remove undefined values before patching
     for (var i in h) {
@@ -175,11 +196,13 @@ async function putImage(id, image) {
 } 
 
 export {
-    all,
+    del,
+    deleteImage,
     get,
+    getAll,
     getQuery,
+    getWithSnapshot,
     getCreatedBy,
-    getCreatedByQuery,
     getImage,
     getNextQuery,
     patch,

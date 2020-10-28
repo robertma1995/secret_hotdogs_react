@@ -74,6 +74,7 @@ function HomeHotdogGrid() {
                 (OR store documentSnapshot for each hotdog - if deleting the same hotdog as cursor, 
                 then set lastDocumentSnapshot)
     */
+    /* 
     useEffect(() => {
         (async () => {
             let query = await DB.getHotdogsCreatedByQuery(userId);
@@ -142,6 +143,7 @@ function HomeHotdogGrid() {
             });
         })();
     }, [userId]);
+    */
 
     // adds 3 more items from hotdogs list given index of next hotdog to render
     // TODO: improve fetching method - two sets of hotdog state vars is confusing

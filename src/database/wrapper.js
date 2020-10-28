@@ -28,7 +28,7 @@ async function getUserImage(id) {
         let url = await users.getImage(id);
         return url;
     } catch(e) {
-        console.log("database: no avatar detected, so set to default avatar (ignore annoying firebase error above)");
+        // console.log("database: no avatar detected, so set to default avatar (ignore annoying firebase error above)");
         return "";
     }
 }
@@ -61,9 +61,27 @@ async function putUserImage(id, image) {
 }
 
 // ========================================= HOTDOGS =========================================
+async function deleteHotdog(id) {
+    try {
+        await hotdogs.del(id);
+        return true;
+    } catch(e) {
+        return false;
+    }
+}
+
+async function deleteHotdogImage(id) {
+    try {
+        await hotdogs.deleteImage(id);
+        return true;
+    } catch(e) {
+        return false;
+    }
+}
+
 async function getAllHotdogs() {
     try {
-        let res = await hotdogs.all();
+        let res = await hotdogs.getAll();
         return res;
     } catch(e) {
         // console.log("database: " + e);
@@ -76,14 +94,23 @@ async function getHotdog(id) {
         let hotdog = await hotdogs.get(id);
         return hotdog;
     } catch(e) {
-        console.log(e);
+        // console.log(e);
         return false;
     }
 }
 
-async function getHotdogQuery(id) {
-    let query = await hotdogs.getQuery(id);
-    return query;
+function getHotdogQuery(id) {
+    return hotdogs.getQuery(id);
+}
+
+async function getHotdogWithSnapshot(id) {
+    try {
+        let hotdog = await hotdogs.getWithSnapshot(id);
+        return hotdog;
+    } catch(e) {
+        // console.log(e);
+        return false;
+    }
 }
 
 async function getHotdogImage(id) {
@@ -91,8 +118,8 @@ async function getHotdogImage(id) {
         let url = await hotdogs.getImage(id);
         return url;
     } catch(e) {
-        console.log("no hotdog image detected, set url to empty string");
-        return ""
+        // console.log("no hotdog image detected, set url to empty string");
+        return "";
     } 
 }
 
@@ -106,14 +133,8 @@ async function getHotdogsCreatedBy(id) {
     }
 }
 
-async function getHotdogsCreatedByQuery(id) {
-    let q = await hotdogs.getCreatedByQuery(id);
-    return q;
-}
-
-async function getHotdogsNextQuery(id, n) {
-    let q = await hotdogs.getNextQuery(id, n);
-    return q;
+function getHotdogsNextQuery(id, n) {
+    return hotdogs.getNextQuery(id, n);
 }
 
 async function patchHotdog(id, hotdog) {
@@ -131,7 +152,7 @@ async function postHotdog(hotdog) {
         let id = await hotdogs.post(hotdog);
         return id;
     } catch(e) {
-        console.log(e);
+        // console.log(e);
         return false;
     }
 }
@@ -162,12 +183,14 @@ export {
     postUser,
     postUserImage,
     putUserImage,
+    deleteHotdog,
+    deleteHotdogImage,
     getAllHotdogs,
     getHotdog, 
     getHotdogQuery,
+    getHotdogWithSnapshot,
     getHotdogImage,
     getHotdogsCreatedBy,
-    getHotdogsCreatedByQuery,
     getHotdogsNextQuery,
     patchHotdog,
     postHotdog,

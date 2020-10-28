@@ -60,40 +60,42 @@ function HomeHotdogGrid() {
     }
 
     // TODO: improve fetching method
-    async function fetchMore() {
+    function fetchMore() {
         setFetchLoading(true);
-        let q = await DB.getHotdogsNextQuery(userId, fetchCount);
+        let q = DB.getHotdogsNextQuery(userId, fetchCount);
         if (lastSnapshot) {
             q = q.startAfter(lastSnapshot);
-            console.log("fetching from last snapshot: " + lastSnapshot.data().title);
+            console.log("FETCHING FROM LAST SNAPSHOT: " + lastSnapshot.data().title);
         }
-        q.get().then(query => {
-            // prevent next fetch call if reached end
-            if (query.size < fetchCount) {
-                setFetchCount(0);
-            }
-            if (!query.empty) {
-                let next = [];
-                query.forEach(doc => {
-                    let h = doc.data();
-                    h["id"] = doc.id;
-                    h["ts"] = doc.data().ts.seconds;
-                    h["snapshot"] = doc;
-                    next.push(h);
-                });
-                console.log("TRIED TO FETCH: " + fetchCount + ", RETURNED: " + query.size);
-                // set startAfter cursor for next fetch call, append current
-                setLastSnapshot(next[next.length-1].snapshot);
-                getImages(next).then(res => {
-                    setHotdogs(current => [...current, ...next]);
+        (async () => {
+            q.get().then(query => {
+                // prevent next fetch call if reached end
+                if (query.size < fetchCount) {
+                    setFetchCount(0);
+                }
+                if (!query.empty) {
+                    let next = [];
+                    query.forEach(doc => {
+                        let h = doc.data();
+                        h["id"] = doc.id;
+                        h["ts"] = doc.data().ts.seconds;
+                        h["snapshot"] = doc;
+                        next.push(h);
+                    });
+                    console.log("tried to fetch: " + fetchCount + ", returned: " + query.size);
+                    // set startAfter cursor for next fetch call, append current
+                    setLastSnapshot(next[next.length-1].snapshot);
+                    getImages(next).then(res => {
+                        setHotdogs(current => [...current, ...next]);
+                        setFetchLoading(false);
+                    });
+                } else {
                     setFetchLoading(false);
-                });
-            } else {
-                setFetchLoading(false);
-            }
-        }).catch(err => {
-            console.log(err);
-        });
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        })();
     }
 
     // display hotdogs created by current user (reverse chronology)
@@ -194,12 +196,12 @@ function HomeHotdogGrid() {
         }
     }, [hotdogs]);
 
-    // TODO: fake real-time add
+    // TODO: fake real-time add 
     useEffect(() => {
         if (addId) {
             (async () => {
                 setChangeLoading(true);
-                let h = await DB.getHotdog(addId);
+                let h = await DB.getHotdogWithSnapshot(addId);
                 h["id"] = addId;
                 getImages([h]).then(res => {
                     setHotdogs(current => [res[0], ...current]);
@@ -213,23 +215,31 @@ function HomeHotdogGrid() {
     useEffect(() => {
         if (editId) {
             (async () => {
-                let h = await DB.getHotdog(editId);
+                let h = await DB.getHotdogWithSnapshot(editId);
                 h["id"] = editId;
+                // TODO: if editId = lastSnapshot, then need to update lastSnapshot - make separate function?
+                // note: below is unnecessary - fetching still works without it, regardless of
+                // shallow edits (description, title, ...) or deep edits (sauce, sausage, ...)
+                // startAfter might only look at the snapshot's id - doesn't look at the data at all
+                /* 
+                if (editId === lastSnapshot.id) {
+                    setLastSnapshot(h.snapshot);
+                }
+                */
                 getImages([h]).then(res => {
                     setHotdogs(current => current.map(hotdog => hotdog.id === res[0].id ? res[0] : hotdog));
-                    // TODO: highlight hotdog card with editId
+                    // TODO: highlight hotdog card with editId (in place of changeLoading)
                 });
             })();
             setEditId("");
         }
     }, [editId]);
 
-    // TODO: deleting hotdog
+    // fake real-time delete - finds previous snapshot if deleting last and there are still more hotdogs to fetch
     useEffect(() => {
         if (deleteId) {
             console.log("DELETING HOTDOG " + deleteId);
-            if (deleteId === lastSnapshot.id) {
-                console.log("deleting last hotdog - find previous");
+            if (deleteId === lastSnapshot.id && fetchCount !== 0) {
                 let previousSnapshot = null;
                 for (let i = 0; i < hotdogs.length; i++) {
                     let h = hotdogs[i];
@@ -240,19 +250,20 @@ function HomeHotdogGrid() {
                         break;
                     }
                 }
-                // TODO: testing
-                if (previousSnapshot) {
-                    console.log(previousSnapshot.data());
-                }
                 setLastSnapshot(previousSnapshot);
             }
-            // TODO: call backend delete (after real-time working)
+            (async () => {
+                await DB.deleteHotdog(deleteId);
+                await DB.deleteHotdogImage(deleteId);
+                setHotdogs(current => current.filter(h => h.id !== deleteId));
+            })();
         }
     }, [deleteId]);
 
     return (
         <Box height="100%" width="100%">
             <Grid container spacing={3} style={{ height: '100%' }}>
+                {/* load bar for newly added hotdog */}
                 { changeLoading &&
                     <Grid item xs={4}>
                         <Box
@@ -288,7 +299,7 @@ function HomeHotdogGrid() {
                         }
                     </Grid>
                 ))}
-                {/* TODO: separate loading state for real-time + fetching */}
+                {/* load bar for fetching next hotdogs */}
                 { fetchLoading && 
                     <Box
                         display="flex"
@@ -301,7 +312,6 @@ function HomeHotdogGrid() {
                         <LinearProgress color="primary" style={{ height: '5px', width: '85%' }}/>
                     </Box>
                 }
-
                 {/* show message if reached end of hotdogs */}
                 { !fetchLoading && fetchCount === 0 && 
                     <Box

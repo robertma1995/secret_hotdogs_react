@@ -76,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+
 /* 
     Given hotdog id, retrieves hotdog details, supports real-time edits
     setEditId used by HotdogGrid for fake real-time updates - passed down to HotdogFormDialog
@@ -94,6 +95,9 @@ function HotdogDetailsDialog(props) {
     // edit form 
     const [openForm, setOpenForm] = useState(false);
     const [hover, setHover] = useState(false);
+    // snapshot listener - detach on dialog close by calling again
+    const [unsubscribe, setUnsubscribe] = useState(null);
+
     const classes = useStyles();
 
     function handleOpenForm() {
@@ -110,8 +114,9 @@ function HotdogDetailsDialog(props) {
 
     function handleClose() {
         setOpen(false);
+        unsubscribe();
     }
-
+    
     // get details on dialog open - allows consecutive opening of same hotdog (unlike id)
     useEffect(() => {
         if (open) {
@@ -120,24 +125,41 @@ function HotdogDetailsDialog(props) {
                 // non-realtime data (except hotdogImageUrl - still need to retrieve on initial open)
                 let hotdogInitial = await DB.getHotdog(id);
                 let hotdogUrl = await DB.getHotdogImage(id);
-                let creatorUrl = await DB.getUserImage(hotdogInitial["creatorId"]);
-                let creator = await DB.getUser(hotdogInitial["creatorId"]);
-                setCreatorName(creator["name"]);
+                let creatorUrl = await DB.getUserImage(hotdogInitial.creatorId);
+                let creator = await DB.getUser(hotdogInitial.creatorId);
+                setCreatorName(creator.name);
                 setCreatorImageUrl(creatorUrl);
-                setSubheader(secondsToDate(hotdogInitial["ts"]));
-                setDialogHotdogImageUrl(hotdogUrl || constants["hotdogImageUrl"]);
+                setSubheader(secondsToDate(hotdogInitial.ts));
+                setDialogHotdogImageUrl(hotdogUrl || constants.hotdogImageUrl);
 
                 // get description, ingredients, and title in real-time
                 // note: no need to get hotdog image url - pass setter down to hotdogFormDialog > hotdogForm
+                // note: deletes from hotdogGrid will be caught by this listener - so ignore them
+                /*
                 let query = await DB.getHotdogQuery(id);
                 query.onSnapshot(snapshot => {
-                    // console.log("hotdog snapshot changed!");
-                    var hotdog = snapshot.data();
-                    setDescription(hotdog["description"]);
-                    setIngredients(hotdog["ingredients"]);
-                    setTitle(hotdog["title"]);
+                    console.log("hotdog snapshot changed!");
+                    if (snapshot.exists) {
+                        let hotdog = snapshot.data();
+                        setDescription(hotdog.description);
+                        setIngredients(hotdog.ingredients);
+                        setTitle(hotdog.title);
+                        setLoading(false);
+                    } else {
+                        console.log("deleted hotdog - ignore");
+                    }
+                });
+                */
+                const listener = DB.getHotdogQuery(id).onSnapshot(snapshot => {
+                    console.log("hotdog snapshot changed!");
+                    let hotdog = snapshot.data();
+                    setDescription(hotdog.description);
+                    setIngredients(hotdog.ingredients);
+                    setTitle(hotdog.title);
                     setLoading(false);
                 });
+                // NOTE: have to wrap in anonymous function - https://medium.com/swlh/how-to-store-a-function-with-the-usestate-hook-in-react-8a88dd4eede1
+                setUnsubscribe(() => listener);
             })();
         }
     }, [open]);
