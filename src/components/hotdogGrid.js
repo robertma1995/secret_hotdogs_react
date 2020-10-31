@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Box, Fab, Grid, CircularProgress, LinearProgress, Typography } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { Waypoint } from 'react-waypoint';
+import { makeStyles } from '@material-ui/core/styles';
 // my components
 import HotdogCard from './hotdogCard';
 import HotdogDetailsDialog from './hotdogDetailsDialog';
@@ -12,6 +13,20 @@ import constants from '../utils/constants';
 import { UserContext } from '../userContext';
 // database
 import * as DB from '../database/wrapper';
+
+const useStyles = makeStyles((theme) => ({
+    green: {
+        backgroundColor: '#00e676',
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        height: '100%',
+        width: '100%',
+        zIndex: 2,
+        opacity: 0.3,
+        borderRadius: '4px',
+    }, 
+}));
 
 /*
     given array of hotdogs, gets hotdog images, creator's profile image and name
@@ -32,6 +47,7 @@ async function getImages(hotdogs) {
 function HomeHotdogGrid() {
     const { userId } = useContext(UserContext);
     const [hotdogs, setHotdogs] = useState([]);
+    const classes = useStyles();
     // add form
     const [openAddDialog, setOpenAddDialog] = useState(false);
     // hotdog details dialog
@@ -231,7 +247,8 @@ function HomeHotdogGrid() {
                     // TODO: highlight hotdog card with editId (in place of changeLoading)
                 });
             })();
-            setEditId("");
+            // TODO: testing overlay - don't unset edit id for now
+            // setEditId("");
         }
     }, [editId]);
 
@@ -280,20 +297,33 @@ function HomeHotdogGrid() {
                 }
                 { hotdogs.length !== 0 && hotdogs.map((hotdog, i) => (
                     <Grid item key={hotdog.id} xs={4}>
-                        <HotdogCard
-                            id={hotdog.id}
-                            creatorId={hotdog.creatorId}
-                            creatorName={hotdog.creatorName}
-                            creatorImageUrl={hotdog.creatorImageUrl}
-                            description={hotdog.description}
-                            hotdogImageUrl={hotdog.hotdogImageUrl}
-                            ingredients={hotdog.ingredients}
-                            title={hotdog.title}
-                            ts={hotdog.ts}
-                            setHotdogDetailsId={setHotdogDetailsId}
-                            setOpenDetailsDialog={setOpenDetailsDialog}
-                            setDeleteId={setDeleteId}
-                        />
+                        <Box 
+                            style={{
+                                position:'relative'
+                            }}
+                        >
+                            {/* TODO: overlay on adding/editing, disappears on hover or after a few seconds */}
+                            {/* {(hotdog.id === editId || hotdog.id === addId) && */}
+                            <div 
+                                className={classes.green}
+                                onMouseEnter={(event) => event.target["className"] = ""}
+                            ></div>
+                            {/* } */}
+                            <HotdogCard
+                                id={hotdog.id}
+                                creatorId={hotdog.creatorId}
+                                creatorName={hotdog.creatorName}
+                                creatorImageUrl={hotdog.creatorImageUrl}
+                                description={hotdog.description}
+                                hotdogImageUrl={hotdog.hotdogImageUrl}
+                                ingredients={hotdog.ingredients}
+                                title={hotdog.title}
+                                ts={hotdog.ts}
+                                setHotdogDetailsId={setHotdogDetailsId}
+                                setOpenDetailsDialog={setOpenDetailsDialog}
+                                setDeleteId={setDeleteId}
+                            />
+                        </Box>
                         { fetchCount !== 0 && (i+1) === hotdogs.length &&
                             <Waypoint onEnter={() => fetchMore()}/>
                         }
@@ -337,7 +367,8 @@ function HomeHotdogGrid() {
                 style={{ 
                     position: 'fixed', 
                     bottom: '15px', 
-                    right: '15px' 
+                    right: '15px',
+                    zIndex: 3
                 }} 
             >
                 <Icon name="plus" color="secondary" />
