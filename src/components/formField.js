@@ -10,7 +10,7 @@ import Icon from '../utils/icons';
 */
 function FormField(props) {
     const { 
-        type, iconName, label, value, setValue, error, multiline, 
+        type, iconName, label, value, setValue, error, multiline, disabled,
         topping, toppingKey, toppingRemove
     } = props;
 
@@ -33,6 +33,7 @@ function FormField(props) {
                         error={error.trim() !== ""}
                         helperText={error}
                         multiline={multiline}
+                        disabled={disabled}
                         fullWidth
                     />
                 </Box>

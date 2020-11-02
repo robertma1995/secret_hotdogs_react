@@ -163,9 +163,9 @@ function HotdogForm(props) {
         const titleValid = isValid(title, setTitle, setTitleError);
         const sausageValid = isValid(sausage, setSausage, setSausageError);
         const sauceValid = isValid(sauce, setSauce, setSauceError);
-        var toppingsValid = true;
+        let toppingsValid = true;
         for (const key of toppings.keys()) {
-            var topping = toppings.get(key);
+            let topping = toppings.get(key);
             if (!isValidTopping(topping, key, updateToppings, updateToppingErrors)) {
                 toppingsValid = false;
             }
@@ -189,14 +189,14 @@ function HotdogForm(props) {
             };
 
             if (edit) {
-                // remove fields from changes if same as initial
+                // remove fields from changes if same as initial - ignore title
                 const initial = {
                     description: initialDescription,
                     sauce: initialIngredients["sauce"],
                     sausage: initialIngredients["sausage"],
                     toppings: initialIngredients["toppings"],
-                    title: initialTitle,
                 };
+                delete hotdog["title"];
                 const changes = removeMatching(hotdog, initial);
                 
                 // update hotdog details (triggers real-time update of details dialog)
@@ -216,7 +216,6 @@ function HotdogForm(props) {
                         }
                     }
                     setSubmitStatus(editSuccess);
-                    setEditId(id);
                     setLoading(false);
                 })();
             } else {
@@ -228,7 +227,6 @@ function HotdogForm(props) {
                         addSuccess = await DB.postHotdogImage(id, hotdogImage);
                     }
                     setSubmitStatus(addSuccess);
-                    setAddId(id);
                     setLoading(false);
                 })();
             }
@@ -248,6 +246,9 @@ function HotdogForm(props) {
                 setToppings(new Map());
                 setHotdogImage(null);
                 setHotdogImageUrl(constants["hotdogImageUrl"]);   
+                setAddId(id);
+            } else {
+                setEditId(id);
             }
             setOpenSnackbar(true);
         }
@@ -283,6 +284,7 @@ function HotdogForm(props) {
                 value={title}
                 setValue={setTitle}
                 error={titleError}
+                disabled={edit}
             />
             <FormField
                 type="text"

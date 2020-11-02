@@ -191,7 +191,6 @@ async function putImage(id, image) {
                 reject(err);
             })
         }
-        // TODO: update timestamp in hotdogs
     });
 } 
 

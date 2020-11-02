@@ -319,7 +319,7 @@ function HomeHotdogGrid() {
                         </Typography>
                     </Box>
                 }
-                {/* TODO: user has no hotdogs to begin with */}
+                {/* user has no hotdogs to begin with */}
                 { !fetchLoading && fetchCount === 0 && hotdogs.length === 0 &&
                     <Box
                         display="flex"

@@ -83,6 +83,7 @@ const useStyles = makeStyles((theme) => ({
 */
 function HotdogDetailsDialog(props) {
     const { id, open, setOpen, setEditId } = props;
+    const classes = useStyles();
     // initial values to pass to hotdogformdialog
     const [creatorName, setCreatorName] = useState("");
     const [description, setDescription] = useState("");
@@ -98,7 +99,6 @@ function HotdogDetailsDialog(props) {
     // snapshot listener - detach on dialog close by calling again
     const [unsubscribe, setUnsubscribe] = useState(null);
 
-    const classes = useStyles();
 
     function handleOpenForm() {
         setOpenForm(true);
@@ -133,23 +133,7 @@ function HotdogDetailsDialog(props) {
                 setDialogHotdogImageUrl(hotdogUrl || constants.hotdogImageUrl);
 
                 // get description, ingredients, and title in real-time
-                // note: no need to get hotdog image url - pass setter down to hotdogFormDialog > hotdogForm
-                // note: deletes from hotdogGrid will be caught by this listener - so ignore them
-                /*
-                let query = await DB.getHotdogQuery(id);
-                query.onSnapshot(snapshot => {
-                    console.log("hotdog snapshot changed!");
-                    if (snapshot.exists) {
-                        let hotdog = snapshot.data();
-                        setDescription(hotdog.description);
-                        setIngredients(hotdog.ingredients);
-                        setTitle(hotdog.title);
-                        setLoading(false);
-                    } else {
-                        console.log("deleted hotdog - ignore");
-                    }
-                });
-                */
+                // unsubscribe on close ensures deletes from HotdogGrid are not caught by this listener
                 const listener = DB.getHotdogQuery(id).onSnapshot(snapshot => {
                     console.log("hotdog snapshot changed!");
                     let hotdog = snapshot.data();

@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 // show loading spinner on top of button
 const useStyles = makeStyles((theme) => ({
     wrapper: {
-        margin: theme.spacing(1),
         position: 'relative',
     },
     buttonSpinner: {
