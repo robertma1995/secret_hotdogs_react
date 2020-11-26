@@ -4,66 +4,68 @@ import isEmail from 'validator/lib/isEmail';
 // my components
 import Form from './form';
 import FormField from './formField';
-import FormButton from './formButton';
-import FormFooter from './formFooter';
+import FormButtonWrapper from './formButtonWrapper';
+import ProgressButton from './progressButton';
+import FormMessage from './formMessage';
 import RouterLink from './routerLink';
-// routing
+// routing + utils
 import { withRouter } from 'react-router-dom';
 import * as routes from '../utils/routes';
+import errors from '../utils/errors';
 // context
 import { UserContext } from '../userContext';
 // database
 import * as DB from '../database/wrapper';
 
+/* 
+    helper: checks trimmed input, returning the appropriate error message
+    only handles email - password error handling done during form submission
+*/
+function checkInput(type, inputTrimmed) {
+    if (!inputTrimmed) {
+        return errors["empty"];
+    }
+    var error = " ";
+    if (type === "email" && !isEmail(inputTrimmed)) error = errors["email"]
+    return error;
+}
+
+/*
+    helper: checks validity of input based on returned error, trims input, and sets input error
+*/
+function isValid(type, input, setInput, setInputError) {
+    const trimmed = input.trim();
+    const error = checkInput(type, trimmed);
+    setInput(trimmed);
+    setInputError(error);
+    return error.trim() === "";
+}
+
 function LoginForm(props) {
  	// context + state variables (default error " " prevents form from looking ugly)
-    const { setCurrentUserId, setCurrentUserName } = useContext(UserContext);
+    const { closeDialog } = props;
+    const { setCurrentUserId } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(" ");
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState(" ");
     const [loading, setLoading] = useState(false);
-    const emptyError = "Please fill out this field";
 
     function handleLogin() {
-        // setError functions are asynchronous, so use local vars instead for login check
-        var emailValid = false;
-        var passwordValid = false;
-
-        // remove trailing whitespace from email before checking validity
-        const emailTrimmed = email.trim();
-        if (!emailTrimmed) {
-            setEmailError(emptyError);
-        } else if (!isEmail(emailTrimmed)) {
-            setEmailError("Invalid email");
-        } else {
-            setEmailError(" ");
-            emailValid = true;
-        }
-        setEmail(emailTrimmed);
-
-        if (!password) {
-            setPasswordError(emptyError);
-        } else {
-            setPasswordError(" ");
-            passwordValid = true;
-        }
-
+        const emailValid = isValid("email", email, setEmail, setEmailError);
+        const passwordValid = isValid("password", password, setPassword, setPasswordError);
         if (emailValid && passwordValid) {
             setLoading(true);
             // if login succeeds, set context user id and redirect to home page
             (async () => {
                 // trim again just in case, since set<value>(<value>Trimmed) is asynchronous
-                const loginUserId = await DB.login(email.trim(), password);
+                const userId = await DB.login(email.trim(), password);
                 setLoading(false);
-                if (!loginUserId) {
-                    setEmailError("Incorrect email or password");
-                    setPasswordError("Incorrect email or password");
+                if (!userId) {
+                    setEmailError(errors["login"]);
+                    setPasswordError(errors["login"]);
                 } else {
-                    // get user details (users currently only have a name)
-                    const loginUser = await DB.getUser(loginUserId);
-                    setCurrentUserName(loginUser.name);
-                    setCurrentUserId(loginUserId);
+                    setCurrentUserId(userId);
                     props.history.push(routes.HOME);
                 }
             })();
@@ -88,14 +90,28 @@ function LoginForm(props) {
                 setValue={setPassword}
                 error={passwordError}
             />
-            <FormButton
-                text="Login"
-                loading={loading}
-                handleClick={handleLogin}
-            />
-            <FormFooter>
-                Don't have an account? <RouterLink color="primary" underline="hover" to={routes.REGISTER}> Sign Up </RouterLink>
-            </FormFooter>
+            <FormButtonWrapper>
+                <ProgressButton 
+                    color="primary"
+                    variant="contained"
+                    loading={loading} 
+                    handleClick={handleLogin}
+                    disableElevation
+                >
+                    Login
+                </ProgressButton>
+            </FormButtonWrapper>
+            <FormMessage color="textSecondary" variant="body2">
+                Don't have an account? &nbsp;
+                <RouterLink 
+                    color="primary" 
+                    underline="hover" 
+                    onClick={closeDialog}
+                    to={routes.REGISTER}
+                > 
+                    Sign Up 
+                </RouterLink>
+            </FormMessage>
         </Form>
     );
 }

@@ -1,27 +1,28 @@
 import React from 'react';
 // material ui
-import { Box, Button, IconButton, Snackbar, Typography }  from '@material-ui/core';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import CloseIcon from '@material-ui/icons/Close';
-// routing
-import { Link } from 'react-router-dom';
+import { Box, IconButton, Snackbar, Typography }  from '@material-ui/core';
+import Icon from '../utils/icons';
+import { makeStyles } from '@material-ui/core/styles';
 
-function SuccessSnackbar(props) {
-    // snackbar only opens if parent opens it, sets parent val to false if time out
-    const { open, setOpen, message, action, actionRoute } = props;
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
+const useStyles = makeStyles((theme) => ({
+    // override iconbutton styles in theme.js
+    button: {
+        color: 'white',
+        '&:hover': {
+            color: '#b9f6ca',
         }
-        setOpen(false);
     }
+}));
 
-    // message with an icon
-    const snackbarMessage = (
+/*
+    message with an icon
+*/
+function Message(props) {
+    const { message } = props;
+    return (
         <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
             <Box mr={2}>
-                <CheckCircleOutlineIcon/>
+                <Icon name="tick" />
             </Box>
             <Box>
                 <Typography variant="subtitle2" display="inline">
@@ -30,39 +31,45 @@ function SuccessSnackbar(props) {
             </Box>
         </Box>
     );
+}
 
-    // main action button + close button - only render action button if action specified
-    const snackbarClose = (
-        <IconButton size="small" aria-label="close" onClick={handleClose}>
-            <CloseIcon color="secondary" fontSize="small"/>
-        </IconButton>
-    );
-    var snackbarAction = snackbarClose;
-    if (action) {
-        snackbarAction = (
-            <div>
-                <Button
-                    component={Link}
-                    to={actionRoute} 
-                    color="secondary"
-                    variant="text" 
-                    disableElevation
-                > 
-                    {action}
-                </Button>
-                { snackbarClose }
-            </div>
-        );
+/* 
+    close button (default) + action button (if defined)
+*/
+function Action(props) {
+    const classes = useStyles();
+    const { actionButton, handleClose } = props;
+    return (
+        <>
+            {actionButton}
+            <IconButton size="small" onClick={handleClose} className={classes.button}>
+                <Icon name="close" />
+            </IconButton>
+        </>
+    );    
+}
+
+/* 
+    only opens if parent opens it, sets parent val to false if time out or closed
+*/
+function SuccessSnackbar(props) {
+    const { open, setOpen, message, action } = props;
+
+    function handleClose(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
     }
 
-    const autoHideDuration = 10000;
+    const autoHideDuration = 5000;
     return (
         <Snackbar 
             open={open}
             autoHideDuration={autoHideDuration}
-            onClose={handleClose}
-            message={snackbarMessage}
-            action={snackbarAction}
+            onClose={(event, reason) => handleClose(event, reason)}
+            message={<Message message={message} />}
+            action={<Action actionButton={action} handleClose={handleClose}/>}
         />
     );
 }

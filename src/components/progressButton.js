@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 // show loading spinner on top of button
 const useStyles = makeStyles((theme) => ({
     wrapper: {
-        margin: theme.spacing(1),
         position: 'relative',
     },
     buttonSpinner: {
@@ -18,18 +17,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ProgressButton(props) {
-    const { text, loading, handleClick } = props;
+    const { 
+        color, variant, size, disabled, disableRipple, disableElevation, 
+        loading, handleClick 
+    } = props;
     const classes = useStyles();
     return (
         <div className={classes.wrapper}>
             <Button
-                color="primary" 
-                variant="contained"
-                disabled={loading}
+                color={color} 
+                variant={variant}
+                size={size}
+                disabled={disabled || loading}
+                disableElevation={disableElevation}
+                disableRipple={disableRipple}
                 onClick={() => handleClick()}
-                disableElevation
             >
-                {text}
+                {props.children}
             </Button>
             {loading && <CircularProgress size={24} className={classes.buttonSpinner}/>}
         </div>

@@ -1,70 +1,80 @@
 import React from 'react';
-import { 
-    Avatar, 
-    IconButton, 
+import {
+    Avatar, Button, Box, IconButton, 
     Card, CardHeader, CardMedia, CardContent, CardActions, 
-    List, ListItem, ListItemIcon, ListItemText, ListSubheader
 } from '@material-ui/core';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import OutdoorGrillIcon from '@material-ui/icons/OutdoorGrill';
-import WavesIcon from '@material-ui/icons/Waves';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+// my components
+import Icon from '../utils/icons';
+import HotdogIngredientsList from './hotdogIngredientsList';
+import { secondsToDate } from '../utils/functions';
 
-function HotdogCard(props) {
-    const { id, title, ingredients, creatorName, ts } = props;
+/*
+    has to be a wrapped in a memo to prevent useless re-rendering of existing cards in homehotdoggrid
+*/
+const HotdogCard = React.memo((props) => {
+    // TODO: keep id, since will need for liking later on
+    const { 
+        id, creatorId, creatorName, creatorImageUrl, 
+        description, hotdogImageUrl, ingredients, title, ts,
+        setHotdogDetailsId, setOpenDetailsDialog,
+        setDeleteId,
+    } = props;
+    // TODO: keep below console log to check for useless rendering
+    console.log("Hotdog " + id + " rendered");
 
-    // format timestamp seconds to readable date
-    var date = new Date(1970, 0, 1);
-    date.setTime(ts * 1000);
-    const subheader = date.getDate() + " " + (date.toLocaleString('default', {month: 'long'})) + ", " + date.getFullYear();
+    // format timestamp seconds into readable date
+    const subheader = secondsToDate(ts);
 
-    // letter avatar based on creator's name
-    const avatar = (
-        <Avatar>
-            {creatorName.charAt(0).toUpperCase()}
-        </Avatar>
-    ); 
+    // set hotdog details dialog
+    function handleSetHotdogDetailsId() {
+        setOpenDetailsDialog(true);
+        setHotdogDetailsId(id);
+    }
+
+    // let hotdog grid handle hotdog deleting
+    function handleSetDeleteId() {
+        setDeleteId(id);
+    }
 
     return (
         <Card>
             <CardHeader
-                avatar={avatar}
+                avatar={<Avatar src={creatorImageUrl} />}
                 title={title + " by " + creatorName}
                 subheader={subheader}
             />
-            <CardMedia image="https://www.svgrepo.com/show/133687/hot-dog.svg"/>
+            <CardMedia image={hotdogImageUrl} />
             <CardContent>
-                <List dense disablePadding subheader={<ListSubheader color="primary"> Ingredients </ListSubheader>}>
-                    <ListItem divider>
-                        <ListItemIcon>
-                            <OutdoorGrillIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary={ingredients["sausage"]}/>
-                    </ListItem>
-                    <ListItem divider>
-                        <ListItemIcon>
-                            <WavesIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary={ingredients["sauce"]}/>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemIcon>
-                            <ShoppingCartIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary={ingredients["toppingA"]}/>
-                    </ListItem>
-                    <ListItem divider>
-                        <ListItemText inset primary={ingredients["toppingB"]}/>
-                    </ListItem>
-                </List>
+                <HotdogIngredientsList 
+                    sausage={ingredients["sausage"]}
+                    sauce={ingredients["sauce"]}
+                    toppings={ingredients["toppings"]}
+                />
             </CardContent>
             <CardActions>
-                <IconButton>
-                    <FavoriteIcon/>
-                </IconButton>
+                <Box display="flex" width="100%">
+                    <Box flexGrow={1}>
+                        <IconButton aria-label="like">
+                            <Icon name="like" />
+                        </IconButton>
+                        <Button 
+                            variant="text" 
+                            color="primary"
+                            disableRipple 
+                            onClick={() => handleSetHotdogDetailsId()}
+                        >
+                            View details
+                        </Button>
+                    </Box>
+                    <Box>
+                        <IconButton onClick={() => handleSetDeleteId()}>
+                            <Icon name="delete" />
+                        </IconButton>
+                    </Box>
+                </Box>
             </CardActions>
         </Card>
     );
-}
+});
 
 export default HotdogCard;

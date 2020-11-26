@@ -27,29 +27,39 @@ const theme = {
         ].join(','),
     },
     overrides: {
-        // white button text - Button "color" only changes background color
+        // appbar color same as text.primary
+        MuiAppBar: {
+            colorPrimary: {
+                backgroundColor: '#212121',
+            }
+        },
         MuiButton: {
+            root: {
+                textTransform: 'none'
+            },
+            // white button text - contained Button "color" material ui attribute only changes background color
             containedPrimary: {
                 color: '#ffffff'
             },
-            textPrimary: {
-                color: '#cbb09c',
-                // '&:hover': {
-                //     backgroundColor: '#fafafa'
-                // }
+            // override white background + default black text color
+            containedSecondary: {
+                color: 'rgba(0, 0, 0, 0.54)',
+                backgroundColor: '#e0e0e0'
             },
-        },
-        // font size for a TextField label
-        MuiInputLabel: {
-            root: {
-                fontSize: 14
-            }
-        },
-        // background color for a Snackbar
-        MuiSnackbarContent: {
-            root: {
-                backgroundColor: '#00e676'
-                // backgroundColor: '#00c853'
+            // change color from lighter text.primary to primary.main, remove text transformation
+            textPrimary: {
+                color: 'rgba(0, 0, 0, 0.54)',
+                '&:hover': {
+                    color: '#cbb09c',
+                    backgroundColor: 'transparent'
+                }
+            },
+            // change color from secondary to primary on hover, and remove the button outline effect
+            textSecondary: {
+                '&:hover': {
+                    color: '#cbb09c',
+                    backgroundColor: 'transparent'
+                }
             }
         },
         // hotdog grid item size
@@ -65,19 +75,77 @@ const theme = {
                 paddingTop: '100%',
             }
         },
-        // capitalize ListItemText
-        MuiListItem: {
+        // disable padding between bottom of image and ingredients list
+        MuiCardContent: {
             root: {
-                textTransform: "capitalize"
+                paddingTop: 'unset'
             }
         },
-        // appbar color same as text.primary
-        MuiAppBar: {
-            colorPrimary: {
-                backgroundColor: '#212121',
+        // smaller than default maxWidth for a dialog with maxWidth="xs"|"md"
+        MuiDialog: {
+            paperWidthXs: {
+                maxWidth: '400px'
+            },
+            paperWidthMd: {
+                maxWidth: '750px'
+            },
+            paperWidthLg: {
+                maxWidth: '950px'
             }
-        }
-
+        },
+        // unset excessive padding in dialog content
+        MuiDialogContent: {
+            root: {
+                paddingTop: 'unset!important',
+                padding: 'unset!important'
+            }
+        },
+        // move dialog buttons to left instead of right (only used in photoUploadDialog for now)
+        MuiDialogActions: {
+            root: {
+                justifyContent: 'flex-start'
+            }
+        },
+        // remove margin from dialogcontenttext
+        MuiDialogContentText: {
+            root: {
+                marginBottom: 0
+            }
+        },
+        // remove hover ripple around iconbuttons, default color on hover same as primary
+        MuiIconButton: {
+            root: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: '#cbb09c'
+                },
+            }
+        },
+        // font size for a TextField label
+        MuiInputLabel: {
+            root: {
+                fontSize: 14
+            }
+        },
+        // capitalize ListItemText (hotdog card ingredients list)
+        MuiListItem: {
+            root: {
+                textTransform: 'capitalize'
+            }, 
+        },
+        // avatar menu minimum width
+        MuiPopover: {
+            paper: {
+                minWidth: 150
+            }
+        },
+        // background color for a Snackbar
+        MuiSnackbarContent: {
+            root: {
+                backgroundColor: '#00e676'
+                // backgroundColor: '#00c853'
+            }
+        },
     }
 }
 

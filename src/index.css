@@ -22,6 +22,47 @@ body, html {
 	overflow: auto;
 }
 
+/* custom scrollbar same colour as primary */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbb09c;
+  border-radius: 30px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* remove inner dashed lines from crop box */
+.cropper-dashed {
+  display: none !important;
+}
+/* crop box lines black */
+.cropper-view-box {
+  outline-color: black !important;
+}
+/* drag points slightly larger + white with black outline */
+.cropper-point {
+  height: 7.5px !important;
+  width: 7.5px !important;
+  background-color: white !important;
+  outline: 1px solid black !important;
+}
+/* cropping container + modal/mask background white */
+.cropper-modal {
+  background-color: #fff !important;
+  opacity: 0.45 !important;
+}
+/* remove weird shadow behind crop box lines */
+.cropper-line {
+  background-color: transparent !important;
+}
+/* remove cross cursor when hovering over excess space in cropper container */
+.cropper-crop {
+  cursor: unset !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

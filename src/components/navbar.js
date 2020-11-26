@@ -1,24 +1,53 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // material ui
-import { AppBar, Box, Button, Toolbar, Typography, } from '@material-ui/core';
-// routing
-import { withRouter } from 'react-router-dom';
-import * as routes from '../utils/routes';
+import { AppBar, Avatar, Box, Button, CircularProgress, Toolbar, Typography } from '@material-ui/core';
 // my components
+import ImageButton from './imageButton';
+import LoginFormDialog from './loginFormDialog';
+import NavbarMenu from './navbarMenu';
 import RouterLink from './routerLink';
 // routing
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import * as routes from '../utils/routes';
 // context
 import { UserContext } from '../userContext';
+// database
+import * as DB from '../database/wrapper';
 
 function NavBar(props) { 
-    const { userId, setCurrentUserId, userName, setCurrentUserName } = useContext(UserContext);
-    
-    // unset context vars and redirect to login page
+    const { userId, setCurrentUserId } = useContext(UserContext);
+    const [openLoginDialog, setOpenLoginDialog] = useState(false);
+    const [menuAnchor, setMenuAnchor] = useState(null);
+    const [userName, setUserName] = useState("");
+    const [userImageUrl, setUserImageUrl] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (userId !== null) {
+            (async () => {
+                // reset loading status to allow logging in/out to refresh the navbar avatar
+                setLoading(true);
+                const user = await DB.getUser(userId);
+                const url = await DB.getUserImage(userId);
+                setUserName(user["name"]);
+                setUserImageUrl(url);
+                setLoading(false);
+            })();
+        }
+    }, [userId]);
+
     function handleLogout() {
         setCurrentUserId(null);
-        setCurrentUserName(null);
         props.history.push(routes.HOME);
+    }
+
+    function handleOpenLoginDialog() {
+        setOpenLoginDialog(true);
+    }
+
+    function handleOpenMenu(event) {
+        setMenuAnchor(event.currentTarget);
     }
 
     return (
@@ -32,45 +61,52 @@ function NavBar(props) {
                             </RouterLink>
                         </Typography>
                     </Box>
-                    <Box p={1}>
-                        { userId && 
-                            <Typography variant="subtitle1" color="secondary">
-                                Welcome, {userName}!
-                            </Typography>
-                        }
-                        { !userId && 
-                            <Button 
-                                component={Link}
-                                to={routes.REGISTER}
-                                color="secondary" 
-                                variant="text" 
-                                disableElevation
-                            > 
-                                Sign Up
-                            </Button>
-                        }
-                    </Box>
                     <Box>
-                        { userId && 
-                            <Button
-                                color="primary"
-                                variant="text" 
-                                disableElevation
-                                onClick={() => handleLogout()}
-                            >
-                                Logout 
-                            </Button>
+                        { userId && !loading &&
+                            <>
+                                <ImageButton 
+                                    imageUrl={userImageUrl}
+                                    iconName="settings"
+                                    handleClick={handleOpenMenu}
+                                    avatar
+                                    navbar
+                                />
+                                <NavbarMenu 
+                                    anchor={menuAnchor}
+                                    setAnchor={setMenuAnchor}
+                                    userId={userId}
+                                    userName={userName}
+                                    userImageUrl={userImageUrl}
+                                    setUserImageUrl={setUserImageUrl}
+                                    handleLogout={handleLogout}
+                                />
+                            </> 
+                        }
+                        { userId && loading &&
+                            <Avatar style={{ height: '40px', width: '40px', backgroundColor: 'transparent' }}>
+                                <CircularProgress color="primary" size="inherit" />
+                            </Avatar>
                         }
                         { !userId && 
-                            <Button 
-                                component={Link}
-                                to={routes.LOGIN}
-                                color="primary"
-                                variant="text" 
-                                disableElevation
-                            > 
-                                Login
-                            </Button>
+                            <>
+                                <Button 
+                                    component={Link}
+                                    to={routes.REGISTER}
+                                    color="secondary" 
+                                    variant="text" 
+                                    disableElevation
+                                > 
+                                    Sign Up
+                                </Button>
+                                <Button 
+                                    variant="text" 
+                                    color="secondary" 
+                                    onClick={() => handleOpenLoginDialog()}
+                                >
+                                    Login
+                                </Button>
+                                <LoginFormDialog open={openLoginDialog} setOpen={setOpenLoginDialog} />
+                            </>
                         }
                     </Box>
                 </Box>
