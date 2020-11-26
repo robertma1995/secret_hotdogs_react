@@ -216,7 +216,7 @@ function HotdogForm(props) {
                     if (editSuccess) {
                         setEditId(id);
                     } else {
-                        console.log("something went wrong with editing...");
+                        // console.log("something went wrong with editing...");
                     }
                     setLoading(false);
                     setOpenSnackbar(true);
@@ -239,7 +239,7 @@ function HotdogForm(props) {
                         setHotdogImageUrl(constants["hotdogImageUrl"]);   
                         setAddId(id);
                     } else {
-                        console.log("something went wrong with adding...");
+                        // console.log("something went wrong with adding...");
                     }
                     setLoading(false);
                     setOpenSnackbar(true);

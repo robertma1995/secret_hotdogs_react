@@ -135,7 +135,7 @@ function HotdogDetailsDialog(props) {
                 // get description, ingredients, and title in real-time
                 // unsubscribe on close ensures deletes from HotdogGrid are not caught by this listener
                 const listener = DB.getHotdogQuery(id).onSnapshot(snapshot => {
-                    console.log("hotdog snapshot changed!");
+                    // console.log("hotdog snapshot changed!");
                     let hotdog = snapshot.data();
                     setDescription(hotdog.description);
                     setIngredients(hotdog.ingredients);

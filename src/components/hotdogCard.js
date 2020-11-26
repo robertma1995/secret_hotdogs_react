@@ -20,7 +20,7 @@ const HotdogCard = React.memo((props) => {
         setDeleteId,
     } = props;
     // TODO: keep below console log to check for useless rendering
-    console.log("Hotdog " + id + " rendered");
+    // console.log("Hotdog " + id + " rendered");
 
     // format timestamp seconds into readable date
     const subheader = secondsToDate(ts);

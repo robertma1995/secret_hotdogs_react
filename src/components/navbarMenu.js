@@ -72,7 +72,7 @@ function NavbarMenu(props) {
     // update backend, set image src as firebase url - set new image last to prevent recursive calls
     useEffect(() => {
         if (newImageUrl !== userImageUrl) {
-            console.log("CHANGED USER IMAGE");
+            // console.log("CHANGED USER IMAGE");
             (async () => {
                 setLoading(true);
                 let url = await DB.putUserImage(userId, newImage);

@@ -130,7 +130,7 @@ function HomeHotdogGrid() {
         let q = DB.getHotdogsNextQuery(userId, fetchCount);
         if (lastSnapshot) {
             q = q.startAfter(lastSnapshot);
-            console.log("FETCHING FROM LAST SNAPSHOT: " + lastSnapshot.data().title);
+            // console.log("FETCHING FROM LAST SNAPSHOT: " + lastSnapshot.data().title);
         }
         (async () => {
             q.get().then(query => {
@@ -147,7 +147,7 @@ function HomeHotdogGrid() {
                         h["snapshot"] = doc;
                         next.push(h);
                     });
-                    console.log("tried to fetch: " + fetchCount + ", returned: " + query.size);
+                    // console.log("tried to fetch: " + fetchCount + ", returned: " + query.size);
                     // set startAfter cursor for next fetch call, append current
                     setLastSnapshot(next[next.length-1].snapshot);
                     getImages(next).then(res => {
@@ -158,7 +158,7 @@ function HomeHotdogGrid() {
                     setFetchLoading(false);
                 }
             }).catch(err => {
-                console.log(err);
+                // console.log(err);
             });
         })();
     }
