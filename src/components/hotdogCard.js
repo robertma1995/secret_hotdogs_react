@@ -15,7 +15,7 @@ const HotdogCard = React.memo((props) => {
     // TODO: keep id, since will need for liking later on
     const { 
         id, creatorId, creatorName, creatorImageUrl, 
-        description, hotdogImageUrl, ingredients, title, ts,
+        hotdogImageUrl, ingredients, title, ts,
         setHotdogDetailsId, setOpenDetailsDialog,
         setDeleteId,
     } = props;

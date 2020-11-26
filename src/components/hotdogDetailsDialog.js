@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { 
-    Avatar, Box, Button, CircularProgress, Grid, IconButton, Paper, Typography,
+    Avatar, Box, CircularProgress, Grid, IconButton, Paper, Typography,
     Card, CardHeader, CardContent, CardMedia,
     Dialog, DialogContent 
 } from '@material-ui/core';
@@ -146,7 +146,7 @@ function HotdogDetailsDialog(props) {
                 setUnsubscribe(() => listener);
             })();
         }
-    }, [open]);
+    }, [open, id]);
 
     return (
         <>

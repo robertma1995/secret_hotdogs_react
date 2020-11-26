@@ -11,7 +11,9 @@ https://secret-hotdogs.web.app
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png" width="900">
 
 ### Forms: Registration, Login, Posting
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png" width="250">  <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png" width="250">  <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593058658/post_b.png" width="320">
+<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png" width="250">
+<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png" width="250">
+<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593058658/post_b.png" width="320">
 
 ### Home (before & after posting)
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593057445/post_a.png" width="800">

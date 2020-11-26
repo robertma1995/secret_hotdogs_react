@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
 import { Box, Container } from '@material-ui/core';
-import { HomeHotdogGrid, Landing, PageTitle } from '../components';
+import { HotdogGrid, Landing, PageTitle } from '../components';
 // context
 import { UserContext } from '../userContext';
-import { HotdogGrid } from '../components'; 
 
 // if not logged in, show welcome page; show hotdog grid otherwise
 function Home() {

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Fab, Grid, CircularProgress, LinearProgress, Typography } from '@material-ui/core';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { Box, Fab, Grid, LinearProgress, Typography } from '@material-ui/core';
 import { Waypoint } from 'react-waypoint';
 import { makeStyles } from '@material-ui/core/styles';
 // my components
@@ -97,9 +96,8 @@ function HomeHotdogGrid() {
     // hotdog details dialog
     const [hotdogDetailsId, setHotdogDetailsId] = useState("");
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-    // pagination/fetching
-    const maxColumns = 3;
-    const [fetchCount, setFetchCount] = useState(maxColumns);
+    // pagination/fetching: max columns = 3 for now
+    const [fetchCount, setFetchCount] = useState(constants.maxHotdogColumns);
     const [lastSnapshot, setLastSnapshot] = useState(null);
     const [fetchLoading, setFetchLoading] = useState(true);
     // add (HotdogFormDialog > HotdogForm), 
@@ -110,9 +108,11 @@ function HomeHotdogGrid() {
     const [editId, setEditId] = useState("");
     const [deleteId, setDeleteId] = useState("");
 
+    /* 
     function handleOpenDetailsDialog() {
         setOpenDetailsDialog(true);
     }
+    */
 
     function handleOpenAddDialog() {
         setOpenAddDialog(true);
@@ -168,7 +168,7 @@ function HomeHotdogGrid() {
     */
     useEffect(() => {
         fetchMore();
-    }, [userId]);
+    }, []);
 
     /* 
         used by fetchMore to always fill a row with 3 hotdog cards
@@ -176,7 +176,7 @@ function HomeHotdogGrid() {
     */
     useEffect(() => {
         if (fetchCount !== 0) {
-            setFetchCount(maxColumns - (hotdogs.length % maxColumns));
+            setFetchCount(constants.maxHotdogColumns - (hotdogs.length % constants.maxHotdogColumns));
         }
     }, [hotdogs]);
 
@@ -274,7 +274,6 @@ function HomeHotdogGrid() {
                                 creatorId={hotdog.creatorId}
                                 creatorName={hotdog.creatorName}
                                 creatorImageUrl={hotdog.creatorImageUrl}
-                                description={hotdog.description}
                                 hotdogImageUrl={hotdog.hotdogImageUrl}
                                 ingredients={hotdog.ingredients}
                                 title={hotdog.title}

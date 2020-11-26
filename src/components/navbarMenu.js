@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Badge, Box, Button, CircularProgress, IconButton, Typography, Menu } from '@material-ui/core';
+import ImageButton from './imageButton';
 import Icon from '../utils/icons';
 import PhotoUploadDialog from './photoUploadDialog';
 import * as DB from '../database/wrapper';
@@ -60,11 +61,8 @@ const useStyles = makeStyles((theme) => ({
     Avatar with material ui menu - for now, only used in navbar, and also takes in handleLogout function
 */
 function NavbarMenu(props) {
-    const { 
-        anchor, setAnchor, 
-        userId, userName, userImageUrl, setUserImageUrl, 
-        handleLogout, 
-    } = props;
+    const { userId, userName, userImageUrl, setUserImageUrl, handleLogout } = props;
+    const [anchor, setAnchor] = useState(null);
     const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
     const [newImage, setNewImage] = useState(null);
     const [newImageUrl, setNewImageUrl] = useState(userImageUrl);
@@ -85,6 +83,10 @@ function NavbarMenu(props) {
         }
     }, [newImageUrl]);
     
+    function handleOpen(event) {
+        setAnchor(event.currentTarget);
+    }
+
     function handleClose() {
         setAnchor(null);
     }
@@ -94,71 +96,80 @@ function NavbarMenu(props) {
     }
 
     return (
-        <Menu
-            open={Boolean(anchor)}
-            onClose={() => handleClose()}
-            anchorEl={anchor}
-            className={classes.menu}
-            getContentAnchorEl={null}
-            keepMounted
-            anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-            transformOrigin={{vertical: 'top', horizontal: 'right'}}
-        >
-            <Box display="flex" flexDirection="column" alignItems="center" className={classes.menuHeader}>
-                <Box className={classes.menuHeaderItem}>
-                    <Badge 
-                        overlap="circle"
-                        anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-                        badgeContent={
-                            <>
-                                <IconButton onClick={() => handleOpenPhotoDialog()} className={classes.menuAvatarBadge}>
-                                    <Icon name="camera" size="small" />
-                                </IconButton>
-                                <PhotoUploadDialog 
-                                    setPhoto={setNewImage} 
-                                    photoUrl={newImageUrl}
-                                    setPhotoUrl={setNewImageUrl}
-                                    open={openPhotoDialog}
-                                    setOpen={setOpenPhotoDialog}
-                                    profile
-                                    confirmRequired
-                                    confirmLoading={loading}
-                                />
-                            </>
-                        }
-                    >
-                        { loading &&
-                            <Avatar className={`${classes.menuAvatar} ${classes.loading}`}>
-                                <CircularProgress color="primary" size="inherit" />
-                            </Avatar>
-                        }
-                        { !loading && 
-                            <Avatar src={userImageUrl} className={classes.menuAvatar} />
-                        }
-                    </Badge>
+        <>
+            <ImageButton 
+                imageUrl={userImageUrl}
+                iconName="settings"
+                handleClick={handleOpen}
+                avatar
+                navbar
+            />
+            <Menu
+                open={Boolean(anchor)}
+                onClose={() => handleClose()}
+                anchorEl={anchor}
+                className={classes.menu}
+                getContentAnchorEl={null}
+                keepMounted
+                anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                transformOrigin={{vertical: 'top', horizontal: 'right'}}
+            >
+                <Box display="flex" flexDirection="column" alignItems="center" className={classes.menuHeader}>
+                    <Box className={classes.menuHeaderItem}>
+                        <Badge 
+                            overlap="circle"
+                            anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                            badgeContent={
+                                <>
+                                    <IconButton onClick={() => handleOpenPhotoDialog()} className={classes.menuAvatarBadge}>
+                                        <Icon name="camera" size="small" />
+                                    </IconButton>
+                                    <PhotoUploadDialog 
+                                        setPhoto={setNewImage} 
+                                        photoUrl={newImageUrl}
+                                        setPhotoUrl={setNewImageUrl}
+                                        open={openPhotoDialog}
+                                        setOpen={setOpenPhotoDialog}
+                                        profile
+                                        confirmRequired
+                                        confirmLoading={loading}
+                                    />
+                                </>
+                            }
+                        >
+                            { loading &&
+                                <Avatar className={`${classes.menuAvatar} ${classes.loading}`}>
+                                    <CircularProgress color="primary" size="inherit" />
+                                </Avatar>
+                            }
+                            { !loading && 
+                                <Avatar src={userImageUrl} className={classes.menuAvatar} />
+                            }
+                        </Badge>
+                    </Box>
+                    <Box className={classes.menuHeaderItem}>
+                        <Typography variant="body2" className={classes.overflow}> 
+                            {userName} 
+                        </Typography>
+                    </Box>
                 </Box>
-                <Box className={classes.menuHeaderItem}>
-                    <Typography variant="body2" className={classes.overflow}> 
-                        {userName} 
-                    </Typography>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                    <Box width="100%">
+                        <Button
+                            variant="text"
+                            color="primary"
+                            disableElevation
+                            fullWidth
+                            startIcon={<Icon name="logout" size="small" />}
+                            onClick={() => handleLogout()}
+                            className={classes.menuButton}
+                        >
+                            Sign Out
+                        </Button>
+                    </Box>
                 </Box>
-            </Box>
-            <Box display="flex" flexDirection="column" alignItems="center">
-                <Box width="100%">
-                    <Button
-                        variant="text"
-                        color="primary"
-                        disableElevation
-                        fullWidth
-                        startIcon={<Icon name="logout" size="small" />}
-                        onClick={() => handleLogout()}
-                        className={classes.menuButton}
-                    >
-                        Sign Out
-                    </Button>
-                </Box>
-            </Box>
-        </Menu>
+            </Menu>
+        </>
     );
 }
 

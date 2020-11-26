@@ -47,6 +47,7 @@ function ImageButtonDouble(props) {
             className={classes.wrapper}
         >
             <img 
+                alt="button"
                 src={imageUrl} 
                 className={
                     `${classes.image} ` +
