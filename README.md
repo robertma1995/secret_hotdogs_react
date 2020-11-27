@@ -6,23 +6,10 @@ https://secret-hotdogs.web.app
 
 (Sign Up function is disabled in current hosted version - sample login credentials can be provided on request)
 
-## Screenshots
-### Landing
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png" width="900">
+## Demo (video)
+https://www.youtube.com/watch?v=UBHHEkR4ON0
 
-### Registration, Login
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png" width="250">
-
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png" width="250">
-
-### Home
-
-### Posting
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593058658/post_b.png" width="320">
-
-### Home (before & after posting)
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593057445/post_a.png" width="800">
-<img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593057444/homepage.png" width="800">
+Shows features such as logging in, real-time posting, editing, and deleting.
 
 ## Startup
 If you want to test the code yourself (requires nodejs and npm):
