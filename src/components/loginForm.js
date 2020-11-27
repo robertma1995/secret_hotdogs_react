@@ -43,13 +43,17 @@ function isValid(type, input, setInput, setInputError) {
 
 function LoginForm(props) {
  	// context + state variables (default error " " prevents form from looking ugly)
-    const { closeDialog } = props;
+    const { setDialogOpen } = props;
     const { setCurrentUserId } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(" ");
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState(" ");
     const [loading, setLoading] = useState(false);
+
+    function handleDialogClose() {
+        setDialogOpen(false);
+    }
 
     function handleLogin() {
         const emailValid = isValid("email", email, setEmail, setEmailError);
@@ -66,6 +70,7 @@ function LoginForm(props) {
                     setPasswordError(errors["login"]);
                 } else {
                     setCurrentUserId(userId);
+                    handleDialogClose();
                     props.history.push(routes.HOME);
                 }
             })();
@@ -106,7 +111,7 @@ function LoginForm(props) {
                 <RouterLink 
                     color="primary" 
                     underline="hover" 
-                    onClick={closeDialog}
+                    onClick={handleDialogClose}
                     to={routes.REGISTER}
                 > 
                     Sign Up 

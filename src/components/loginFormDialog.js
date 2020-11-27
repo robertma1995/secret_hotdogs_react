@@ -50,7 +50,7 @@ function LoginFormDialog(props) {
                 </Box>
             </Box>
             <DialogContent className={classes.dialogContent}>
-                <LoginForm closeDialog={handleClose} />
+                <LoginForm setDialogOpen={setOpen} />
             </DialogContent>
         </Dialog>
     );

@@ -96,11 +96,15 @@ function RegisterForm(props) {
             setLoading(true);
             (async () => {
                 // only set user image if defined and account creation succeeded
+                /* 
+                */
                 let id = await DB.postUser(name, email, password);
                 let registerSuccess = id !== false;
                 if (registerSuccess && image) {
                     registerSuccess = await DB.postUserImage(id, image);
                 }
+                // TODO: disable sign up before final deploy
+                // let registerSuccess = false;
                 setLoading(false);
 
                 // if register succeeds, reset all fields and give user option to go to login 

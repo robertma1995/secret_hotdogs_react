@@ -10,9 +10,14 @@ https://secret-hotdogs.web.app
 ### Landing
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593054688/landing.png" width="900">
 
-### Forms: Registration, Login, Posting
+### Registration, Login
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/registration.png" width="250">
+
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593059871/login.png" width="250">
+
+### Home
+
+### Posting
 <img src="https://res.cloudinary.com/noctisvirtus/image/upload/v1593058658/post_b.png" width="320">
 
 ### Home (before & after posting)
@@ -32,12 +37,12 @@ npm start
 
 ## Built with
 - React       (16.13.1)
-- Firebase    (7.14.1)
+- Firebase    (7.22.0)
 - Material-UI (4.9.10)
 
 ## TODO
 - [x] Convert app from PHP + MySQL to React + Firebase
-- [ ] Edit/delete hotdog recipes after posting them
+- [x] Edit/delete hotdog recipes after posting them (real-time)
 - [ ] Searching for and liking/commenting on hotdog recipes
 - [ ] Add friends
 - [ ] Notifications - friend has posted/liked/commented
