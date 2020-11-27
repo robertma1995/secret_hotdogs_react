@@ -142,7 +142,7 @@ async function patchHotdog(id, hotdog) {
         await hotdogs.patch(id, hotdog);
         return true;
     } catch(e) {
-        console.log(e);
+        // console.log(e);
         return false;
     }
 }

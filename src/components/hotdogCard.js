@@ -15,12 +15,12 @@ const HotdogCard = React.memo((props) => {
     // TODO: keep id, since will need for liking later on
     const { 
         id, creatorId, creatorName, creatorImageUrl, 
-        description, hotdogImageUrl, ingredients, title, ts,
+        hotdogImageUrl, ingredients, title, ts,
         setHotdogDetailsId, setOpenDetailsDialog,
         setDeleteId,
     } = props;
     // TODO: keep below console log to check for useless rendering
-    console.log("Hotdog " + id + " rendered");
+    // console.log("Hotdog " + id + " rendered");
 
     // format timestamp seconds into readable date
     const subheader = secondsToDate(ts);

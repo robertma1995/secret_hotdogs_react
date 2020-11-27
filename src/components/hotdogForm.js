@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import isEqual from 'lodash/isEqual';
 import isEmpty from 'lodash/isEmpty';
@@ -8,7 +8,6 @@ import Form from './form';
 import FormField from './formField';
 import FormButtonWrapper from './formButtonWrapper';
 import FormMessage from './formMessage';
-import ImageButton from './imageButton';
 import ImageButtonDouble from './imageButtonDouble';
 import PhotoUploadDialog from './photoUploadDialog';
 import ProgressButton from './progressButton';
@@ -91,7 +90,6 @@ function HotdogForm(props) {
     } = props;
     const { userId } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
-    const [submitStatus, setSubmitStatus] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     // input details
     const [title, setTitle] = useState(edit ? initialTitle : "");
@@ -215,8 +213,13 @@ function HotdogForm(props) {
                             setDialogHotdogImageUrl(finalUrl);
                         }
                     }
-                    setSubmitStatus(editSuccess);
+                    if (editSuccess) {
+                        setEditId(id);
+                    } else {
+                        // console.log("something went wrong with editing...");
+                    }
                     setLoading(false);
+                    setOpenSnackbar(true);
                 })();
             } else {
                 hotdog["creatorId"] = userId;
@@ -226,33 +229,24 @@ function HotdogForm(props) {
                     if (addSuccess && hotdogImage) {
                         addSuccess = await DB.postHotdogImage(id, hotdogImage);
                     }
-                    setSubmitStatus(addSuccess);
+                    if (addSuccess) {
+                        setTitle("");
+                        setDescription("");
+                        setSausage("");
+                        setSauce("");
+                        setToppings(new Map());
+                        setHotdogImage(null);
+                        setHotdogImageUrl(constants["hotdogImageUrl"]);   
+                        setAddId(id);
+                    } else {
+                        // console.log("something went wrong with adding...");
+                    }
                     setLoading(false);
+                    setOpenSnackbar(true);
                 })();
             }
         }
     }
-
-    // if post succeeds, reset all fields and give user option to go back to homepage
-    useEffect(() => {
-        if (!submitStatus) {
-            console.log("initial opening of form, no edits made, or something went wrong with post");
-        } else {
-            if (!edit) {
-                setTitle("");
-                setDescription("");
-                setSausage("");
-                setSauce("");
-                setToppings(new Map());
-                setHotdogImage(null);
-                setHotdogImageUrl(constants["hotdogImageUrl"]);   
-                setAddId(id);
-            } else {
-                setEditId(id);
-            }
-            setOpenSnackbar(true);
-        }
-    }, [submitStatus])
 
     return (
         <Form>

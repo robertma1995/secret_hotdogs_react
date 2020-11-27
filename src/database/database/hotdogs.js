@@ -175,7 +175,7 @@ async function putImage(id, image) {
     let imageRef = firebase.storage().ref().child("hotdogs/" + id + ".jpg");
     return new Promise((resolve, reject) => {
         if (image) {
-            console.log("image defined - replace existing");
+            // console.log("image defined - replace existing");
             imageRef.put(image).then(() => {
                 return imageRef.getDownloadURL();
             }).then(url => {
@@ -184,7 +184,7 @@ async function putImage(id, image) {
                 reject(err);
             })
         } else {
-            console.log("image not defined - delete existing");
+            // console.log("image not defined - delete existing");
             imageRef.delete().then(() => {
                 resolve("");
             }).catch(err => {

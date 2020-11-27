@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 // material ui
 import { AppBar, Avatar, Box, Button, CircularProgress, Toolbar, Typography } from '@material-ui/core';
 // my components
-import ImageButton from './imageButton';
 import LoginFormDialog from './loginFormDialog';
 import NavbarMenu from './navbarMenu';
 import RouterLink from './routerLink';
@@ -18,7 +17,6 @@ import * as DB from '../database/wrapper';
 function NavBar(props) { 
     const { userId, setCurrentUserId } = useContext(UserContext);
     const [openLoginDialog, setOpenLoginDialog] = useState(false);
-    const [menuAnchor, setMenuAnchor] = useState(null);
     const [userName, setUserName] = useState("");
     const [userImageUrl, setUserImageUrl] = useState("");
     const [loading, setLoading] = useState(true);
@@ -46,10 +44,6 @@ function NavBar(props) {
         setOpenLoginDialog(true);
     }
 
-    function handleOpenMenu(event) {
-        setMenuAnchor(event.currentTarget);
-    }
-
     return (
         <AppBar position="sticky" elevation={0}>
             <Toolbar>
@@ -63,24 +57,13 @@ function NavBar(props) {
                     </Box>
                     <Box>
                         { userId && !loading &&
-                            <>
-                                <ImageButton 
-                                    imageUrl={userImageUrl}
-                                    iconName="settings"
-                                    handleClick={handleOpenMenu}
-                                    avatar
-                                    navbar
-                                />
-                                <NavbarMenu 
-                                    anchor={menuAnchor}
-                                    setAnchor={setMenuAnchor}
-                                    userId={userId}
-                                    userName={userName}
-                                    userImageUrl={userImageUrl}
-                                    setUserImageUrl={setUserImageUrl}
-                                    handleLogout={handleLogout}
-                                />
-                            </> 
+                            <NavbarMenu 
+                                userId={userId}
+                                userName={userName}
+                                userImageUrl={userImageUrl}
+                                setUserImageUrl={setUserImageUrl}
+                                handleLogout={handleLogout}
+                            />
                         }
                         { userId && loading &&
                             <Avatar style={{ height: '40px', width: '40px', backgroundColor: 'transparent' }}>

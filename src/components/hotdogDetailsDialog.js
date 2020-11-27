@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { 
-    Avatar, Box, Button, CircularProgress, Grid, IconButton, Paper, Typography,
+    Avatar, Box, CircularProgress, Grid, IconButton, Paper, Typography,
     Card, CardHeader, CardContent, CardMedia,
     Dialog, DialogContent 
 } from '@material-ui/core';
@@ -135,7 +135,7 @@ function HotdogDetailsDialog(props) {
                 // get description, ingredients, and title in real-time
                 // unsubscribe on close ensures deletes from HotdogGrid are not caught by this listener
                 const listener = DB.getHotdogQuery(id).onSnapshot(snapshot => {
-                    console.log("hotdog snapshot changed!");
+                    // console.log("hotdog snapshot changed!");
                     let hotdog = snapshot.data();
                     setDescription(hotdog.description);
                     setIngredients(hotdog.ingredients);
@@ -146,7 +146,7 @@ function HotdogDetailsDialog(props) {
                 setUnsubscribe(() => listener);
             })();
         }
-    }, [open]);
+    }, [open, id]);
 
     return (
         <>

@@ -3,7 +3,8 @@
 */
 const constants = {
     hotdogImageUrl: "https://www.svgrepo.com/show/133687/hot-dog.svg",
-    maxToppings: 15
+    maxToppings: 15,
+    maxHotdogColumns: 3,
 }
 
 export default constants;
