@@ -7,7 +7,7 @@ https://secret-hotdogs.web.app
 (Sign Up function is disabled in current hosted version - sample login credentials can be provided on request)
 
 ## Demo (video)
-https://www.youtube.com/watch?v=UBHHEkR4ON0
+https://www.youtube.com/watch?v=BGGiiBvF15M
 
 Shows features such as logging in, real-time posting, editing, and deleting.
 
